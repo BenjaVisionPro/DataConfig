@@ -8,11 +8,7 @@
 
 namespace DcExtra {
 
-DATACONFIGEXTRA_API EDcDeserializePredicateResult PredicateIsColorStruct(FDcDeserializeContext& Ctx);
-
 DATACONFIGEXTRA_API FDcResult HandlerColorDeserialize(FDcDeserializeContext& Ctx);
-
-DATACONFIGEXTRA_API EDcSerializePredicateResult PredicateIsColorStruct(FDcSerializeContext& Ctx);
 
 DATACONFIGEXTRA_API FDcResult HandlerColorSerialize(FDcSerializeContext& Ctx);
 

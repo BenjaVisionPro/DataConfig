@@ -6,6 +6,7 @@
 #include "DataConfig/Json/DcJsonReader.h"
 #include "DataConfig/MsgPack/DcMsgPackReader.h"
 #include "DataConfig/MsgPack/DcMsgPackWriter.h"
+#include "DataConfig/Extra/Types/DcExtraTestFixtures.h"
 
 DC_TEST("DataConfig.Core.RoundTrip.Property_Json_MsgPack_Json_Property")
 {
@@ -20,7 +21,7 @@ DC_TEST("DataConfig.Core.RoundTrip.Property_Json_MsgPack_Json_Property")
 	Source->StructClassRefs.MakeFixture();
 	FDcPropertyDatum SourceDatum(Source);
 
-	//	Serialize Property -> Json 
+	//	Serialize Property -> Json
 	FDcCondensedJsonWriter JsonWriter;
 	{
 		UTEST_OK("Property Json MsgPack Roundtrip 1", DcAutomationUtils::SerializeInto(&JsonWriter, SourceDatum,
@@ -53,7 +54,7 @@ DC_TEST("DataConfig.Core.RoundTrip.Property_Json_MsgPack_Json_Property")
 	{
 		FString Json = JsonWriter2.Sb.ToString();
 		FDcJsonReader JsonReader(Json);
-		
+
 		UTEST_OK("Property Json MsgPack Roundtrip 1", DcAutomationUtils::DeserializeFrom(&JsonReader, DestDatum,
 		[](FDcDeserializeContext& Ctx)
 		{
@@ -65,4 +66,72 @@ DC_TEST("DataConfig.Core.RoundTrip.Property_Json_MsgPack_Json_Property")
 	UTEST_OK("Property Json MsgPack Roundtrip 1", DcAutomationUtils::TestReadDatumEqual(SourceDatum, DestDatum));
 	return true;
 }
+
+
+DC_TEST("DataConfig.Core.RoundTrip.CoreTypes")
+{
+	{
+		/// use coretypes serializers
+		FDcExtraCoreTypesStruct Source;
+		Source.MakeFixture();
+
+		FDcPropertyDatum SourceDatum(&Source);
+		FDcJsonWriter JsonWriter;
+		{
+			UTEST_OK("CoreTypes Roundtrip", DcAutomationUtils::SerializeInto(&JsonWriter, SourceDatum,
+			[](FDcSerializeContext& Ctx)
+			{
+				DcSetupCoreTypesSerializeHandlers(*Ctx.Serializer);
+			}));
+		}
+
+		FDcExtraCoreTypesStruct Dest;
+		FDcPropertyDatum DestDatum(&Dest);
+
+		FString Json = JsonWriter.Sb.ToString();
+		FDcJsonReader JsonReader(Json);
+		{
+			UTEST_OK("CoreTypes Roundtrip", DcAutomationUtils::DeserializeFrom(&JsonReader, DestDatum,
+			[](FDcDeserializeContext& Ctx)
+			{
+				DcSetupCoreTypesDeserializeHandlers(*Ctx.Deserializer);
+			}));
+		}
+
+		UTEST_OK("CoreTypes Roundtrip", DcAutomationUtils::TestReadDatumEqual(SourceDatum, DestDatum));
+	}
+
+	{
+		/// use default serializers but coretypes deserializers also works
+		FDcExtraCoreTypesStruct Source;
+		Source.MakeFixture();
+
+		FDcPropertyDatum SourceDatum(&Source);
+		FDcJsonWriter JsonWriter;
+		{
+			UTEST_OK("CoreTypes Roundtrip", DcAutomationUtils::SerializeInto(&JsonWriter, SourceDatum,
+			[](FDcSerializeContext& Ctx)
+			{
+				//	no setup
+			}));
+		}
+
+		FDcExtraCoreTypesStruct Dest;
+		FDcPropertyDatum DestDatum(&Dest);
+
+		FString Json = JsonWriter.Sb.ToString();
+		FDcJsonReader JsonReader(Json);
+		{
+			UTEST_OK("CoreTypes Roundtrip", DcAutomationUtils::DeserializeFrom(&JsonReader, DestDatum,
+			[](FDcDeserializeContext& Ctx)
+			{
+				DcSetupCoreTypesDeserializeHandlers(*Ctx.Deserializer);
+			}));
+		}
+
+		UTEST_OK("CoreTypes Roundtrip", DcAutomationUtils::TestReadDatumEqual(SourceDatum, DestDatum));
+	}
+
+	return true;
+};
 

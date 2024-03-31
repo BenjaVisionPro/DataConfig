@@ -53,7 +53,7 @@ FDcResult HandlerCanadaCoordsSerialize(FDcSerializeContext& Ctx)
 		DC_TRY(Ctx.Reader->PeekRead(&CurPeek));
 		if (CurPeek == EDcDataEntry::ArrayEnd)
 			break;
-		
+
 		DC_TRY(DcSerializeUtils::RecursiveSerialize(Ctx));
 	}
 
@@ -107,14 +107,8 @@ DC_TEST("DataConfigBenchmark.Canada")
 		FDcJsonReader Reader(JsonStr);
 		return DcAutomationUtils::DeserializeFrom(&Reader, Datum,
 		[](FDcDeserializeContext& Ctx) {
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FDcCanadaCoords>),
-				FDcDeserializeDelegate::CreateStatic(HandlerCanadaCoordsDeserialize)
-			);
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FDcVector2D>),
-				FDcDeserializeDelegate::CreateStatic(HandlerVector2DDeserialize)
-			);
+			Ctx.Deserializer->AddStructHandler(TBaseStructure<FDcCanadaCoords>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerCanadaCoordsDeserialize));
+			Ctx.Deserializer->AddStructHandler(TBaseStructure<FDcVector2D>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerVector2DDeserialize));
 		});
 	};
 
@@ -166,15 +160,8 @@ DC_TEST("DataConfigBenchmark.Canada")
 			FDcJsonWriter Writer;
 			FDcResult Result = DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Root),
 			[](FDcSerializeContext& Ctx) {
-				Ctx.Serializer->AddPredicatedHandler(
-					FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsUStruct<FDcCanadaCoords>),
-					FDcSerializeDelegate::CreateStatic(HandlerCanadaCoordsSerialize)
-				);
-
-				Ctx.Serializer->AddPredicatedHandler(
-					FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsUStruct<FDcVector2D>),
-					FDcSerializeDelegate::CreateStatic(HandlerVector2DSerialize)
-				);
+				Ctx.Serializer->AddStructHandler(TBaseStructure<FDcCanadaCoords>::Get(), FDcSerializeDelegate::CreateStatic(HandlerCanadaCoordsSerialize));
+				Ctx.Serializer->AddStructHandler(TBaseStructure<FDcVector2D>::Get(), FDcSerializeDelegate::CreateStatic(HandlerVector2DSerialize));
 			});
 			return Result.Ok();
 		});
@@ -194,14 +181,8 @@ DC_TEST("DataConfigBenchmark.Canada")
 			FDcResult Result = DcAutomationUtils::DeserializeFrom(&Reader, FDcPropertyDatum(&Data),
 			[](FDcDeserializeContext& Ctx) {
 				DcSetupMsgPackDeserializeHandlers(*Ctx.Deserializer, EDcMsgPackDeserializeType::Default);
-				Ctx.Deserializer->AddPredicatedHandler(
-					FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FDcCanadaCoords>),
-					FDcDeserializeDelegate::CreateStatic(HandlerCanadaCoordsDeserialize)
-				);
-				Ctx.Deserializer->AddPredicatedHandler(
-					FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FDcVector2D>),
-					FDcDeserializeDelegate::CreateStatic(HandlerVector2DDeserialize)
-				);
+				Ctx.Deserializer->AddStructHandler(TBaseStructure<FDcCanadaCoords>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerCanadaCoordsDeserialize));
+				Ctx.Deserializer->AddStructHandler(TBaseStructure<FDcVector2D>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerVector2DDeserialize));
 			}, DcAutomationUtils::EDefaultSetupType::SetupNothing);
 			return Result.Ok();
 		});
@@ -217,19 +198,13 @@ DC_TEST("DataConfigBenchmark.Canada")
 		FDcBenchStat Stat = DcBenchStats([&]
 		{
 			FDcMsgPackWriter Writer;
-			FDcResult Result = DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Root), 
+			FDcResult Result = DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Root),
 			[](FDcSerializeContext& Ctx) {
 				DcSetupMsgPackSerializeHandlers(*Ctx.Serializer, EDcMsgPackSerializeType::Default);
 
-				Ctx.Serializer->AddPredicatedHandler(
-					FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsUStruct<FDcCanadaCoords>),
-					FDcSerializeDelegate::CreateStatic(HandlerCanadaCoordsSerialize)
-				);
+				Ctx.Serializer->AddStructHandler(TBaseStructure<FDcCanadaCoords>::Get(), FDcSerializeDelegate::CreateStatic(HandlerCanadaCoordsSerialize));
+				Ctx.Serializer->AddStructHandler(TBaseStructure<FDcVector2D>::Get(), FDcSerializeDelegate::CreateStatic(HandlerVector2DSerialize));
 
-				Ctx.Serializer->AddPredicatedHandler(
-					FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsUStruct<FDcVector2D>),
-					FDcSerializeDelegate::CreateStatic(HandlerVector2DSerialize)
-				);
 			}, DcAutomationUtils::EDefaultSetupType::SetupNothing);
 			return Result.Ok();
 		});
@@ -390,7 +365,7 @@ FDcResult HandlerNullableSerialize(FDcSerializeContext& Ctx)
 
 		return DcOk();
 	}
-	else 
+	else
 	{
 		return DcSerializeUtils::RecursiveSerialize(Ctx);
 	}
@@ -409,13 +384,10 @@ DC_TEST("DataConfigBenchmark.Corpus")
 		FDcJsonReader Reader(JsonStr);
 		return DcAutomationUtils::DeserializeFrom(&Reader, Datum,
 		[](FDcDeserializeContext& Ctx) {
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FDcCorpusRoot>),
-				FDcDeserializeDelegate::CreateStatic(HandlerIsCorpusRootDeserialize)
-			);
+			Ctx.Deserializer->AddStructHandler(TBaseStructure<FDcCorpusRoot>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerIsCorpusRootDeserialize));
 
 			Ctx.Deserializer->PredicatedDeserializers.Insert(
-				MakeTuple(
+				FDcDeserializer::FPredicatedHandlerEntry{
 					FDcDeserializePredicate::CreateLambda([](FDcDeserializeContext& Ctx)
 					{
 						return DcBenchmarkDetails::IsCorpusNullableField(Ctx)
@@ -423,7 +395,7 @@ DC_TEST("DataConfigBenchmark.Corpus")
 							: EDcDeserializePredicateResult::Pass;
 					}),
 					FDcDeserializeDelegate::CreateStatic(HandlerNullableDeserialize)
-				), 
+				},
 				0	// insert at 0, before usual numeric handlers
 			);
 		});
@@ -475,15 +447,12 @@ DC_TEST("DataConfigBenchmark.Corpus")
 		FDcBenchStat Stat = DcBenchStats([&]
 		{
 			FDcCondensedJsonWriter Writer;
-			FDcResult Result = DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Root), 
+			FDcResult Result = DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Root),
 			[](FDcSerializeContext& Ctx) {
-				Ctx.Serializer->AddPredicatedHandler(
-					FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsUStruct<FDcCorpusRoot>),
-					FDcSerializeDelegate::CreateStatic(HandlerIsCorpusRootSerialize)
-				);
+				Ctx.Serializer->AddStructHandler(TBaseStructure<FDcCorpusRoot>::Get(), FDcSerializeDelegate::CreateStatic(HandlerIsCorpusRootSerialize));
 
 				Ctx.Serializer->PredicatedSerializers.Insert(
-					MakeTuple(
+					FDcSerializer::FPredicatedHandlerEntry{
 						FDcSerializePredicate::CreateLambda([](FDcSerializeContext& Ctx)
 						{
 							return DcBenchmarkDetails::IsCorpusNullableField(Ctx)
@@ -491,7 +460,7 @@ DC_TEST("DataConfigBenchmark.Corpus")
 								: EDcSerializePredicateResult::Pass;
 						}),
 						FDcSerializeDelegate::CreateStatic(HandlerNullableSerialize)
-					), 
+					},
 					0	// insert at 0, before usual numeric handlers
 				);
 			});
@@ -514,13 +483,10 @@ DC_TEST("DataConfigBenchmark.Corpus")
 			FDcResult Result = DcAutomationUtils::DeserializeFrom(&Reader, FDcPropertyDatum(&Data),
 			[](FDcDeserializeContext& Ctx) {
 				DcSetupMsgPackDeserializeHandlers(*Ctx.Deserializer, EDcMsgPackDeserializeType::Default);
-				Ctx.Deserializer->AddPredicatedHandler(
-					FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FDcCorpusRoot>),
-					FDcDeserializeDelegate::CreateStatic(HandlerIsCorpusRootDeserialize)
-				);
+				Ctx.Deserializer->AddStructHandler(TBaseStructure<FDcCorpusRoot>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerIsCorpusRootDeserialize));
 
 				Ctx.Deserializer->PredicatedDeserializers.Insert(
-					MakeTuple(
+					FDcDeserializer::FPredicatedHandlerEntry{
 						FDcDeserializePredicate::CreateLambda([](FDcDeserializeContext& Ctx)
 						{
 							return DcBenchmarkDetails::IsCorpusNullableField(Ctx)
@@ -528,7 +494,7 @@ DC_TEST("DataConfigBenchmark.Corpus")
 								: EDcDeserializePredicateResult::Pass;
 						}),
 						FDcDeserializeDelegate::CreateStatic(HandlerNullableDeserialize)
-					), 
+					},
 					0	// insert at 0, before usual numeric handlers
 				);
 			}, DcAutomationUtils::EDefaultSetupType::SetupNothing);
@@ -547,17 +513,14 @@ DC_TEST("DataConfigBenchmark.Corpus")
 		FDcBenchStat Stat = DcBenchStats([&]
 		{
 			FDcMsgPackWriter Writer;
-			FDcResult Result = DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Root), 
+			FDcResult Result = DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Root),
 			[](FDcSerializeContext& Ctx) {
 				DcSetupMsgPackSerializeHandlers(*Ctx.Serializer, EDcMsgPackSerializeType::Default);
 
-				Ctx.Serializer->AddPredicatedHandler(
-					FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsUStruct<FDcCorpusRoot>),
-					FDcSerializeDelegate::CreateStatic(HandlerIsCorpusRootSerialize)
-				);
+				Ctx.Serializer->AddStructHandler(TBaseStructure<FDcCorpusRoot>::Get(), FDcSerializeDelegate::CreateStatic(HandlerIsCorpusRootSerialize));
 
 				Ctx.Serializer->PredicatedSerializers.Insert(
-					MakeTuple(
+					FDcSerializer::FPredicatedHandlerEntry{
 						FDcSerializePredicate::CreateLambda([](FDcSerializeContext& Ctx)
 						{
 							return DcBenchmarkDetails::IsCorpusNullableField(Ctx)
@@ -565,7 +528,7 @@ DC_TEST("DataConfigBenchmark.Corpus")
 								: EDcSerializePredicateResult::Pass;
 						}),
 						FDcSerializeDelegate::CreateStatic(HandlerNullableSerialize)
-					), 
+					},
 					0	// insert at 0, before usual numeric handlers
 				);
 			}, DcAutomationUtils::EDefaultSetupType::SetupNothing);

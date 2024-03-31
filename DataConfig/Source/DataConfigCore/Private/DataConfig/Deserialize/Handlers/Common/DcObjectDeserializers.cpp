@@ -72,7 +72,7 @@ EDcDeserializePredicateResult PredicateIsSubObjectProperty(FDcDeserializeContext
 		return EDcDeserializePredicateResult::Pass;
 
 	FObjectProperty* ObjectProperty = CastField<FObjectProperty>(Ctx.TopProperty().ToFieldUnsafe());
-	return ObjectProperty && DcPropertyUtils::IsSubObjectProperty(ObjectProperty)
+	return ObjectProperty && Ctx.Writer->Config.ShouldExpandObject(ObjectProperty)
 		? EDcDeserializePredicateResult::Process
 		: EDcDeserializePredicateResult::Pass;
 }

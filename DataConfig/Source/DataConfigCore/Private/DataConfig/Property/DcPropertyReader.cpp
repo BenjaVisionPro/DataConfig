@@ -201,7 +201,7 @@ FDcPropertyReader::FDcPropertyReader(FDcPropertyDatum Datum)
 		PushOptionalPropertyState(this, Datum.DataPtr, Datum.CastFieldChecked<FOptionalProperty>());
 	}
 #endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
-	else 
+	else
 	{
 		PushScalarPropertyState(this, Datum.DataPtr, Datum.CastFieldChecked<FProperty>());
 	}
@@ -258,10 +258,10 @@ FDcResult FDcPropertyReader::ReadEnum(FDcEnumData* OutPtr)
 {
 	FDcPropertyDatum Datum;
 	DC_TRY(GetTopState(this).ReadDataEntry(this, FProperty::StaticClass(), Datum));
-	
+
 	UEnum* Enum = nullptr;
 	FNumericProperty* UnderlyingProperty = nullptr;
-	
+
 	bool bIsEnum = DcPropertyUtils::IsEnumAndTryUnwrapEnum(Datum.Property, Enum, UnderlyingProperty);
 	if (!bIsEnum)
 		return DC_FAIL(DcDReadWrite, PropertyMismatch2)

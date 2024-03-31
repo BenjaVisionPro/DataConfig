@@ -71,11 +71,11 @@ FDcResult TryLocateObject(FStringView Str, T*& OutObject)
 {
 	return TryStaticLocateObject(T::StaticClass(), Str, (UObject*&)OutObject);
 }
-	
+
 DATACONFIGCORE_API FDcResult ExpectLhsChildOfRhs(UClass* Lhs, UClass* Rhs);
 DATACONFIGCORE_API FDcResult ExpectNonAbstract(UClass* Class);
 
-DATACONFIGCORE_API FString FormatObjectName(UObject* Object); 
+DATACONFIGCORE_API FString FormatObjectName(UObject* Object);
 
 DATACONFIGCORE_API FDcResult DispatchNoopRead(EDcDataEntry Next, FDcReader* Reader);
 DATACONFIGCORE_API FDcResult ReadNoopConsumeValue(FDcReader* Reader);

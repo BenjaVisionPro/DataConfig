@@ -197,7 +197,7 @@ struct FDcWriteStateMap : public FDcBaseWriteState
 	FDcWriteStateMap(void* InMapPtr, FMapProperty* InMapProperty)
 		: MapHelper(InMapProperty, InMapPtr)
 	{
-		MapName = InMapProperty->GetFName();	
+		MapName = InMapProperty->GetFName();
 		MapProperty = InMapProperty;
 	}
 

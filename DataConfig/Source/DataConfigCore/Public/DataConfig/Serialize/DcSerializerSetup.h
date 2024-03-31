@@ -22,3 +22,5 @@ enum class EDcMsgPackSerializeType
 
 DATACONFIGCORE_API void DcSetupMsgPackSerializeHandlers(FDcSerializer& Serializer, EDcMsgPackSerializeType Type = EDcMsgPackSerializeType::Default);
 
+DATACONFIGCORE_API void DcSetupCoreTypesSerializeHandlers(FDcSerializer& Serializer);
+

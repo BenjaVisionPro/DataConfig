@@ -60,7 +60,7 @@ FORCEINLINE EDcDataEntry TypeByteToDataEntry(uint8 TypeByte)
 		case MSGPACK_NIL:
 			return EDcDataEntry::None;
 		case MSGPACK_TRUE:
-		case MSGPACK_FALSE: 
+		case MSGPACK_FALSE:
 			return EDcDataEntry::Bool;
 		case MSGPACK_BIN8:
 		case MSGPACK_BIN16:
@@ -127,7 +127,7 @@ FORCEINLINE EDcDataEntry TypeByteToDataEntry(uint8 TypeByte)
 static FORCEINLINE void SwapChar(uint8* Ptr, int FromIx, int ToIx)
 {
 	uint8 Tmp = Ptr[FromIx];
-	Ptr[FromIx] = Ptr[ToIx]; 
+	Ptr[FromIx] = Ptr[ToIx];
 	Ptr[ToIx] = Tmp;
 }
 

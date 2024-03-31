@@ -69,16 +69,16 @@ DC_TEST("DataConfig.Core.Property.UE5.TObjectPtr")
 		UTEST_TRUE("TObjectPtr", Dest.ObjPtrField1 == FindObject<UPackage>(nullptr, TEXT("/Script/DataConfigTests5"), true));
 	}
 
-    return true;
+	return true;
 }
 
 DC_TEST("DataConfig.Core.Property.UE5.LargeWorldCoordinates")
 {
 	FDcTestLWC Source;
 
-    Source.VectorField = {1.5f, 1.75f, 1.875f};
-    Source.Vector3fField = {1.5f, 1.75f, 1.875f};
-    Source.Vector3dField = {1.5, 1.75, 1.875};
+	Source.VectorField = {1.5f, 1.75f, 1.875f};
+	Source.Vector3fField = {1.5f, 1.75f, 1.875f};
+	Source.Vector3dField = {1.5, 1.75, 1.875};
 
 	FDcTestLWC Dest;
 
@@ -146,7 +146,7 @@ DC_TEST("DataConfig.Core.RoundTrip.UE5.TObjectPtr")
 			[](FDcSerializeContext& Ctx)
 			{
 				DcSetupPropertyPipeSerializeHandlers(*Ctx.Serializer);
-				return;	
+				return;
 			}, DcAutomationUtils::EDefaultSetupType::SetupNothing));
 
 			FDcPropertyReader Reader(MiddleDatum);
@@ -204,7 +204,7 @@ DC_TEST("DataConfig.Core.RoundTrip.UE5.TObjectPtr")
 			[](FDcSerializeContext& Ctx)
 			{
 				DcSetupPropertyPipeSerializeHandlers(*Ctx.Serializer);
-				return;	
+				return;
 			}, DcAutomationUtils::EDefaultSetupType::SetupNothing));
 
 			FDcPropertyReader Reader(MiddleDatum);

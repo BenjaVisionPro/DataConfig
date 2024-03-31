@@ -172,7 +172,7 @@ DC_TEST("DataConfig.Core.Diagnostic.Highlight")
 		));
 
 	}
-		
+
 	return true;
 };
 

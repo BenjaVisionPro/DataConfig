@@ -72,7 +72,7 @@ FString DcFormatBenchStats(FString Prefix, double BytesCount, FDcBenchStat Stat)
 			TEXT("%s: [%s] Bandwidth: %.3f(MB/s), Mean: %.3f(ms), Median:%.3f(ms), Deviation:%.3f"),
 			*Prefix,
 			*DcBuildConfigurationString(),
-			MegaBytesPerSecond, 
+			MegaBytesPerSecond,
 			Stat.MeanMs,
 			Stat.MedianMs,
 			Stat.Deviation

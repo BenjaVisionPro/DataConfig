@@ -61,7 +61,7 @@ static FORCEINLINE_DEBUGGABLE FDcResult WriteTransientMulticastScriptDelegate(FD
 	return DcOk();
 }
 
-	
+
 } // namespace DcMsgPackHandlersDetails
 
 namespace DcMsgPackHandlers

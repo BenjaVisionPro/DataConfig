@@ -9,7 +9,7 @@
 template<typename T>
 struct TDcIsDataVariantCompatible
 {
-	enum { Value = 
+	enum { Value =
 		DcTypeUtils::TIsDataEntryType<T>::Value
 		|| TIsEnum<T>::Value
 	};

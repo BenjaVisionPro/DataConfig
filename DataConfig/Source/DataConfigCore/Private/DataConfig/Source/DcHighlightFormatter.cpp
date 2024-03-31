@@ -41,23 +41,23 @@ FString THightlightFormatter<CharType>::FormatHighlight(SourceRef SpanRef, int L
 		Line = FindLineNumber(SpanRef);
 
 	int LineOffset;
-    {
-        if (SpanRef.Num >= _LINE_MAX_LENGH)
-            SpanRef.Num = _LINE_MAX_LENGH;
+	{
+		if (SpanRef.Num >= _LINE_MAX_LENGH)
+			SpanRef.Num = _LINE_MAX_LENGH;
 
-        //  calculate a line window 
-        int Slack = _LINE_MAX_LENGH - SpanRef.Num;
-        int SlackBefore = Slack / 2;
+		//  calculate a line window
+		int Slack = _LINE_MAX_LENGH - SpanRef.Num;
+		int SlackBefore = Slack / 2;
 		int SlackAfter = Slack - SlackBefore;
 
 		int SlackOff = FMath::Max(0, (SpanRef.Begin - LineHighlight.Begin + SpanRef.Num + SlackAfter) - LineHighlight.Num);
 		SlackBefore += SlackOff;
 
-        LineOffset = SpanRef.Begin - LineHighlight.Begin;
-        LineOffset -= SlackBefore;
-        if (LineOffset < 0)
-            LineOffset = 0;
-    }
+		LineOffset = SpanRef.Begin - LineHighlight.Begin;
+		LineOffset -= SlackBefore;
+		if (LineOffset < 0)
+			LineOffset = 0;
+	}
 
 	auto _ClampLine = [LineOffset](SourceRef Line)
 	{

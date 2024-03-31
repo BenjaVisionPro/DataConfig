@@ -37,7 +37,7 @@ struct FDcStructShapeCircle : public FDcStructShapeBase
 You can use `FInstancedStruct` specified with a `BaseStruct` meta to reference to a polymorphism instance:
 
 ```c++
-// DataConfigEditorExtra5/Public/DataConfig/EditorExtra/SerDe/DcSerDeInstancedStruct.h
+// DataConfigEngineExtra5/Public/DataConfig/EngineExtra/SerDe/DcSerDeInstancedStruct.h
 UPROPERTY(EditAnywhere, meta = (BaseStruct = "/Script/DataConfigExtra.DcStructShapeBase"))
 FInstancedStruct InstancedStruct1;
 
@@ -54,13 +54,13 @@ Prior to this you'll need to setup [Sub Objects](../Formats/JSON.md#sub-objects)
 `FInstancedStruct` can also be serialized to and from JSON with DataConfig:
 
 
-* [DcSerDeInstancedStruct.h]({{SrcRoot}}DataConfigEditorExtra5/Public/DataConfig/EditorExtra/SerDe/DcSerDeInstancedStruct.h)
-* [DcSerDeInstancedStruct.cpp]({{SrcRoot}}DataConfigEditorExtra5/Private/DataConfig/EditorExtra/SerDe/DcSerDeInstancedStruct.cpp)
+* [DcSerDeInstancedStruct.h]({{SrcRoot}}DataConfigEngineExtra5/Public/DataConfig/EngineExtra/SerDe/DcSerDeInstancedStruct.h)
+* [DcSerDeInstancedStruct.cpp]({{SrcRoot}}DataConfigEngineExtra5/Private/DataConfig/EngineExtra/SerDe/DcSerDeInstancedStruct.cpp)
 
 ```c++
-// DataConfigExtra5/Public/DataConfig/EditorExtra/SerDe/DcSerDeInstancedStruct.h
+// DataConfigExtra5/Public/DataConfig/EngineExtra/SerDe/DcSerDeInstancedStruct.h
 USTRUCT()
-struct FDcEditorExtra5InstancedStruct1
+struct FDcEngineExtra5InstancedStruct1
 {
     GENERATED_BODY()
 
@@ -69,7 +69,7 @@ struct FDcEditorExtra5InstancedStruct1
     UPROPERTY() FInstancedStruct InstancedStruct3;
 };
 
-// DataConfigExtra5/Private/DataConfig/EditorExtra/SerDe/DcSerDeInstancedStruct.cpp
+// DataConfigExtra5/Private/DataConfig/EngineExtra/SerDe/DcSerDeInstancedStruct.cpp
 FString Str = TEXT(R"(
     {
         "InstancedStruct1" : {

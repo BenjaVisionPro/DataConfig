@@ -5,7 +5,7 @@ public class DataConfigHeadless : ModuleRules
 {
 	public DataConfigHeadless(ReadOnlyTargetRules Target) : base(Target)
 	{
-	    bRequiresImplementModule = false;
+		bRequiresImplementModule = false;
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PrivateDependencyModuleNames.AddRange(

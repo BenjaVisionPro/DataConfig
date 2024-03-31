@@ -13,7 +13,7 @@
 namespace DcPropertyReadStateDetails
 {
 
-static FDcResult CheckExpectedProperty(FDcPropertyReader* Parent, FField* Property, FFieldClass* ExpectedPropertyClass)
+static FORCEINLINE FDcResult CheckExpectedProperty(FDcPropertyReader* Parent, FField* Property, FFieldClass* ExpectedPropertyClass)
 {
 	if (!Property->IsA(ExpectedPropertyClass))
 		return DC_FAIL(DcDReadWrite, PropertyMismatch)
@@ -21,6 +21,14 @@ static FDcResult CheckExpectedProperty(FDcPropertyReader* Parent, FField* Proper
 		<< Parent->FormatHighlight();
 	else
 		return DcOk();
+}
+
+static FORCEINLINE FDcResult HeuristicCheckStatesTooDeep(FDcPropertyReader* Parent)
+{
+	if (Parent->States.Num() > DC_HEURISTIC_MAX_PROPERTIES_DEPTH)
+		return DC_FAIL(DcDReadWrite, HeuristicPropertiesTooDeep);
+
+	return DcOk();
 }
 
 }	// namespace DcPropertyReadStateDetails
@@ -157,6 +165,7 @@ void FDcReadStateClass::FormatHighlightSegment(TArray<FString>& OutSegments, DcP
 
 FDcResult FDcReadStateClass::ReadClassRootAccess(FDcPropertyReader* Parent, FDcClassAccess& Access)
 {
+	DC_TRY(DcPropertyReadStateDetails::HeuristicCheckStatesTooDeep(Parent));
 	DC_TRY(DcPropertyUtils::HeuristicVerifyPointer(ClassObject));
 	if (State == EState::ExpectRoot)
 	{
@@ -427,6 +436,7 @@ void FDcReadStateStruct::FormatHighlightSegment(TArray<FString>& OutSegments, Dc
 
 FDcResult FDcReadStateStruct::ReadStructRootAccess(FDcPropertyReader* Parent, FDcStructAccess& Access)
 {
+	DC_TRY(DcPropertyReadStateDetails::HeuristicCheckStatesTooDeep(Parent));
 	if (State == EState::ExpectRoot)
 	{
 		Access.Name = StructClass->GetFName();
@@ -624,6 +634,7 @@ void FDcReadStateMap::FormatHighlightSegment(TArray<FString>& OutSegments, DcPro
 
 FDcResult FDcReadStateMap::ReadMapRoot(FDcPropertyReader* Parent)
 {
+	DC_TRY(DcPropertyReadStateDetails::HeuristicCheckStatesTooDeep(Parent));
 	if (State == EState::ExpectRoot)
 	{
 		//	check map effectiveness
@@ -812,6 +823,7 @@ void FDcReadStateArray::FormatHighlightSegment(TArray<FString>& OutSegments, DcP
 
 FDcResult FDcReadStateArray::ReadArrayRoot(FDcPropertyReader* Parent)
 {
+	DC_TRY(DcPropertyReadStateDetails::HeuristicCheckStatesTooDeep(Parent));
 	auto& ArrayAccess = (DcSerDeCommon::FScriptArrayHelperAccess&)ArrayHelper;
 	if (State == EState::ExpectRoot)
 	{
@@ -1034,6 +1046,7 @@ FDcResult FDcReadStateSet::PeekReadDataPtr(FDcPropertyReader* Parent, void** Out
 
 FDcResult FDcReadStateSet::ReadSetRoot(FDcPropertyReader* Parent)
 {
+	DC_TRY(DcPropertyReadStateDetails::HeuristicCheckStatesTooDeep(Parent));
 	if (State == EState::ExpectRoot)
 	{
 		if (!Parent->Config.ShouldProcessProperty(SetHelper.ElementProp))

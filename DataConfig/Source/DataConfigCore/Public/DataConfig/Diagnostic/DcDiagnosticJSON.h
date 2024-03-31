@@ -44,6 +44,7 @@ enum Type : uint16
 	ExpectStringAtObjectKey,
 	UnexpectedArrayEnd,
 	UnexpectedObjectEnd,
+	NumericFormatOutOfRange,
 };
 
 } // namespace DcDJSON

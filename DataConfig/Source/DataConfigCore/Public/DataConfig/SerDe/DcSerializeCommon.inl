@@ -172,6 +172,7 @@ FORCEINLINE_DEBUGGABLE FDcResult DcSerializeInstancedSubObject(FDcSerializeConte
 	}
 
 	FDcClassAccess Access;
+	Access.Control = FDcClassAccess::EControl::ExpandObject;
 	DC_TRY(Ctx.Reader->ReadClassRootAccess(Access));
 
 	EDcDataEntry CurPeek;

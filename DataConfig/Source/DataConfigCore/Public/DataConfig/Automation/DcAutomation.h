@@ -23,7 +23,7 @@ public:
 	}
 
 	uint32 GetTestFlags() const override;
-	uint32 GetRequiredDeviceNum() const override; 
+	uint32 GetRequiredDeviceNum() const override;
 
 	bool TestOk(const TCHAR* Description, const FDcResult& Result);
 	bool TestOk(const FString& Description, const FDcResult& Result);

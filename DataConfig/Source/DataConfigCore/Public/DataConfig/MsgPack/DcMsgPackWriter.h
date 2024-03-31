@@ -71,7 +71,7 @@ struct DATACONFIGCORE_API FDcMsgPackWriter : public FDcWriter, private FNoncopya
 
 	void FormatDiagnostic(FDcDiagnostic& Diag) override;
 
-	static FName ClassId(); 
+	static FName ClassId();
 	FName GetId() override;
 };
 

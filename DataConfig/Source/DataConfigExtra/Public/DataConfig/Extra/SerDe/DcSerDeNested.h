@@ -22,29 +22,29 @@ DATACONFIGEXTRA_API FDcResult HandlerGrid2DSerialize(FDcSerializeContext& Ctx);
 USTRUCT()
 struct FDcGrid2D
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
-    UPROPERTY() TArray<int> Data;
+	UPROPERTY() TArray<int> Data;
 };
 
 
 USTRUCT()
 struct FDcExtraTestNested_Vec2
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
-    UPROPERTY() TArray<FVector2D> Vec2ArrayField1;
-    UPROPERTY() TArray<FVector2D> Vec2ArrayField2;
+	UPROPERTY() TArray<FVector2D> Vec2ArrayField1;
+	UPROPERTY() TArray<FVector2D> Vec2ArrayField2;
 };
 
 
 USTRUCT()
 struct FDcExtraTestNested_Grid
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
-    UPROPERTY(meta=(DcWidth = 2, DcHeight = 2)) FDcGrid2D GridField1;
-    UPROPERTY(meta=(DcWidth = 3, DcHeight = 4)) FDcGrid2D GridField2;
+	UPROPERTY(meta=(DcWidth = 2, DcHeight = 2)) FDcGrid2D GridField1;
+	UPROPERTY(meta=(DcWidth = 3, DcHeight = 4)) FDcGrid2D GridField2;
 };
 
 

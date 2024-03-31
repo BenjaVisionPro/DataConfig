@@ -308,7 +308,7 @@ struct FDcReadStateScalar : public FDcBaseReadState
 	enum class EState : uint8
 	{
 		//    ArrayDim == 1
-		ExpectScalar,    
+		ExpectScalar,
 
 		//    ArrayDim > 1
 		ExpectArrayRoot,

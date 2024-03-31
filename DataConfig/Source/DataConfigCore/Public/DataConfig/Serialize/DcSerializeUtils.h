@@ -5,21 +5,23 @@
 #include "DataConfig/Property/DcPropertyUtils.h"
 #include "DataConfig/Serialize/DcSerializeTypes.h"
 
+struct FDcJsonWriterShared;
+
 namespace DcSerializeUtils
 {
 
 DATACONFIGCORE_API FDcResult RecursiveSerialize(FDcSerializeContext& Ctx);
 
-template<typename TStruct>
-EDcSerializePredicateResult PredicateIsUStruct(FDcSerializeContext& Ctx)
-{
-	UScriptStruct* Struct = DcPropertyUtils::TryGetStructClass(Ctx.TopProperty());
-	return Struct && Struct == TBaseStructure<TStruct>::Get()
-		? EDcSerializePredicateResult::Process
-		: EDcSerializePredicateResult::Pass;
-}
-
 DATACONFIGCORE_API EDcSerializePredicateResult PredicateIsRootProperty(FDcSerializeContext& Ctx);
-	
+
+struct DATACONFIGCORE_API FDcScopedTryUseJSONOverrideConfig
+{
+	FDcJsonWriterShared* JsonWriterShared;
+	bool bPrevUseOverrideConfig;
+
+	FDcScopedTryUseJSONOverrideConfig(FDcWriter* Writer);
+	~FDcScopedTryUseJSONOverrideConfig();
+};
+
 } // namespace DcSerializeUtils
 

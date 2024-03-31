@@ -49,7 +49,7 @@ static bool UStructToJsonObjectString(const InStructType& InStruct, FString& Out
 	return bRet;
 }
 
-	
+
 } // namespace DcExtra
 
 USTRUCT()
@@ -86,7 +86,7 @@ USTRUCT()
 struct FDcTestJsonConverterArrayDim1
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY() FString StrArr[2];
 	UPROPERTY() int IntArr[3];
 	UPROPERTY() FMovie MovieArr[2];

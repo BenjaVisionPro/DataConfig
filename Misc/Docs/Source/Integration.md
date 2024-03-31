@@ -66,7 +66,7 @@ python ./DataConfig/Misc/Scripts/make_dataconfig_ue5.py
 
 4. Additionally delete UE5 specific modules.
     
-    * `DataConfig/Source/DataConfigEditorExtra5`
+    * `DataConfig/Source/DataConfigEngineExtra5`
 
 ### Validate integration
 

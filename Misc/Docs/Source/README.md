@@ -12,7 +12,7 @@ __Serialization framework for Unreal Engine that just works!__
 ## Getting Started
 
 - Get the code on [github][1].
-- See [Examples](Examples/index.html) for code examples.
+- See [Examples](Examples/index.html) for examples.
 - See [Integration](Integration.md) for quick integration guide.
 - See [Design](Design.md) for more context about the project.
 - See [Extra](Extra/index.html) for more advanced usages.

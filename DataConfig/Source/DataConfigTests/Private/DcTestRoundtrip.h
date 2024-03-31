@@ -23,7 +23,7 @@ class UDcTestRoundtrip1 : public UObject
 	GENERATED_BODY()
 
 public:
-	
+
 	//	Primitives
 	UPROPERTY() FDcTestStruct1 StructPrimitives;
 

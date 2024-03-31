@@ -34,11 +34,11 @@ DC_TEST("DataConfig.Core.Property.UE54.Optional.Blurb1")
 
 
 		FDcPropertyReader Reader(FDcPropertyDatum(OptionalStrProp.Get(), &Source));
-		
+
 		FString ReadStr;
 		DC_TRY(Reader.ReadOptionalRoot());		// Optional Root
 		DC_TRY(Reader.ReadString(&ReadStr));	// Str
-		check(ReadStr == TEXT("Some String"));	
+		check(ReadStr == TEXT("Some String"));
 		DC_TRY(Reader.ReadOptionalEnd());		// Optional End
 	}
 
@@ -48,7 +48,7 @@ DC_TEST("DataConfig.Core.Property.UE54.Optional.Blurb1")
 		DC_TRY(Writer.WriteOptionalRoot());	//	Optional Root
 		DC_TRY(Writer.WriteNone());			//	None
 		DC_TRY(Writer.WriteOptionalEnd());	//	Optional End
-		
+
 		check(!Source.IsSet());
 
 		FDcPropertyReader Reader(FDcPropertyDatum(OptionalStrProp.Get(), &Source));
@@ -67,23 +67,23 @@ DC_TEST("DataConfig.Core.Property.UE54.Optional.Blurb1")
 
 DC_TEST("DataConfig.Core.Property.UE54.Optional.Blurb2")
 {
-    FString Str = TEXT(R"(
+	FString Str = TEXT(R"(
 
-	    {
-	    	"OptionalFloatField1" : 17.5,
-	    	"OptionalFloatField2" : null,
+		{
+			"OptionalFloatField1" : 17.5,
+			"OptionalFloatField2" : null,
 
-	    	"OptionalStrField1" : "Alpha",
-	    	"OptionalStrField2" : null,
+			"OptionalStrField1" : "Alpha",
+			"OptionalStrField2" : null,
 
-	    	"OptionalStructField1" : {
-	    		"StrField" : "Beta",
-	    		"IntField" : 42
-	    	},
-	    	"OptionalStructField2" : null
-	    }
+			"OptionalStructField1" : {
+				"StrField" : "Beta",
+				"IntField" : 42
+			},
+			"OptionalStructField2" : null
+		}
 
-    )");
+	)");
 
 	FDcTestOptional Expect;
 	Expect.OptionalFloatField1 = 17.5f;
@@ -95,10 +95,10 @@ DC_TEST("DataConfig.Core.Property.UE54.Optional.Blurb2")
 	{
 		FDcTestOptional Dest;
 		FDcPropertyDatum DestDatum(&Dest);
-        FDcJsonReader Reader(Str);
+		FDcJsonReader Reader(Str);
 
-        UTEST_OK("Optional Blurb", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
-        [](FDcDeserializeContext& Ctx) {}));
+		UTEST_OK("Optional Blurb", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
+		[](FDcDeserializeContext& Ctx) {}));
 
 		FDcPropertyDatum ExpectDatum(&Expect);
 		UTEST_OK("Optional Blurb", DcAutomationUtils::TestReadDatumEqual(ExpectDatum, DestDatum));

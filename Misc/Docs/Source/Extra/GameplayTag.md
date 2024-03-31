@@ -4,13 +4,13 @@
 
 In this example we have roundtrip handlers for `FGameplayTag` and `FGameplayTagContainer`.
 
-* [DcSerDeGameplayTags.h]({{SrcRoot}}DataConfigEditorExtra/Public/DataConfig/EditorExtra/SerDe/DcSerDeGameplayTags.h)
-* [DcSerDeGameplayTags.cpp]({{SrcRoot}}DataConfigEditorExtra/Private/DataConfig/EditorExtra/SerDe/DcSerDeGameplayTags.cpp)
+* [DcSerDeGameplayTags.h]({{SrcRoot}}DataConfigEngineExtra/Public/DataConfig/EngineExtra/SerDe/DcSerDeGameplayTags.h)
+* [DcSerDeGameplayTags.cpp]({{SrcRoot}}DataConfigEngineExtra/Private/DataConfig/EngineExtra/SerDe/DcSerDeGameplayTags.cpp)
 
 ```c++
-// DataConfigEditorExtra/Public/DataConfig/EditorExtra/SerDe/DcSerDeGameplayTags.h
+// DataConfigEngineExtra/Public/DataConfig/EngineExtra/SerDe/DcSerDeGameplayTags.h
 USTRUCT()
-struct FDcEditorExtraTestStructWithGameplayTag1
+struct FDcEngineExtraTestStructWithGameplayTag1
 {
     GENERATED_BODY()
 
@@ -18,7 +18,7 @@ struct FDcEditorExtraTestStructWithGameplayTag1
     UPROPERTY() FGameplayTag TagField2;
 };
 
-// DataConfigEditorExtra/Private/DataConfig/EditorExtra/SerDe/DcSerDeGameplayTags.cpp
+// DataConfigEngineExtra/Private/DataConfig/EngineExtra/SerDe/DcSerDeGameplayTags.cpp
 FString Str = TEXT(R"(
     {
         "TagField1" : null,
@@ -30,9 +30,9 @@ FString Str = TEXT(R"(
  `FGameplayTagContainer` converts to a list of strings:
 
 ```c++
-// DataConfigEditorExtra/Public/DataConfig/EditorExtra/Deserialize/DcDeserializeGameplayTags.h
+// DataConfigEngineExtra/Public/DataConfig/EngineExtra/Deserialize/DcDeserializeGameplayTags.h
 USTRUCT()
-struct FDcEditorExtraTestStructWithGameplayTag2
+struct FDcEngineExtraTestStructWithGameplayTag2
 {
     GENERATED_BODY()
 
@@ -40,7 +40,7 @@ struct FDcEditorExtraTestStructWithGameplayTag2
     UPROPERTY() FGameplayTagContainer TagContainerField2;
 };
 
-// DataConfigEditorExtra/Private/DataConfig/EditorExtra/Deserialize/DcDeserializeGameplayTags.cpp
+// DataConfigEngineExtra/Private/DataConfig/EngineExtra/Deserialize/DcDeserializeGameplayTags.cpp
 FString Str = TEXT(R"(
     {
         "TagContainerField1" : [],
@@ -56,14 +56,14 @@ FString Str = TEXT(R"(
 Note that gameplay tag parsing has error reporting built-in. In this case we can pipe it into our diagnostic:
 
 ```c++
-// DataConfigEditorExtra/Private/DataConfig/EditorExtra/Deserialize/DcDeserializeGameplayTags.cpp
+// DataConfigEngineExtra/Private/DataConfig/EngineExtra/Deserialize/DcDeserializeGameplayTags.cpp
 static FDcResult _StringToGameplayTag(FDcDeserializeContext& Ctx, const FString& Str, FGameplayTag* OutTagPtr)
 {
     FString FixedString;
     FText Err;
     if (!FGameplayTag::IsValidGameplayTagString(Str, &Err, &FixedString))
     {
-        return DC_FAIL(DcDEditorExtra, InvalidGameplayTagStringFixErr)
+        return DC_FAIL(DcDEngineExtra, InvalidGameplayTagStringFixErr)
             << Str << FixedString << Err;
     }
     //...
@@ -81,7 +81,7 @@ In case of a invalid tag it would report the reason and fixed string:
      |                          ^^^^^^^^^^^^^^^^^^^^^^^^^
    6 |        } 
    7 |    
-- [PropertyWriter] Writing property: (FDcEditorExtraTestStructWithGameplayTag1)$root.(FGameplayTag)TagField2
+- [PropertyWriter] Writing property: (FDcEngineExtraTestStructWithGameplayTag1)$root.(FGameplayTag)TagField2
  [C:\DevUE\UnrealEngine\Engine\Source\Developer\MessageLog\Private\Model\MessageLogListingModel.cpp(73)]
 ```
 

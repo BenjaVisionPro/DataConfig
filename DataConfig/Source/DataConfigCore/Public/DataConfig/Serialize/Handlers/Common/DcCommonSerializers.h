@@ -43,5 +43,5 @@ DATACONFIGCORE_API FDcResult HandlerSetToArraySerialize(FDcSerializeContext& Ctx
 DATACONFIGCORE_API FDcResult HandlerStringKeyMapOrArrayOfKeyValueSerialize(FDcSerializeContext& Ctx);
 
 DATACONFIGCORE_API FDcResult HandlerOptionalSerialize(FDcSerializeContext& Ctx);
-	
+
 } // namespace DcCommonHandlers

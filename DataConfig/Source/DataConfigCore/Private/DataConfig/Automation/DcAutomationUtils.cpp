@@ -708,7 +708,7 @@ int DebugGetEnumPropertyIndex(const FDcPropertyDatum& Datum, const FName& Name)
 	UEnum* Enum = nullptr;
 	FNumericProperty* UnderlyingProperty = nullptr;
 	bool bIsEnum = DcPropertyUtils::IsEnumAndTryUnwrapEnum(EnumProperty, Enum, UnderlyingProperty);
-	if (!bIsEnum	
+	if (!bIsEnum
 		|| Enum == nullptr
 		|| UnderlyingProperty == nullptr)
 		return INDEX_NONE;
@@ -734,7 +734,7 @@ double DebugGetRealPropertyValue(const FDcPropertyDatum& Datum, const FName& Nam
 
 	FProperty* Property = PropertyAccessUtil::FindPropertyByName(Name, Struct);
 	if (!Property)
-		return NaNRet; 
+		return NaNRet;
 
 	if (FFloatProperty* FloatProperty = CastField<FFloatProperty>(Property))
 		return FloatProperty->GetPropertyValue(Property->ContainerPtrToValuePtr<void*>(Datum.DataPtr));
@@ -745,7 +745,7 @@ double DebugGetRealPropertyValue(const FDcPropertyDatum& Datum, const FName& Nam
 }
 
 FDcResult DeserializeFrom(FDcReader* Reader, FDcPropertyDatum Datum,
-                          TFunctionRef<void(FDcDeserializeContext&)> Func, EDefaultSetupType SetupType)
+						  TFunctionRef<void(FDcDeserializeContext&)> Func, EDefaultSetupType SetupType)
 {
 	FDcDeserializer Deserializer;
 	if (SetupType == EDefaultSetupType::SetupJSONHandlers)

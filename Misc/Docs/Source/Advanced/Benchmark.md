@@ -11,32 +11,18 @@ Here're the results:
 
 * [DcBenchmarkFixture1.cpp]({{SrcRoot}}DataConfigExtra/Private/DataConfig/Extra/Benchmark/DcBenchmarkFixture1.cpp)
 
-On a Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz:
-
-```
-Corpus Json Deserialize: [Shipping] Bandwidth: 77.816(MB/s), Mean: 70.891(ms), Median:70.662(ms), Deviation:0.861
-Corpus Json Serialize: [Shipping] Bandwidth: 97.532(MB/s), Mean: 56.560(ms), Median:55.786(ms), Deviation:1.930
-Corpus MsgPack Deserialize: [Shipping] Bandwidth: 89.347(MB/s), Mean: 58.498(ms), Median:58.339(ms), Deviation:0.573
-Corpus MsgPack Serialize: [Shipping] Bandwidth: 79.530(MB/s), Mean: 65.719(ms), Median:65.457(ms), Deviation:0.867
-
-Canada Json Deserialize: [Shipping] Bandwidth: 59.257(MB/s), Mean: 36.228(ms), Median:36.029(ms), Deviation:0.490
-Canada Json Serialize: [Shipping] Bandwidth: 47.083(MB/s), Mean: 45.596(ms), Median:44.961(ms), Deviation:1.563
-Canada MsgPack Serialize: [Shipping] Bandwidth: 101.112(MB/s), Mean: 5.778(ms), Median:5.764(ms), Deviation:0.060
-Canada MsgPack Deserialize: [Shipping] Bandwidth: 89.467(MB/s), Mean: 6.530(ms), Median:6.513(ms), Deviation:0.094
-```
-
 On a AMD Ryzen 9 5950X 16-Core Processor 3.40 GHz:
 
 ```
-Corpus Json Deserialize: [Shipping] Bandwidth: 98.890(MB/s), Mean: 55.784(ms), Median:55.486(ms), Deviation:0.856
-Corpus Json Serialize: [Shipping] Bandwidth: 107.389(MB/s), Mean: 51.369(ms), Median:51.046(ms), Deviation:1.531
-Corpus MsgPack Deserialize: [Shipping] Bandwidth: 112.146(MB/s), Mean: 46.606(ms), Median:46.521(ms), Deviation:0.213
-Corpus MsgPack Serialize: [Shipping] Bandwidth: 98.295(MB/s), Mean: 53.173(ms), Median:52.951(ms), Deviation:1.065
+Corpus Json Deserialize: [Shipping] Bandwidth: 94.951(MB/s), Mean: 58.097(ms), Median:58.061(ms), Deviation:0.997
+Corpus Json Serialize: [Shipping] Bandwidth: 117.859(MB/s), Mean: 46.805(ms), Median:46.086(ms), Deviation:1.818
+Corpus MsgPack Deserialize: [Shipping] Bandwidth: 103.436(MB/s), Mean: 50.531(ms), Median:50.453(ms), Deviation:0.469
+Corpus MsgPack Serialize: [Shipping] Bandwidth: 103.586(MB/s), Mean: 50.457(ms), Median:50.342(ms), Deviation:0.614
 
-Canada Json Deserialize: [Shipping] Bandwidth: 72.858(MB/s), Mean: 29.465(ms), Median:29.238(ms), Deviation:0.802
-Canada Json Serialize: [Shipping] Bandwidth: 57.586(MB/s), Mean: 37.279(ms), Median:37.363(ms), Deviation:0.640
-Canada MsgPack Serialize: [Shipping] Bandwidth: 126.463(MB/s), Mean: 4.620(ms), Median:4.548(ms), Deviation:0.233
-Canada MsgPack Deserialize: [Shipping] Bandwidth: 103.348(MB/s), Mean: 5.653(ms), Median:5.649(ms), Deviation:0.020
+Canada Json Deserialize: [Shipping] Bandwidth: 73.581(MB/s), Mean: 29.176(ms), Median:29.171(ms), Deviation:0.132
+Canada Json Serialize: [Shipping] Bandwidth: 56.439(MB/s), Mean: 38.037(ms), Median:37.882(ms), Deviation:1.050
+Canada MsgPack Serialize: [Shipping] Bandwidth: 131.555(MB/s), Mean: 4.441(ms), Median:4.432(ms), Deviation:0.030
+Canada MsgPack Deserialize: [Shipping] Bandwidth: 100.450(MB/s), Mean: 5.816(ms), Median:5.816(ms), Deviation:0.024
 ```
 
 Some insights on the results:

@@ -134,7 +134,7 @@ struct FDcTestStruct4
 {
 	GENERATED_BODY()
 
-	//	inline object 
+	//	inline object
 	UPROPERTY() UDcBaseShape* InlineObjectField1;
 	UPROPERTY() UDcBaseShape* InlineObjectField2;
 

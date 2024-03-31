@@ -39,6 +39,7 @@ static FDcDiagnosticDetail _JSONDetails[] = {
 	{ ExpectStringAtObjectKey, TEXT("Expect only string at object key"), },
 	{ UnexpectedArrayEnd, TEXT("Unexpected write array end"), },
 	{ UnexpectedObjectEnd, TEXT("Unexpected write object end"), },
+	{ NumericFormatOutOfRange, TEXT("Numeric format out of range: '{0}"), },
 
 };
 

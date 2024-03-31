@@ -53,6 +53,10 @@ struct FDcDiagnosticDetail _DeserializeDetails[] = {
 	{ PipeUnhandledEnded, TEXT("Pipe visit can't handle Ended") },
 	{ PipeUnhandledExtension, TEXT("Pipe visit can't handle Extension") },
 
+	//	Core Types
+	{ DateTimeParseFail, TEXT("DateTime parse failed: '{0}") },
+	{ TimespanParseFail, TEXT("Timespan parse failed: '{0}") },
+
 };
 
 FDcDiagnosticGroup Details = {

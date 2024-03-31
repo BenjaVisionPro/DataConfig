@@ -59,7 +59,7 @@ struct DATACONFIGCORE_API FDcWeakCompositeWriter : public FDcWriter
 
 	void FormatDiagnostic(FDcDiagnostic& Diag) override;
 
-	static FName ClassId(); 
+	static FName ClassId();
 	FName GetId() override;
 };
 

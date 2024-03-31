@@ -9,6 +9,7 @@
 #include "DataConfig/Deserialize/Handlers/Common/DcCommonDeserializers.h"
 #include "DataConfig/SerDe/DcDeserializeCommon.inl"
 #include "DataConfig/Extra/SerDe/DcSerDeColor.h"
+#include "DataConfig/Extra/Types/DcExtraTestFixtures.h"
 
 DC_TEST("DataConfig.Core.Deserialize.Primitive1")
 {
@@ -163,7 +164,7 @@ DC_TEST("DataConfig.Core.Deserialize.Containers")
 			],
 			"StringMap" : {
 				"One": "1",
-				"Two": "2",	
+				"Two": "2",
 				"Three": "3",
 			},
 			"StructArray" : [
@@ -399,7 +400,7 @@ DC_TEST("DataConfig.Core.Deserialize.NonStructClassRoots")
 
 	using namespace DcPropertyUtils;
 
-	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();		
+	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();
 	auto U64ArrProp = FDcPropertyBuilder::UInt64().ArrayDim(2).LinkOnScope();
 
 	auto ArrProp = FDcPropertyBuilder::Array(
@@ -474,7 +475,7 @@ DC_TEST("DataConfig.Core.Deserialize.NonStructClassRoots")
 					"NameField" : "Goo",
 					"StrField" : "Gar"
 				}
-			]		
+			]
 		)"),
 		FDcPropertyDatum(ArrProp.Get(), &DestArr),
 		FDcPropertyDatum(ArrProp.Get(), &ExpectArr)
@@ -487,7 +488,7 @@ DC_TEST("DataConfig.Core.Deserialize.NonStructClassRoots")
 				"Foo",
 				"Bar",
 				"Tard"
-			]		
+			]
 		)"),
 		FDcPropertyDatum(SetProp.Get(), &DestSet),
 		FDcPropertyDatum(SetProp.Get(), &ExpectSet)
@@ -554,8 +555,8 @@ DC_TEST("DataConfig.Core.Deserialize.NonStringKeyMaps")
 	FDcPropertyDatum ExpectDatum(&Expect);
 
 	UTEST_OK("Deserialize NonStringKeyMaps", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum, [](FDcDeserializeContext& Ctx){
-		Ctx.Deserializer->AddPredicatedHandler(
-			FDcDeserializePredicate::CreateStatic(DcExtra::PredicateIsColorStruct),
+		Ctx.Deserializer->AddStructHandler(
+			TBaseStructure<FColor>::Get(),
 			FDcDeserializeDelegate::CreateStatic(DcExtra::HandlerColorDeserialize)
 		);
 	}));
@@ -718,5 +719,50 @@ DC_TEST("DataConfig.Core.Deserialize.DiagObjectClassMismatch")
 	}
 
 	return true;
-};
+}
 
+DC_TEST("DataConfig.Core.Deserialize.DiagCoreTypes")
+{
+
+	{
+		FDcExtraCoreTypesStruct Dest;
+		FDcPropertyDatum DestDatum(&Dest);
+
+		FString Str = TEXT(R"(
+
+			{
+				"DateTimeField1" : "not-really"
+			}
+
+		)");
+
+		FDcJsonReader Reader(Str);
+		UTEST_DIAG("DiagObjectClassMismatch", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum, [](FDcDeserializeContext& Ctx){
+
+			DcSetupCoreTypesDeserializeHandlers(*Ctx.Deserializer);
+
+		}), DcDSerDe, DateTimeParseFail);
+	}
+
+	{
+		FDcExtraCoreTypesStruct Dest;
+		FDcPropertyDatum DestDatum(&Dest);
+
+		FString Str = TEXT(R"(
+
+			{
+				"TimespanField1" : "not-really"
+			}
+
+		)");
+
+		FDcJsonReader Reader(Str);
+		UTEST_DIAG("DiagObjectClassMismatch", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum, [](FDcDeserializeContext& Ctx){
+
+			DcSetupCoreTypesDeserializeHandlers(*Ctx.Deserializer);
+
+		}), DcDSerDe, TimespanParseFail);
+	}
+
+	return true;
+}

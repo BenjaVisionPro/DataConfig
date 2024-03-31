@@ -637,7 +637,7 @@ void FDcMsgPackReader::FormatDiagnostic(FDcDiagnostic& Diag)
 	UEnum* DataEntryEnum = StaticEnum<EDcDataEntry>();
 	check(DataEntryEnum);
 
-	Highlight.Formatted = FString::Printf(TEXT("Last read: %s"), 
+	Highlight.Formatted = FString::Printf(TEXT("Last read: %s"),
 		*DataEntryEnum->GetNameStringByIndex((int32)DcMsgPackCommon::TypeByteToDataEntry(State.LastTypeByte))
 		);
 

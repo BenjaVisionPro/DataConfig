@@ -57,7 +57,7 @@ USTRUCT()
 struct FDcCorpusAuthor
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY() FString name;
 	UPROPERTY() TArray<FString> ids;
 	UPROPERTY() FString structuredName;
@@ -96,6 +96,6 @@ USTRUCT()
 struct FDcCorpusRoot
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY() TArray<FDcCorpusEntry> data;
 };

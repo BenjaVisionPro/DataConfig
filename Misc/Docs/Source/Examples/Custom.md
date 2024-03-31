@@ -65,8 +65,8 @@ Upon deserializing we'll need to register these pair of delegates to the `FDcDes
 // DataConfigTests/Private/DcTestBlurb.cpp
 FDcDeserializer Deserializer;
 DcSetupJsonDeserializeHandlers(Deserializer);
-Deserializer.AddPredicatedHandler(
-    FDcDeserializePredicate::CreateStatic(DcExtra::PredicateIsColorStruct),
+Deserializer.AddStructHandler(
+    TBaseStructure<FColor>::Get(),
     FDcDeserializeDelegate::CreateStatic(DcExtra::HandlerColorDeserialize)
 );
 ```

@@ -10,7 +10,7 @@ DC_TEST("DataConfig.EditorExtra.Deserialize.ObjectReference2")
 		{
 			"ObjField1" : "DcEditorExtraNativeDataAsset'/DataConfig/DcFixture/DcTestNativeDataAssetAlpha.DcTestNativeDataAssetAlpha'",
 			"ObjField2" : "/DataConfig/DcFixture/DcTestNativeDataAssetAlpha",
-			"ObjField3" : 
+			"ObjField3" :
 			{
 				"$type" : "DcEditorExtraNativeDataAsset",
 				"$path" : "/DataConfig/DcFixture/DcTestNativeDataAssetAlpha"

@@ -3,6 +3,7 @@
 - [Intro](README.md)
 
 - [Examples](Examples/README.md)
+  - [JSON Deserialization](Examples/JSONDeserialization.md)
   - [Custom](Examples/Custom.md)
   - [Debug Dump](Examples/DebugDump.md)
 
@@ -38,20 +39,23 @@
   - [SQLite](Extra/SQLite.md)
   - [NDJSON](Extra/NDJSON.md)
   - [Root Object](Extra/RootObject.md)
-  - [Optional](Extra/Optional.md)
   - [Module Setup](Extra/ModuleSetup.md)
   - [Dump Asset To Log](Extra/DumpAssetToLog.md)
   - [Blueprint](Extra/Blueprint.md)
   - [Gameplay Tag](Extra/GameplayTag.md)
   - [Gameplay Ability](Extra/GameplayAbility.md)
+  - [Blueprint Nodes](Extra/BlueprintNodes.md)
 
 - [Advanced](Advanced/README.md)
   - [Benchmark](Advanced/Benchmark.md)
   - [Writing Handlers](Advanced/WritingHandlers.md)
+  - [UE Core Types](Advanced/CoreTypes.md)
+  - [Optional](Advanced/Optional.md)
   - [Non Class/Struct Root](Advanced/NonClassStructRoot.md)
   - [No MetaData](Advanced/NoMetaData.md)
   - [Automation](Advanced/Automation.md)
   - [UE Upgrades](Advanced/UEUpgrades.md)
+  - [Breaking Changes](Advanced/Breaking.md)
   
 - [Changes](Changes.md)
 

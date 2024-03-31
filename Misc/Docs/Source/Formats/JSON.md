@@ -483,6 +483,43 @@ DC_TRY(DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Source),
 }
 ```
 
+## Override Config
+
+Sometimes we want to write a single line array/object within a pretty print JSON writer. To implement this we added mechanic to apply an override config in scope:
+
+
+```c++
+// DataConfigTests/Private/DcTestJSON2.cpp
+DC_TRY(Writer.WriteMapRoot());
+{
+    DC_TRY(Writer.WriteName("Obj1"));
+
+    FDcScopedTryUseJSONOverrideConfig ScopedOverrideConfig(&Writer);
+    DC_TRY(Writer.WriteMapRoot());
+
+        DC_TRY(Writer.WriteString("Foo"));
+        DC_TRY(Writer.WriteString("Bar"));
+
+        DC_TRY(Writer.WriteString("Alpha"));
+        DC_TRY(Writer.WriteString("Beta"));
+
+    DC_TRY(Writer.WriteMapEnd());
+}
+/// ...
+```
+
+With `FDcScopedTryUseJSONOverrideConfig` the following object would be written on a single line:
+
+```json
+{
+    "Obj1" : {"Foo" : "Bar", "Alpha" : "Beta"},
+    // ...
+}
+```
+
+This is how [UE Core Types](../Advanced/CoreTypes.md) serializer handlers are implemented.
+
+
 ## Caveats
 
 Here're some closing notes:

@@ -128,7 +128,7 @@ FProperty* FindEffectivePropertyByName(UStruct* Struct, const FName& Name)
 	FProperty* Property = PropertyAccessUtil::FindPropertyByName(Name, Struct);
 	if (Property == nullptr)
 		return nullptr;
-	
+
 	return IsEffectiveProperty(Property)
 		? Property
 		: nullptr;
@@ -598,7 +598,7 @@ UStruct* TryGetStruct(const FDcPropertyDatum& Datum)
 const FName DC_TRANSIENT_PROPERTY = FName(TEXT("DcPropertyBuilderTransientProperty"));
 
 FDcPropertyBuilder FDcPropertyBuilder::Make(
-	FFieldClass* PropertyClass, 
+	FFieldClass* PropertyClass,
 	const FName InName,
 	FFieldVariant InOuter
 )

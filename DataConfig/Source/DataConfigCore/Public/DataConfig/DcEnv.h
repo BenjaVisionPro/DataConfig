@@ -21,7 +21,7 @@ struct DATACONFIGCORE_API FDcEnv
 
 	void FlushDiags();
 
-	FORCEINLINE FDcDiagnostic& GetLastDiag() 
+	FORCEINLINE FDcDiagnostic& GetLastDiag()
 	{
 		checkf(Diagnostics.Num(), TEXT("<empty diagnostics>"));
 		return Diagnostics.Last();
@@ -35,7 +35,7 @@ DATACONFIGCORE_API FDcEnv& DcParentEnv();
 DATACONFIGCORE_API FDcEnv& DcPushEnv();
 DATACONFIGCORE_API void DcPopEnv();
 
-extern TArray<FDcEnv> gDcEnvs;	
+extern TArray<FDcEnv> gDcEnvs;
 
 template<typename T, TArray<T*> FDcEnv::*MemberPtr>
 struct TScopedEnvMemberPtr
@@ -83,7 +83,7 @@ FORCEINLINE FDcDiagnostic& DcFail(FDcErrorCode InErr)
 DATACONFIGCORE_API FDcResult DcFail();
 
 
-FORCEINLINE FDcResult DcNoEntry() 
+FORCEINLINE FDcResult DcNoEntry()
 {
 	checkNoEntry();
 	return DcFail({1, 2});	// DcDCommon::Unreachable

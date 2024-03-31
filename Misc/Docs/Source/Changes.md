@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.6.0 - 2024-3-31
+
+- **BREAKING** Removed `PredicateIsUStruct`. Use struct handlers instead.
+    - See: [Breaking - 1.6.0](Advanced/Breaking.md#160)
+- **NEW** JSON Blueprint Library Nodes
+    - See: [Extra - Blueprint Nodes](Extra/BlueprintNodes.md)
+    - Moved most editor extra samples to engine so it can be used at runtime.
+- **NEW** Struct handlers added to serializer/deserializers.
+    - See: [Serializer Deserializer Setup](Programming/SerializerDeserializer.md#deserializer-setup)
+- **NEW** JSON Writer improvements.
+    - Allows override config for inline object/arrays.  
+      See: [JSON - Override Config](Formats/JSON.md#override-config)
+    - Add float/int format strings to config.
+- **NEW** UE core types serializers and deserializers.
+    - See: [UE Core Types](Advanced/CoreTypes.md)
+- **NEW** Property reader/writer heuristic stack overflow detection. 
+    - This avoids a hard crash when serializing running into infinite loop.
+- **FIX** EditorConfig fixes.
+    - Now properly indented with tab just like UE code base.
+
 ## 1.5.0 - 2024-2-20
 
 - **BREAKING** `EDcDataEntry::Nil` renamed to `EDcDataType::None`.

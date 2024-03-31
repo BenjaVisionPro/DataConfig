@@ -10,8 +10,17 @@ template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_DEFAULT
 template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_DEFAULT_INDENT_LITERAL[];
 template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_DEFAULT_NEWLINE_LITERAL[];
 template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_EMPTY_LITERAL[];
+template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_DEFAULT_INT64_FORMAT_LITERAL[];
+template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_DEFAULT_UINT64_FORMAT_LITERAL[];
+template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_DEFAULT_FLOAT_FORMAT_LITERAL[];
+template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_DEFAULT_DOUBLE_FORMAT_LITERAL[];
+template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_INLINE_INT64_FORMAT_LITERAL[];
+template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_INLINE_UINT64_FORMAT_LITERAL[];
+template<typename CharType> constexpr CharType TDcJsonWriter<CharType>::_INLINE_FLOAT_DOUBLE_FORMAT_LITERAL[];
+
 template<typename CharType> constexpr typename TDcJsonWriter<CharType>::ConfigType TDcJsonWriter<CharType>::DefaultConfig;
 template<typename CharType> constexpr typename TDcJsonWriter<CharType>::ConfigType TDcJsonWriter<CharType>::CondenseConfig;
+template<typename CharType> constexpr typename TDcJsonWriter<CharType>::ConfigType TDcJsonWriter<CharType>::InlineConfig;
 
 namespace DcJsonWriterDetails
 {
@@ -65,46 +74,6 @@ static FORCEINLINE void WriteSbStringDispatch(TDcJsonWriter<ANSICHAR>::StringBui
 }
 
 template<typename CharType>
-struct FNumericDispatch
-{
-	using StringBuilder = typename TDcJsonWriter<CharType>::StringBuilder;
-
-	static FORCEINLINE void _WriteInt64(StringBuilder& Sb, const int64& Value)
-	{
-		const static CharType _INT64_FMT[] = { '%', 'l', 'l', 'd', 0 };
-		Sb.Appendf(_INT64_FMT, Value);
-	}
-
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const int8& Value) { _WriteInt64(Sb, Value); }
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const int16& Value) { _WriteInt64(Sb, Value); }
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const int32& Value) { _WriteInt64(Sb, Value); }
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const int64& Value) { _WriteInt64(Sb, Value); }
-
-	static FORCEINLINE void _WriteUInt64(StringBuilder& Sb, const int64& Value)
-	{
-		const static CharType _UINT64_FMT[] = { '%', 'l', 'l', 'u', 0 };
-		Sb.Appendf(_UINT64_FMT, Value);
-	}
-
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const uint8& Value) { _WriteUInt64(Sb, Value); }
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const uint16& Value) { _WriteUInt64(Sb, Value); }
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const uint32& Value) { _WriteUInt64(Sb, Value); }
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const uint64& Value) { _WriteUInt64(Sb, Value); }
-
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const float& Value)
-	{
-		const static CharType _FLOAT_FMT[] = { '%', 'g', 0 };
-		Sb.Appendf(_FLOAT_FMT, Value);
-	}
-
-	static FORCEINLINE void WriteNumericDispatch(StringBuilder& Sb, const double& Value)
-	{
-		const static CharType _DOUBLE_FMT[] = { '%', '.', '1', '7', 'g', 0 };
-		Sb.Appendf(_DOUBLE_FMT, Value);
-	}
-};
-
-template<typename CharType>
 struct TJsonWriterClassIdSelector;
 template<> struct TJsonWriterClassIdSelector<ANSICHAR> { static constexpr const TCHAR* Id = TEXT("AnsiCharDcJsonWriter"); };
 template<> struct TJsonWriterClassIdSelector<WIDECHAR> { static constexpr const TCHAR* Id = TEXT("WideCharDcJsonWriter"); };
@@ -117,30 +86,37 @@ struct FDcJsonWriterDetails
 
 using TSelf = TDcJsonWriter<CharType>;
 
-static FORCEINLINE void WriteLineEnd(TSelf* Self) { Self->Sb << Self->Config.LineEndLiteral; }
+static FORCEINLINE_DEBUGGABLE void WriteLineEnd(TSelf* Self) { Self->Sb << Self->ActiveConfig().LineEndLiteral; }
 
-static FORCEINLINE void WriteRightSpacing(TSelf* Self) { Self->Sb << Self->Config.RightSpacingLiteral; }
+static FORCEINLINE_DEBUGGABLE void WriteRightSpacing(TSelf* Self) { Self->Sb << Self->ActiveConfig().RightSpacingLiteral; }
 
-static FORCEINLINE void WriteIndentation(TSelf* Self)
+static FORCEINLINE_DEBUGGABLE void WriteIndentation(TSelf* Self)
 {
 	for (int Ix = 0; Ix < Self->State.Indent; Ix++)
-		Self->Sb << Self->Config.IndentLiteral;
+		Self->Sb << Self->ActiveConfig().IndentLiteral;
 }
 
-static FORCEINLINE void ConsumeWriteComma(TSelf* Self)
+static FORCEINLINE_DEBUGGABLE void ConsumeWriteComma(TSelf* Self)
 {
 	if (Self->State.bNeedComma)
 	{
 		Self->Sb << CharType(',');
 
-		WriteLineEnd(Self);
-		WriteIndentation(Self);
+		if (Self->ActiveConfig().bUsesNewLine)
+		{
+			WriteLineEnd(Self);
+			WriteIndentation(Self);
+		}
+		else
+		{
+			Self->Sb << Self->ActiveConfig().RightCommaLiteral;
+		}
 
 		Self->State.bNeedComma = false;
 	}
 }
 
-static FORCEINLINE void ConsumeWriteRightSpacing(TSelf* Self)
+static FORCEINLINE_DEBUGGABLE void ConsumeWriteRightSpacing(TSelf* Self)
 {
 	if (Self->State.bNeedRightSpacing)
 	{
@@ -149,7 +125,7 @@ static FORCEINLINE void ConsumeWriteRightSpacing(TSelf* Self)
 	}
 }
 
-static FORCEINLINE void ConsumeWriteNestedRightSpacing(TSelf* Self, bool bNewLine)
+static FORCEINLINE_DEBUGGABLE void ConsumeWriteNestedRightSpacing(TSelf* Self, bool bNewLine)
 {
 	if (Self->State.bNeedRightSpacing)
 	{
@@ -167,7 +143,7 @@ static FORCEINLINE void ConsumeWriteNestedRightSpacing(TSelf* Self, bool bNewLin
 	}
 }
 
-static FORCEINLINE void ConsumeNeedNewLineAndIndent(TSelf* Self)
+static FORCEINLINE_DEBUGGABLE void ConsumeNeedNewLineAndIndent(TSelf* Self)
 {
 	if (Self->State.bNeedNewlineAndIndent)
 	{
@@ -191,7 +167,7 @@ static void WriteEscapedString(TSelf* Self, const FString& Str)
 
 		switch (Ch)
 		{
-			case TCHAR('\\'): 
+			case TCHAR('\\'):
 			case TCHAR('\n'):
 			case TCHAR('\t'):
 			case TCHAR('\b'):
@@ -305,7 +281,7 @@ static void WriteString(TSelf* Self, const FString& Value)
 		ConsumeWriteComma(Self);
 
 		WriteEscapedString(Self, Value);
-		Self->Sb << Self->Config.LeftSpacingLiteral; 
+		Self->Sb << Self->ActiveConfig().LeftSpacingLiteral;
 		Self->Sb << ":";
 
 		Self->State.bNeedRightSpacing = true;
@@ -319,28 +295,69 @@ static void WriteString(TSelf* Self, const FString& Value)
 	}
 }
 
-template<typename TInt>
-static FDcResult WriteNumeric(TSelf* Self, const TInt& Value)
+static FDcResult WriteNumericFmt(TSelf* Self, const CharType* Fmt, ...)
 {
 	DC_TRY(CheckAtValuePosition(Self));
 
 	BeginWriteValuePosition(Self);
-	DcJsonWriterDetails::FNumericDispatch<CharType>::WriteNumericDispatch(Self->Sb, Value);
+
+	CharType Buf[128];
+
+	va_list ArgPtr;
+	va_start(ArgPtr, Fmt);
+	int32 Ret = TCString<CharType>::GetVarArgs(Buf, 128, Fmt, ArgPtr);
+	va_end(ArgPtr);
+
+	if (Ret <= 0)
+		return DC_FAIL(DcDJSON, UnexpectedObjectEnd) << Fmt;
+
+	Self->Sb.Append(Buf, Ret);
 	EndWriteValuePosition(Self);
 	return DcOk();
+}
+
+static FDcResult WriteI64Dispatch(TSelf* Self, const int64& Value)
+{
+	return WriteNumericFmt(Self, Self->ActiveConfig().Int64FormatLiteral, Value);
+}
+
+static FDcResult WriteU64Dispatch(TSelf* Self, const uint64& Value)
+{
+	return WriteNumericFmt(Self, Self->ActiveConfig().UInt64FormatLiteral, Value);
 }
 
 };
 
 template<typename CharType>
 TDcJsonWriter<CharType>::TDcJsonWriter()
-	: TDcJsonWriter(DefaultConfig)
-{}
+	: Config(DefaultConfig)
+	, OverrideConfig(InlineConfig)
+{
+	bAllowOverrideConfig = true;
+	bUseOverrideConfig = false;
+
+	States.Add(EWriteState::Root);
+}
 
 template<typename CharType>
 TDcJsonWriter<CharType>::TDcJsonWriter(ConfigType InConfig)
 	: Config(InConfig)
+	, OverrideConfig(InConfig)
 {
+	bAllowOverrideConfig = false;
+	bUseOverrideConfig = false;
+
+	States.Add(EWriteState::Root);
+}
+
+template<typename CharType>
+TDcJsonWriter<CharType>::TDcJsonWriter(ConfigType InConfig, ConfigType InOverrideConfig)
+	: Config(InConfig)
+	, OverrideConfig(InOverrideConfig)
+{
+	bAllowOverrideConfig = true;
+	bUseOverrideConfig = false;
+
 	States.Add(EWriteState::Root);
 }
 
@@ -410,13 +427,14 @@ FDcResult TDcJsonWriter<CharType>::WriteMapRoot()
 
 	Details::ConsumeNeedNewLineAndIndent(this);
 	Details::ConsumeWriteComma(this);
-	Details::ConsumeWriteNestedRightSpacing(this, Config.bNestedObjectStartsOnNewLine);
+	Details::ConsumeWriteNestedRightSpacing(this,
+		ActiveConfig().bUsesNewLine && ActiveConfig().bNestedObjectStartsOnNewLine);
 
 	States.Push(EWriteState::Object);
 	Sb << CharType('{');
 	++State.Indent;
 	State.bTopContainerNotEmpty = false;
-	State.bNeedNewlineAndIndent = true;
+	State.bNeedNewlineAndIndent = ActiveConfig().bUsesNewLine;
 	State.bTopObjectAtValue = false;
 
 	return DcOk();
@@ -433,7 +451,7 @@ FDcResult TDcJsonWriter<CharType>::WriteMapEnd()
 		return DC_FAIL(DcDJSON, UnexpectedObjectEnd);
 
 	--State.Indent;
-	if (State.bTopContainerNotEmpty)
+	if (State.bTopContainerNotEmpty && ActiveConfig().bUsesNewLine)
 	{
 		Details::WriteLineEnd(this);
 		Details::WriteIndentation(this);
@@ -455,13 +473,14 @@ FDcResult TDcJsonWriter<CharType>::WriteArrayRoot()
 
 	Details::ConsumeNeedNewLineAndIndent(this);
 	Details::ConsumeWriteComma(this);
-	Details::ConsumeWriteNestedRightSpacing(this, Config.bNestedArrayStartsOnNewLine);
+	Details::ConsumeWriteNestedRightSpacing(this,
+		ActiveConfig().bUsesNewLine && ActiveConfig().bNestedArrayStartsOnNewLine);
 
 	States.Push(EWriteState::Array);
 	Sb << CharType('[');
 	++State.Indent;
 	State.bTopContainerNotEmpty = false;
-	State.bNeedNewlineAndIndent = true;
+	State.bNeedNewlineAndIndent = ActiveConfig().bUsesNewLine;
 
 	return DcOk();
 }
@@ -476,7 +495,7 @@ FDcResult TDcJsonWriter<CharType>::WriteArrayEnd()
 		return DC_FAIL(DcDJSON, UnexpectedArrayEnd);
 
 	State.Indent--;
-	if (State.bTopContainerNotEmpty)
+	if (State.bTopContainerNotEmpty && ActiveConfig().bUsesNewLine)
 	{
 		Details::WriteLineEnd(this);
 		Details::WriteIndentation(this);
@@ -489,18 +508,18 @@ FDcResult TDcJsonWriter<CharType>::WriteArrayEnd()
 	return DcOk();
 }
 
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt8(const int8& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt16(const int16& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt32(const int32& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt64(const int64& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt8(const int8& Value) { return FDcJsonWriterDetails<CharType>::WriteI64Dispatch(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt16(const int16& Value) { return FDcJsonWriterDetails<CharType>::WriteI64Dispatch(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt32(const int32& Value) { return FDcJsonWriterDetails<CharType>::WriteI64Dispatch(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteInt64(const int64& Value) { return FDcJsonWriterDetails<CharType>::WriteI64Dispatch(this, Value); }
 
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt8(const uint8& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt16(const uint16& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt32(const uint32& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt64(const uint64& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt8(const uint8& Value) { return FDcJsonWriterDetails<CharType>::WriteU64Dispatch(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt16(const uint16& Value) { return FDcJsonWriterDetails<CharType>::WriteU64Dispatch(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt32(const uint32& Value) { return FDcJsonWriterDetails<CharType>::WriteU64Dispatch(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteUInt64(const uint64& Value) { return FDcJsonWriterDetails<CharType>::WriteU64Dispatch(this, Value); }
 
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteFloat(const float& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
-template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteDouble(const double& Value) { return FDcJsonWriterDetails<CharType>::template WriteNumeric(this, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteFloat(const float& Value) { return FDcJsonWriterDetails<CharType>::WriteNumericFmt(this, ActiveConfig().FloatFormatLiteral, Value); }
+template<typename CharType> FDcResult TDcJsonWriter<CharType>::WriteDouble(const double& Value) { return FDcJsonWriterDetails<CharType>::WriteNumericFmt(this, ActiveConfig().DoubleFormatLiteral, Value); }
 
 template <typename CharType>
 void TDcJsonWriter<CharType>::FormatDiagnostic(FDcDiagnostic& Diag)
@@ -542,6 +561,15 @@ template <typename CharType>
 void TDcJsonWriter<CharType>::CancelWriteComma()
 {
 	State.bNeedComma = false;
+}
+
+template <typename CharType>
+void TDcJsonWriter<CharType>::FlushOverrideConfigChange()
+{
+	using Details = FDcJsonWriterDetails<CharType>;
+
+	Details::ConsumeNeedNewLineAndIndent(this);
+	Details::ConsumeWriteComma(this);
 }
 
 template<typename CharType>

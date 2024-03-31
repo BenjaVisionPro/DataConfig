@@ -10,26 +10,28 @@ namespace DcExtra
 {
 
 template<typename TInlineStruct>
-struct TDcInlineStructDeserialize
+struct DATACONFIGEXTRA_API TDcInlineStructDeserialize
 {
 	static FDcResult DcHandlerDeserializeInlineStruct(
-		FDcDeserializeContext& Ctx, 
+		FDcDeserializeContext& Ctx,
 		TFunctionRef<FDcResult(FDcDeserializeContext&, const FString&, UScriptStruct*&)> FuncLocateStruct
 	);
-	static EDcDeserializePredicateResult PredicateIsDcInlineStruct(FDcDeserializeContext& Ctx);
 	static FDcResult HandlerDcInlineStructDeserialize(FDcDeserializeContext& Ctx);
+
+	static UScriptStruct* StaticStruct();
 };
 
 template<typename TInlineStruct>
-struct TDcInlineStructSerialize
+struct DATACONFIGEXTRA_API TDcInlineStructSerialize
 {
 	static FDcResult DcHandlerSerializeInlineStruct(
 		FDcSerializeContext& Ctx,
 		TFunctionRef<FString(UScriptStruct* InStruct)> FuncWriteStructType
 	);
 
-	static EDcSerializePredicateResult PredicateIsDcInlineStruct(FDcSerializeContext& Ctx);
 	static FDcResult HandlerDcInlineStructSerialize(FDcSerializeContext& Ctx);
+
+	static UScriptStruct* StaticStruct();
 };
 
 } // namespace DcExtra

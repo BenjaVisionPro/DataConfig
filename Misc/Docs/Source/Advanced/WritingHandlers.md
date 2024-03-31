@@ -48,7 +48,7 @@ Ctx.Objects.Push(GetTransientPackage());
 Sometimes you want to peek the content of the next entry. For example in `DcExtra::HandlerBPDcAnyStructDeserialize()` we're dealing with a JSON like this:
 
 ```json
-// DataConfigEditorExtra/Private/DataConfig/EditorExtra/Deserialize/DcDeserializeBPClass.cpp
+// DataConfigEngineExtra/Private/DataConfig/EngineExtra/Deserialize/DcDeserializeBPClass.cpp
 {
     "AnyStructField1" : {
         "$type" : "/DataConfig/DcFixture/DcTestBlueprintStructWithColor",
@@ -61,7 +61,7 @@ Sometimes you want to peek the content of the next entry. For example in `DcExtr
 We want to consume the `$type` key and its value, and then delegate the logic back to the deserializer. The solution here is first to consume the pair. Then we put back a `{`  then replace the reader:
 
 ```c++
-// DataConfigEditorExtra/Private/DataConfig/EditorExtra/Deserialize/DcDeserializeBPClass.cpp
+// DataConfigEngineExtra/Private/DataConfig/EngineExtra/Deserialize/DcDeserializeBPClass.cpp
 FDcPutbackReader PutbackReader(Ctx.Reader);
 PutbackReader.Putback(EDcDataEntry::MapRoot);
 TDcStoreThenReset<FDcReader*> RestoreReader(Ctx.Reader, &PutbackReader);

@@ -3,7 +3,7 @@
 
 namespace DcDMsgPack
 {
-	
+
 static FDcDiagnosticDetail _MsgPackDetails[] = {
 
 	{ TypeByteMismatch, TEXT("MsgPack type byte mismatch, Expect '{0}', Actual '{1}'")},

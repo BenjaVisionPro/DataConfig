@@ -114,7 +114,7 @@ static void LazyInitializeDeserializer()
 {
 	if (Deserializer.IsSet())
 		return;
-	
+
 	Deserializer.Emplace();
 	DcSetupJsonDeserializeHandlers(Deserializer.GetValue());
 }
@@ -193,8 +193,8 @@ DC_TEST("DataConfig.Extra.JsonConverterBlurb")
 		  "Name": "Bad Boys",
 		  "ReleaseDate": "1995-4-7T00:00:00",
 		  "Genres": [
-		    "Action",
-		    "Comedy"
+			"Action",
+			"Comedy"
 		  ]
 		}
 		)");
@@ -214,8 +214,8 @@ DC_TEST("DataConfig.Extra.JsonConverterBlurb")
 		  "Name": "Bad Boys",
 		  "ReleaseDate": "1995-4-7T00:00:00",
 		  "Genres": [
-		    "Action",
-		    "Comedy"
+			"Action",
+			"Comedy"
 		  ]
 		}
 		)");
@@ -267,19 +267,19 @@ DC_TEST("DataConfig.Extra.JsonConverter")
 		253,
 		true
 	};
-	
+
 	{
 		FDcTestJsonConverter1 Lhs;
 		bool LhsOk = DcExtra::JsonObjectStringToUStruct(Str, &Lhs);
 
 		FDcTestJsonConverter1 Rhs;
 		bool RhsOk = FJsonObjectConverter::JsonObjectStringToUStruct(Str, &Rhs, 0, 0);
-		
+
 		UTEST_TRUE("JsonObjectStringToUStruct", LhsOk);
 		UTEST_TRUE("JsonObjectStringToUStruct", RhsOk);
-		
+
 		UTEST_OK("JsonConverter", DcAutomationUtils::TestReadDatumEqual(
-			FDcPropertyDatum(&Lhs), 
+			FDcPropertyDatum(&Lhs),
 			FDcPropertyDatum(&Rhs)
 		));
 	}

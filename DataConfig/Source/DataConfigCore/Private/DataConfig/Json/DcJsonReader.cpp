@@ -118,7 +118,7 @@ static FDcResult ParseQuotedString(TSelf* Self, const FString& InStr, FString& O
 
 	if (bHasUnicodeEscapes)
 		StringConv::InlineCombineSurrogates(OutStr);
-	
+
 	return DcOk();
 }
 
@@ -278,14 +278,14 @@ TDcJsonReader<CharType>::TDcJsonReader()
 
 template <typename CharType>
 TDcJsonReader<CharType>::TDcJsonReader(const CharType* Str)
-	: TDcJsonReader()	
+	: TDcJsonReader()
 {
 	FDcJsonReaderDetails<CharType>::Reset(this, Str, CString::Strlen(Str));
 }
 
 template <typename CharType>
 TDcJsonReader<CharType>::TDcJsonReader(const CharType* Buf, int Len)
-	: TDcJsonReader()	
+	: TDcJsonReader()
 {
 	FDcJsonReaderDetails<CharType>::Reset(this, Buf, Len);
 }
@@ -311,7 +311,7 @@ FDcResult TDcJsonReader<CharType>::FinishRead()
 
 	if (Next != EDcDataEntry::Ended)
 	{
-		return DC_FAIL(DcDJSON, UnexpectedTrailingToken) 
+		return DC_FAIL(DcDJSON, UnexpectedTrailingToken)
 			<< Next
 			<< FormatHighlight(Token.Ref);
 	}
@@ -583,7 +583,7 @@ FDcResult TDcJsonReader<CharType>::ReadStringToken()
 				if (!SourceUtils::IsAscii(Char))
 					Token.Flag.bStringHasNonAscii = true;
 			}
-			
+
 			Advance();
 		}
 	}
@@ -962,7 +962,7 @@ FDcResult TDcJsonReader<CharType>::EndTopRead()
 
 			if (Token.Type == ETokenType::Comma // allowing optional trailing comma
 				|| Token.Type == ETokenType::EOF_) // allowing root level object
-				
+
 			{
 				return DcOk();
 			}
@@ -1032,7 +1032,7 @@ FDcResult TDcJsonReader<CharType>::ReadMapEnd()
 {
 	if (GetTopState() != EParseState::Object)
 		return DC_FAIL(DcDJSON, UnexpectedToken) << FormatHighlight(Token.Ref);
-	
+
 	DC_TRY(CheckConsumeToken(EDcDataEntry::MapEnd));
 	if (Token.Type == ETokenType::CurlyClose)
 	{
@@ -1073,7 +1073,7 @@ FDcResult TDcJsonReader<CharType>::ReadArrayEnd()
 {
 	if (GetTopState() != EParseState::Array)
 		return DC_FAIL(DcDJSON, UnexpectedToken) << FormatHighlight(Token.Ref);
-	
+
 	DC_TRY(CheckConsumeToken(EDcDataEntry::ArrayEnd));
 	if (Token.Type == ETokenType::SquareClose)
 	{
@@ -1304,7 +1304,7 @@ FDcDiagnosticHighlight TDcJsonReader<CharType>::FormatHighlight(SourceRef SpanRe
 
 	if (OutHighlight.Formatted.IsEmpty())
 		OutHighlight.Formatted = TEXT("<contents empty>");
-	
+
 	return OutHighlight;
 }
 

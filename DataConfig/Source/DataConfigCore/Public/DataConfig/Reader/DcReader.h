@@ -110,7 +110,7 @@ struct DATACONFIGCORE_API FDcReader
 	FDcResult ReadTObjectPtr(TObjectPtr<TObject>* OutPtr);
 #endif
 
-	static FName ClassId(); 
+	static FName ClassId();
 	virtual FName GetId();
 
 	template<typename T>

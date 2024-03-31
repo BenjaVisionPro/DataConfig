@@ -239,7 +239,7 @@ FDcResult FDcPropertyWriter::WriteEnum(const FDcEnumData& Value)
 		&& Value.Type != EnumName)
 	{
 		return DC_FAIL(DcDReadWrite, EnumNameMismatch)
-			<< Value.Type <<EnumName 
+			<< Value.Type <<EnumName
 			<< FormatHighlight();
 	}
 
@@ -485,7 +485,7 @@ FDcResult FDcPropertyWriter::WriteArrayRoot()
 		else if (FDcWriteStateScalar* ScalarState = TopState.As<FDcWriteStateScalar>())
 		{
 			if (ScalarState->State == FDcWriteStateScalar::EState::ExpectArrayRoot)
-				return ScalarState->WriteArrayRoot(this);	
+				return ScalarState->WriteArrayRoot(this);
 		}
 	}
 

@@ -39,7 +39,7 @@ struct FTextAccess
 {
 	TSharedRef<ITextData, ESPMode::ThreadSafe> TextData;
 	uint32 Flags;
-	
+
 };
 static_assert(sizeof(FTextAccess) == sizeof(FText), "FTextAccess stale");
 

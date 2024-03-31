@@ -93,7 +93,7 @@ FORCEINLINE_DEBUGGABLE FDcResult TryReadObjectReference(FDcDeserializeContext& C
 		DC_TRY(DcSerDeUtils::TryFindFirstObject<UClass>(*LoadClassName, true, LoadClass));
 
 		DC_TRY(DcSerDeUtils::ExpectLhsChildOfRhs(LoadClass, ObjectProperty->PropertyClass));
-		
+
 		UObject* Loaded;
 		DC_TRY(DcSerDeUtils::TryStaticLoadObject(LoadClass, nullptr, *LoadPath, Loaded));
 
@@ -226,7 +226,7 @@ FORCEINLINE_DEBUGGABLE FDcResult DcDeserializeClassReference(FDcDeserializeConte
 		DC_TRY(Ctx.Writer->WriteClassReference(nullptr));
 		return DcOk();
 	}
-	
+
 	if (!Loaded->IsA<UClass>())
 	{
 		return DC_FAIL(DcDSerDe, UObjectTypeMismatch)
@@ -259,7 +259,7 @@ FORCEINLINE_DEBUGGABLE FDcResult DcDeserializeSoftClassReference(FDcDeserializeC
 		DC_TRY(Ctx.Writer->WriteSoftClassReference(FSoftObjectPtr(NullPath)));
 		return DcOk();
 	}
-	
+
 	if (!Loaded->IsA<UClass>())
 	{
 		return DC_FAIL(DcDSerDe, UObjectTypeMismatch)

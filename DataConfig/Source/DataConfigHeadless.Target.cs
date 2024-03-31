@@ -9,7 +9,7 @@ public class DataConfigHeadlessTarget : TargetRules
 	public DataConfigHeadlessTarget(TargetInfo Target) : base(Target)
 	{
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		
+
 		Type = TargetType.Program;
 		LaunchModuleName = "DataConfigHeadless";
 		//	! note that only monolithic works atm
@@ -18,9 +18,9 @@ public class DataConfigHeadlessTarget : TargetRules
 		MinGameModuleSourceFilesForUnityBuild = 2;
 
 		//	! need this for logging
-        bUseLoggingInShipping = true;
+		bUseLoggingInShipping = true;
 
-        bCompileICU = false;
+		bCompileICU = false;
 
 		bCompileAgainstEngine = false;
 		bCompileAgainstCoreUObject = true;

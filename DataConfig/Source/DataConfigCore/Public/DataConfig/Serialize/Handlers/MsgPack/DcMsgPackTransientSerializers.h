@@ -26,7 +26,7 @@ DATACONFIGCORE_API FDcResult HandlerTransientMulticastSparseDelegateSerialize(FD
 DATACONFIGCORE_API FDcResult HandlerTransientFieldPathSerialize(FDcSerializeContext& Ctx);
 DATACONFIGCORE_API FDcResult HandlerTransientEnumSerialize(FDcSerializeContext& Ctx);
 
-	
+
 } // namespace DcMsgPackHandlers
 
 

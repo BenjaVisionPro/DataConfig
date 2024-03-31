@@ -3,6 +3,7 @@
 #include "DataConfig/Json/DcJsonWriter.h"
 #include "DataConfig/Misc/DcTypeUtils.h"
 #include "DataConfig/SerDe/DcSerDeUtils.h"
+#include "DataConfig/Serialize/DcSerializeUtils.h"
 #include "DataConfig/Diagnostic/DcDiagnosticJSON.h"
 #include "DataConfig/Diagnostic/DcDiagnosticCommon.h"
 #include "DataConfig/Diagnostic/DcDiagnosticReadWrite.h"
@@ -51,7 +52,7 @@ DC_TEST("DataConfig.Core.JSON.ReadStrings")
 			if (!Self->TestEqual("ReadJson String Literal", ParsedStr, ExpectStr))
 				return DC_FAIL(DcDCommon, CustomMessage)
 					<< FString::Printf(TEXT("ReadJson String Literal"));
-			
+
 			return DcOk();
 		};
 
@@ -129,7 +130,7 @@ DC_TEST("DataConfig.Core.JSON.Writer1")
 				123,
 				null
 			]
-		} 
+		}
 
 	)"), FDcPrettyJsonWriter()));
 
@@ -144,7 +145,7 @@ DC_TEST("DataConfig.Core.JSON.Writer1")
 			"Emtpy1" : [],
 			"Emtpy2" : {},
 			"Outer" : "Dart"
-		} 
+		}
 
 	)"), FDcPrettyJsonWriter()));
 
@@ -157,7 +158,7 @@ DC_TEST("DataConfig.Core.JSON.Writer1")
 
 			{
 				"Foo" : "Bar",
-				"Nest1" : 
+				"Nest1" :
 				{
 					"Inner1" : "Foo",
 					"Inner2" : "Bar"
@@ -167,7 +168,7 @@ DC_TEST("DataConfig.Core.JSON.Writer1")
 				"Emtpy2" :
 				{},
 				"Outer" : "Dart"
-			} 
+			}
 
 		)"), MoveTemp(NestOnNewLineWriter)));
 	}
@@ -188,27 +189,27 @@ DC_TEST("DataConfig.Core.JSON.Writer2")
 
 	UTEST_OK("JsonWriter Roundtrip", RoundtripJsonLiteral(this, TEXT(R"(
 
-		{} 
+		{}
 
 	)"), FDcCondensedJsonWriter()));
 
 
 	UTEST_OK("JsonWriter Roundtrip", RoundtripJsonLiteral(this, TEXT(R"(
 
-		[] 
+		[]
 
 	)"), FDcCondensedJsonWriter()));
 
 
 	UTEST_OK("JsonWriter Roundtrip", RoundtripJsonLiteral(this, TEXT(R"(
 
-		{} 
+		{}
 
 	)"), FDcPrettyJsonWriter()));
 
 	UTEST_OK("JsonWriter Roundtrip", RoundtripJsonLiteral(this, TEXT(R"(
 
-		{} 
+		{}
 
 	)"), FDcPrettyJsonWriter()));
 
@@ -284,7 +285,7 @@ DC_TEST("DataConfig.Core.JSON.WriterScalars")
 
 	UTEST_OK("JsonWriter Roundtrip", RoundtripJsonLiteral(this, TEXT(R"(
 
-		"\u0081\u0096\u001F"	
+		"\u0081\u0096\u001F"
 
 	)"), FDcPrettyJsonWriter()));
 
@@ -300,7 +301,7 @@ DC_TEST("DataConfig.Core.JSON.WriterStringEscape")
 		{
 			"Escapes1" : "Foo\nBar\r\nDart\t",
 			"Escapes2" : "Foo\\Bar\b\fDart\""
-		} 
+		}
 
 	)"), FDcPrettyJsonWriter()));
 
@@ -377,20 +378,20 @@ DC_TEST("DataConfig.Core.JSON.ReaderFloats")
 		UTEST_OK("JsonReader Coercion float", _TestFloat("0.0", 0.0f));
 		UTEST_OK("JsonReader Coercion float", _TestFloat("-0.0", 0.0f));
 		UTEST_OK("JsonReader Coercion float", _TestFloat("1.0", 1.0));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("-1.0", -1.0));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("1.5", 1.5));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("-1.5", -1.5));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("3.1416", 3.1416));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("1E10", 1E10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("1e10", 1e10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("1E+10", 1E+10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("1E-10", 1E-10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("-1E10", -1E10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("-1e10", -1e10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("-1E+10", -1E+10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("-1E-10", -1E-10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("1.234E+10", 1.234E+10));
-        UTEST_OK("JsonReader Coercion float", _TestFloat("1.234E-10", 1.234E-10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("-1.0", -1.0));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("1.5", 1.5));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("-1.5", -1.5));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("3.1416", 3.1416));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("1E10", 1E10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("1e10", 1e10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("1E+10", 1E+10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("1E-10", 1E-10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("-1E10", -1E10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("-1e10", -1e10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("-1E+10", -1E+10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("-1E-10", -1E-10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("1.234E+10", 1.234E+10));
+		UTEST_OK("JsonReader Coercion float", _TestFloat("1.234E-10", 1.234E-10));
 
 	}
 
@@ -403,56 +404,56 @@ DC_TEST("DataConfig.Core.JSON.ReaderFloats")
 		UTEST_OK("JsonReader Coercion double", _TestDouble("0.0", 0.0f));
 		UTEST_OK("JsonReader Coercion double", _TestDouble("-0.0", 0.0f));
 		UTEST_OK("JsonReader Coercion double", _TestDouble("1.0", 1.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-1.0", -1.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1.5", 1.5));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-1.5", -1.5));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("3.1416", 3.1416));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1E10", 1E10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1e10", 1e10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1E+10", 1E+10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1E-10", 1E-10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-1E10", -1E10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-1e10", -1e10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-1E+10", -1E+10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-1E-10", -1E-10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1.234E+10", 1.234E+10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1.234E-10", 1.234E-10));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1.79769e+308", 1.79769e+308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("2.22507e-308", 2.22507e-308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-1.79769e+308", -1.79769e+308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-2.22507e-308", -2.22507e-308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("4.9406564584124654e-324", 4.9406564584124654e-324));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("2.2250738585072009e-308]", 2.2250738585072009e-308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("2.2250738585072014e-308]", 2.2250738585072014e-308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1.7976931348623157e+308]", 1.7976931348623157e+308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1e-10000", 0.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("18446744073709551616", 18446744073709551616.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("-9223372036854775809",-9223372036854775809.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("0.9868011474609375",0.9868011474609375));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("123e34", 123e34));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("45913141877270640000.0", 45913141877270640000.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("2.2250738585072011e-308", 2.2250738585072011e-308));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1e-214748363", 0.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1e-214748364", 0.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("0.017976931348623157e+310", 1.7976931348623157e+308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-1.0", -1.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1.5", 1.5));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-1.5", -1.5));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("3.1416", 3.1416));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1E10", 1E10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1e10", 1e10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1E+10", 1E+10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1E-10", 1E-10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-1E10", -1E10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-1e10", -1e10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-1E+10", -1E+10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-1E-10", -1E-10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1.234E+10", 1.234E+10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1.234E-10", 1.234E-10));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1.79769e+308", 1.79769e+308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("2.22507e-308", 2.22507e-308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-1.79769e+308", -1.79769e+308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-2.22507e-308", -2.22507e-308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("4.9406564584124654e-324", 4.9406564584124654e-324));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("2.2250738585072009e-308]", 2.2250738585072009e-308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("2.2250738585072014e-308]", 2.2250738585072014e-308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1.7976931348623157e+308]", 1.7976931348623157e+308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1e-10000", 0.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("18446744073709551616", 18446744073709551616.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("-9223372036854775809",-9223372036854775809.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("0.9868011474609375",0.9868011474609375));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("123e34", 123e34));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("45913141877270640000.0", 45913141877270640000.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("2.2250738585072011e-308", 2.2250738585072011e-308));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1e-214748363", 0.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1e-214748364", 0.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("0.017976931348623157e+310", 1.7976931348623157e+308));
 
-        UTEST_OK("JsonReader Coercion double", _TestDouble("72057594037927928.0", 72057594037927928.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("72057594037927936.0", 72057594037927936.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("72057594037927932.0", 72057594037927936.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("7205759403792793199999e-5", 72057594037927928.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("7205759403792793200001e-5", 72057594037927936.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("72057594037927928.0", 72057594037927928.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("72057594037927936.0", 72057594037927936.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("72057594037927932.0", 72057594037927936.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("7205759403792793199999e-5", 72057594037927928.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("7205759403792793200001e-5", 72057594037927936.0));
 
-        UTEST_OK("JsonReader Coercion double", _TestDouble("9223372036854774784.0", 9223372036854774784.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("9223372036854775808.0", 9223372036854775808.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("9223372036854775296.0", 9223372036854775808.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("922337203685477529599999e-5", 9223372036854774784.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("922337203685477529600001e-5", 9223372036854775808.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("9223372036854774784.0", 9223372036854774784.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("9223372036854775808.0", 9223372036854775808.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("9223372036854775296.0", 9223372036854775808.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("922337203685477529599999e-5", 9223372036854774784.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("922337203685477529600001e-5", 9223372036854775808.0));
 
-        UTEST_OK("JsonReader Coercion double", _TestDouble("10141204801825834086073718800384", 10141204801825834086073718800384.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("10141204801825835211973625643008", 10141204801825835211973625643008.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("10141204801825834649023672221696", 10141204801825835211973625643008.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1014120480182583464902367222169599999e-5", 10141204801825834086073718800384.0));
-        UTEST_OK("JsonReader Coercion double", _TestDouble("1014120480182583464902367222169600001e-5", 10141204801825835211973625643008.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("10141204801825834086073718800384", 10141204801825834086073718800384.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("10141204801825835211973625643008", 10141204801825835211973625643008.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("10141204801825834649023672221696", 10141204801825835211973625643008.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1014120480182583464902367222169599999e-5", 10141204801825834086073718800384.0));
+		UTEST_OK("JsonReader Coercion double", _TestDouble("1014120480182583464902367222169600001e-5", 10141204801825835211973625643008.0));
 
 	}
 
@@ -586,7 +587,229 @@ DC_TEST("DataConfig.Core.JSON.UTF8RoundTrips")
 
 	int Cmp = TCString<ANSICHAR>::Strncmp((const char*)Buf.GetData(), *Writer.Sb, Buf.Num());
 	UTEST_EQUAL("JSON UTF8RoundTrips", Cmp, 0);
-	
+
+	return true;
+}
+
+DC_TEST("DataConfig.Core.JSON.OverrideConfig")
+{
+	using namespace DcSerializeUtils;
+
+	auto _WriteFixture1 = [](FDcWriter& Writer)
+	{
+		DC_TRY(Writer.WriteArrayRoot());
+
+		{
+			FDcScopedTryUseJSONOverrideConfig ScopedOverrideConfig(&Writer);
+			DC_TRY(Writer.WriteMapRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+				DC_TRY(Writer.WriteString("Alpha"));
+				DC_TRY(Writer.WriteString("Beta"));
+
+			DC_TRY(Writer.WriteMapEnd());
+		}
+
+		{
+			DC_TRY(Writer.WriteMapRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+				DC_TRY(Writer.WriteString("Alpha"));
+				DC_TRY(Writer.WriteString("Beta"));
+
+			DC_TRY(Writer.WriteMapEnd());
+		}
+
+		{
+			FDcScopedTryUseJSONOverrideConfig ScopedOverrideConfig(&Writer);
+			DC_TRY(Writer.WriteArrayRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+			DC_TRY(Writer.WriteArrayEnd());
+		}
+
+		{
+			DC_TRY(Writer.WriteArrayRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+			DC_TRY(Writer.WriteArrayEnd());
+		}
+
+		DC_TRY(Writer.WriteArrayEnd());
+
+		return DcOk();
+	};
+
+	auto _WriteFixture2 = [](FDcWriter& Writer)
+	{
+		DC_TRY(Writer.WriteMapRoot());
+
+		{
+			DC_TRY(Writer.WriteName("Obj1"));
+
+			FDcScopedTryUseJSONOverrideConfig ScopedOverrideConfig(&Writer);
+			DC_TRY(Writer.WriteMapRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+				DC_TRY(Writer.WriteString("Alpha"));
+				DC_TRY(Writer.WriteString("Beta"));
+
+			DC_TRY(Writer.WriteMapEnd());
+		}
+
+		{
+			DC_TRY(Writer.WriteName("Obj2"));
+			DC_TRY(Writer.WriteMapRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+				DC_TRY(Writer.WriteString("Alpha"));
+				DC_TRY(Writer.WriteString("Beta"));
+
+			DC_TRY(Writer.WriteMapEnd());
+		}
+
+		{
+			DC_TRY(Writer.WriteName("Array1"));
+			FDcScopedTryUseJSONOverrideConfig ScopedOverrideConfig(&Writer);
+			DC_TRY(Writer.WriteArrayRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+			DC_TRY(Writer.WriteArrayEnd());
+		}
+
+		{
+			DC_TRY(Writer.WriteName("Array2"));
+			DC_TRY(Writer.WriteArrayRoot());
+
+				DC_TRY(Writer.WriteString("Foo"));
+				DC_TRY(Writer.WriteString("Bar"));
+
+			DC_TRY(Writer.WriteArrayEnd());
+		}
+
+		DC_TRY(Writer.WriteMapEnd());
+
+		return DcOk();
+	};
+
+	{
+		FDcJsonWriter Writer;
+		UTEST_OK("OverrideConfig", _WriteFixture1(Writer));
+		Writer.Sb << TCHAR('\n');
+
+		UTEST_EQUAL("OverrideConfig", Writer.Sb.ToString(), DcAutomationUtils::DcReindentStringLiteral(TEXT(R"(
+
+		[
+		    {"Foo" : "Bar", "Alpha" : "Beta"},
+		    {
+		        "Foo" : "Bar",
+		        "Alpha" : "Beta"
+		    },
+		    ["Foo", "Bar"],
+		    [
+		        "Foo",
+		        "Bar"
+		    ]
+		]
+
+		)")));
+	}
+
+	{
+		//	nested doesn't affect array
+		FDcJsonWriter::ConfigType Config = FDcJsonWriter::DefaultConfig;
+		Config.bNestedArrayStartsOnNewLine = true;
+		Config.bNestedObjectStartsOnNewLine = true;
+
+		FDcJsonWriter Writer(Config, FDcJsonWriter::InlineConfig);
+		UTEST_OK("OverrideConfig", _WriteFixture1(Writer));
+		Writer.Sb << TCHAR('\n');
+
+		UTEST_EQUAL("OverrideConfig", Writer.Sb.ToString(), DcAutomationUtils::DcReindentStringLiteral(TEXT(R"(
+
+		[
+		    {"Foo" : "Bar", "Alpha" : "Beta"},
+		    {
+		        "Foo" : "Bar",
+		        "Alpha" : "Beta"
+		    },
+		    ["Foo", "Bar"],
+		    [
+		        "Foo",
+		        "Bar"
+		    ]
+		]
+
+		)")));
+	}
+
+	{
+		FDcJsonWriter Writer;
+		UTEST_OK("OverrideConfig", _WriteFixture2(Writer));
+		Writer.Sb << TCHAR('\n');
+
+		UTEST_EQUAL("OverrideConfig", Writer.Sb.ToString(), DcAutomationUtils::DcReindentStringLiteral(TEXT(R"(
+
+		{
+		    "Obj1" : {"Foo" : "Bar", "Alpha" : "Beta"},
+		    "Obj2" : {
+		        "Foo" : "Bar",
+		        "Alpha" : "Beta"
+		    },
+		    "Array1" : ["Foo", "Bar"],
+		    "Array2" : [
+		        "Foo",
+		        "Bar"
+		    ]
+		}
+
+		)")));
+	}
+
+	{
+		FDcJsonWriter::ConfigType Config = FDcJsonWriter::DefaultConfig;
+		Config.bNestedArrayStartsOnNewLine = true;
+		Config.bNestedObjectStartsOnNewLine = true;
+
+		FDcJsonWriter Writer(Config, FDcJsonWriter::InlineConfig);
+		UTEST_OK("OverrideConfig", _WriteFixture2(Writer));
+		Writer.Sb << TCHAR('\n');
+
+		UTEST_EQUAL("OverrideConfig", Writer.Sb.ToString(), DcAutomationUtils::DcReindentStringLiteral(TEXT(R"(
+
+		{
+		    "Obj1" : {"Foo" : "Bar", "Alpha" : "Beta"},
+		    "Obj2" :
+		    {
+		        "Foo" : "Bar",
+		        "Alpha" : "Beta"
+		    },
+		    "Array1" : ["Foo", "Bar"],
+		    "Array2" :
+		    [
+		        "Foo",
+		        "Bar"
+		    ]
+		}
+
+		)")));
+	}
+
+
 	return true;
 }
 

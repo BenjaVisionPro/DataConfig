@@ -112,12 +112,6 @@ FDcResult DcHandlerSerializeAnyStruct(FDcSerializeContext& Ctx, TFunctionRef<FSt
 	return DcOk();
 }
 
-
-EDcDeserializePredicateResult PredicateIsDcAnyStruct(FDcDeserializeContext& Ctx)
-{
-	return DcDeserializeUtils::PredicateIsUStruct<FDcAnyStruct>(Ctx);
-}
-
 FDcResult HandlerDcAnyStructDeserialize(FDcDeserializeContext& Ctx)
 {
 	return DcHandlerDeserializeAnyStruct(Ctx, [](FDcDeserializeContext& Ctx, const FString& Str, UScriptStruct*& OutStruct)
@@ -126,11 +120,6 @@ FDcResult HandlerDcAnyStructDeserialize(FDcDeserializeContext& Ctx)
 		check(OutStruct != nullptr);
 		return DcOk();
 	});
-}
-
-EDcSerializePredicateResult PredicateIsDcAnyStruct(FDcSerializeContext& Ctx)
-{
-	return DcSerializeUtils::PredicateIsUStruct<FDcAnyStruct>(Ctx);
 }
 
 FDcResult HandlerDcAnyStructSerialize(FDcSerializeContext& Ctx)
@@ -232,12 +221,12 @@ DC_TEST("DataConfig.Extra.SerDe.AnyStruct")
 		FDcJsonReader Reader(Str);
 		UTEST_OK("Extra FAnyStruct SerDe", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
 		[](FDcDeserializeContext& Ctx) {
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(PredicateIsDcAnyStruct),
+			Ctx.Deserializer->AddStructHandler(
+				TBaseStructure<FDcAnyStruct>::Get(),
 				FDcDeserializeDelegate::CreateStatic(HandlerDcAnyStructDeserialize)
 			);
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Deserializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcDeserializeDelegate::CreateStatic(HandlerColorDeserialize)
 			);
 		}));
@@ -253,12 +242,12 @@ DC_TEST("DataConfig.Extra.SerDe.AnyStruct")
 		FDcJsonWriter Writer;
 		UTEST_OK("Extra FAnyStruct SerDe", DcAutomationUtils::SerializeInto(&Writer, DestDatum,
 		[](FDcSerializeContext& Ctx) {
-			Ctx.Serializer->AddPredicatedHandler(
-				FDcSerializePredicate::CreateStatic(PredicateIsDcAnyStruct),
+			Ctx.Serializer->AddStructHandler(
+				TBaseStructure<FDcAnyStruct>::Get(),
 				FDcSerializeDelegate::CreateStatic(HandlerDcAnyStructSerialize)
 			);
-			Ctx.Serializer->AddPredicatedHandler(
-				FDcSerializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Serializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcSerializeDelegate::CreateStatic(HandlerColorSerialize)
 			);
 		}));

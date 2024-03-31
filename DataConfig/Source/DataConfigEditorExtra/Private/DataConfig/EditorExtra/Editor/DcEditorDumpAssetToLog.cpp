@@ -7,7 +7,7 @@
 
 namespace DcEditorExtra
 {
-	
+
 TSharedRef<FExtender> DumpAssetToLogExtender(const TArray<FAssetData>& SelectedAssets)
 {
 	TSharedRef<FExtender> Extender(new FExtender());
@@ -18,7 +18,7 @@ TSharedRef<FExtender> DumpAssetToLogExtender(const TArray<FAssetData>& SelectedA
 			FMenuExtensionDelegate::CreateLambda([Asset](FMenuBuilder& MenuBuilder)
 			{
 				MenuBuilder.AddMenuEntry(
-					NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_DumpToLog", "DataConfig Dump To Log"), 
+					NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_DumpToLog", "DataConfig Dump To Log"),
 					NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_DumpToLogTooltip", "DataConfig pretty print asset to log"),
 					FSlateIcon(),
 					FUIAction(

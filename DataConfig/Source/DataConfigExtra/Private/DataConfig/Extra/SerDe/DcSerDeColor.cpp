@@ -15,15 +15,6 @@
 namespace DcExtra
 {
 
-EDcDeserializePredicateResult PredicateIsColorStruct(FDcDeserializeContext& Ctx)
-{
-    UScriptStruct* Struct = DcPropertyUtils::TryGetStructClass(Ctx.TopProperty());
-    return Struct && Struct == TBaseStructure<FColor>::Get()
-        ? EDcDeserializePredicateResult::Process
-        : EDcDeserializePredicateResult::Pass;
-
-}
-
 ///	Showcasing different ways of deserializing into `FColor`
 ///	End results should be identical
 enum class EDcColorDeserializeMethod
@@ -106,15 +97,6 @@ FDcResult TemplatedHandlerColorDeserialize(FDcDeserializeContext& Ctx)
 	return DcOk();
 }
 
-EDcSerializePredicateResult PredicateIsColorStruct(FDcSerializeContext& Ctx)
-{
-	UScriptStruct* Struct = DcPropertyUtils::TryGetStructClass(Ctx.TopProperty());
-	return Struct && Struct == TBaseStructure<FColor>::Get()
-		? EDcSerializePredicateResult::Process
-		: EDcSerializePredicateResult::Pass;
-
-}
-
 FDcResult HandlerColorDeserialize(FDcDeserializeContext& Ctx)
 {
 	FDcPropertyDatum Datum;
@@ -170,8 +152,8 @@ DC_TEST("DataConfig.Extra.SerDe.Color")
 		UTEST_OK("Extra FColor SerDe", Reader.SetNewString(*Str));
 		UTEST_OK("Extra FColor SerDe", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
 		[](FDcDeserializeContext& Ctx) {
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Deserializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcDeserializeDelegate::CreateStatic(TemplatedHandlerColorDeserialize<EDcColorDeserializeMethod::WritePointer>)
 			);
 		}));
@@ -183,8 +165,8 @@ DC_TEST("DataConfig.Extra.SerDe.Color")
 		UTEST_OK("Extra FColor SerDe", Reader.SetNewString(*Str));
 		UTEST_OK("Extra FColor SerDe", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
 		[](FDcDeserializeContext& Ctx) {
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Deserializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcDeserializeDelegate::CreateStatic(TemplatedHandlerColorDeserialize<EDcColorDeserializeMethod::WriteDataEntry>)
 			);
 		}));
@@ -196,8 +178,8 @@ DC_TEST("DataConfig.Extra.SerDe.Color")
 		UTEST_OK("Extra FColor SerDe", Reader.SetNewString(*Str));
 		UTEST_OK("Extra FColor SerDe", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
 		[](FDcDeserializeContext& Ctx) {
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Deserializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcDeserializeDelegate::CreateStatic(TemplatedHandlerColorDeserialize<EDcColorDeserializeMethod::WriteBlob>)
 			);
 		}));
@@ -209,8 +191,8 @@ DC_TEST("DataConfig.Extra.SerDe.Color")
 		UTEST_OK("Extra FColor SerDe", Reader.SetNewString(*Str));
 		UTEST_OK("Extra FColor SerDe", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
 		[](FDcDeserializeContext& Ctx) {
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Deserializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcDeserializeDelegate::CreateStatic(TemplatedHandlerColorDeserialize<EDcColorDeserializeMethod::WriterAPI>)
 			);
 		}));
@@ -221,8 +203,8 @@ DC_TEST("DataConfig.Extra.SerDe.Color")
 		FDcJsonWriter Writer;
 		UTEST_OK("Extra FColor SerDe", DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum{&Expect},
 		[](FDcSerializeContext& Ctx) {
-			Ctx.Serializer->AddPredicatedHandler(
-				FDcSerializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Serializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcSerializeDelegate::CreateStatic(HandlerColorSerialize)
 			);
 		}));

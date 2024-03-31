@@ -31,18 +31,18 @@ struct DATACONFIGCORE_API FDcEnv
 DataConfig needs explicit initializatioon before use. This is done through manually `DcStartUp()`. There's also a paired `DcShutdown()` that should be called when DataConfig isn't used anymore. Here's an example:
 
 ```c++
-// DataConfigEditorExtra/Private/DcEditorExtraModule.cpp
-void FDcEditorExtraModule::StartupModule()
+// DataConfigEngineExtra/Private/DcEngineExtraModule.cpp
+void FDcEngineExtraModule::StartupModule()
 {
-    UE_LOG(LogDataConfigCore, Log, TEXT("DcEditorExtraModule module starting up"));
+    UE_LOG(LogDataConfigCore, Log, TEXT("DcEngineExtraModule module starting up"));
     DcRegisterDiagnosticGroup(&DcDExtra::Details);
-    DcRegisterDiagnosticGroup(&DcDEditorExtra::Details);
+    DcRegisterDiagnosticGroup(&DcDEngineExtra::Details);
 
     DcStartUp(EDcInitializeAction::Minimal);
     //...
 }
 
-void FDcEditorExtraModule::ShutdownModule()
+void FDcEngineExtraModule::ShutdownModule()
 {
     DcShutDown();
     //...

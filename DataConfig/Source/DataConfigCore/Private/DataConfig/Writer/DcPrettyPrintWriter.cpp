@@ -58,7 +58,7 @@ FDcResult FDcPrettyPrintWriter::WriteEnum(const FDcEnumData& Value)
 	Output.Logf(TEXT("%s<Enum> '%s', '%s', IsUnsigned: '%d', '0x%X'"),
 		*Indent,
 		*DcPropertyUtils::SafeNameToString(Value.Type),
-		*DcPropertyUtils::SafeNameToString(Value.Name), 
+		*DcPropertyUtils::SafeNameToString(Value.Name),
 		Value.bIsUnsigned,
 		Value.Signed64
 	);
@@ -154,7 +154,7 @@ FDcResult FDcPrettyPrintWriter::WriteOptionalEnd()
 
 FDcResult FDcPrettyPrintWriter::WriteObjectReference(const UObject* Value)
 {
-	check(Value);	// note that this is guaranteed to be non-null 
+	check(Value);	// note that this is guaranteed to be non-null
 	DC_TRY(DcPropertyUtils::HeuristicVerifyPointer(Value));
 	Output.Logf(TEXT("%s<ObjectReference> '%d' '%s'"), *Indent, Value->GetUniqueID(), *GetNameSafe(Value));
 	return DcOk();
@@ -177,7 +177,7 @@ FDcResult FDcPrettyPrintWriter::WriteWeakObjectReference(const FWeakObjectPtr& V
 	static_assert(DcTypeUtils::TIsSameSize<FView, FWeakObjectPtr>::Value, "should be same size");
 
 	const FView& View = (const FView&)Value;
-	Output.Logf(TEXT("%s<WeakObjectReference> Index: '%d', Gen: '%d'"), *Indent, 
+	Output.Logf(TEXT("%s<WeakObjectReference> Index: '%d', Gen: '%d'"), *Indent,
 		View.ObjectIndex,
 		View.ObjectSerialNumber
 	);

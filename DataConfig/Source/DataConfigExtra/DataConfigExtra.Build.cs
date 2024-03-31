@@ -4,8 +4,8 @@ public class DataConfigExtra : ModuleRules
 {
 	public DataConfigExtra(ReadOnlyTargetRules Target) : base(Target)
 	{
-	    bRequiresImplementModule = false;
-	    Type = ModuleType.CPlusPlus;
+		bRequiresImplementModule = false;
+		Type = ModuleType.CPlusPlus;
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(
@@ -16,8 +16,8 @@ public class DataConfigExtra : ModuleRules
 			"PropertyPath",
 			"Json",
 			"JsonUtilities",
-            "Projects",
-            "SQLiteCore",
+			"Projects",
+			"SQLiteCore",
 			});
 
 	}

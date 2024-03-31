@@ -21,7 +21,7 @@ static void LazyInitializeDeserializer()
 {
 	if (Deserializer.IsSet())
 		return;
-	
+
 	Deserializer.Emplace();
 
 	using namespace DcCommonHandlers;
@@ -95,7 +95,7 @@ struct FSqliteReader : FDcReader
 
 				Types.Add(ColType);
 			}
-			
+
 			bPrepared = true;
 		}
 
@@ -274,7 +274,7 @@ struct FSqliteReader : FDcReader
 
 	FDcResult ReadFloat(float* OutPtr) override { return ReadColValue(OutPtr); }
 	FDcResult ReadDouble(double* OutPtr) override { return ReadColValue(OutPtr); }
-	
+
 	static FName ClassId() { return FName(TEXT("SqliteReader")); }
 	FName GetId() override { return ClassId(); }
 };

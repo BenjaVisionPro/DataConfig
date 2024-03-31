@@ -11,7 +11,7 @@
 template<int32 BUFLEN>
 struct TDcInlineStructBase
 {
-	constexpr static int32 _BUFLEN = BUFLEN; 
+	constexpr static int32 _BUFLEN = BUFLEN;
 	constexpr static int32 _CLASS_OFFSET = _BUFLEN - sizeof(void*);
 
 	//	[<struct body>, UScriptStruct*]
@@ -22,7 +22,7 @@ struct TDcInlineStructBase
 	template<typename TStruct, typename... TArgs>
 	TStruct* Emplace(TArgs&&... Args)
 	{
-		UScriptStruct** StructPtr = GetStructPtr();  
+		UScriptStruct** StructPtr = GetStructPtr();
 		//	can only assign once
 		check(!IsValid());
 		UScriptStruct* Struct = TBaseStructure<TStruct>::Get();
@@ -60,7 +60,7 @@ struct TDcInlineStructBase
 			check(!IsValid());
 			CopyFromOther(InOther);
 		}
-	
+
 		return *this;
 	}
 

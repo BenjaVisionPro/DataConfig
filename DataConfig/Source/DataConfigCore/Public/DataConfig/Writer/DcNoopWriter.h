@@ -55,7 +55,7 @@ struct DATACONFIGCORE_API FDcNoopWriter : public FDcWriter
 	FDcResult WriteDouble(const double&) override;
 	FDcResult WriteBlob(const FDcBlobViewData& Value) override;
 
-	static FName ClassId(); 
+	static FName ClassId();
 	FName GetId() override;
 };
 

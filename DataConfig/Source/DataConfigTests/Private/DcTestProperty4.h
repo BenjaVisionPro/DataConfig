@@ -151,3 +151,15 @@ struct FDcTestObjectRefs2
 
 	UPROPERTY() UDcBaseShape* InlineShapeObjectField;
 };
+
+UCLASS(BlueprintType, EditInlineNew, DefaultToInstanced)
+class UDcSelfReference1 : public UObject
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY() FString StrField;
+	UPROPERTY() UDcSelfReference1* RefField1;
+	UPROPERTY() UDcSelfReference1* RefField2;
+};

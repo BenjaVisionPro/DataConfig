@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Math/UnrealMath.h"
 #include "DcExtraTestFixtures.generated.h"
 
 USTRUCT()
@@ -56,7 +57,7 @@ struct DATACONFIGEXTRA_API FDcExtraTestCopyDelegateContainer
 			PropValue = InOther.PropValue;
 			NonPropValue = InOther.NonPropValue;
 		}
-	
+
 		return *this;
 	}
 };
@@ -65,7 +66,7 @@ USTRUCT(BlueprintType)
 struct DATACONFIGEXTRA_API FDcStructShapeBase
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(EditAnywhere) FName ShapeName;
 };
 
@@ -73,7 +74,7 @@ USTRUCT(BlueprintType)
 struct DATACONFIGEXTRA_API FDcStructShapeRectangle : public FDcStructShapeBase
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(EditAnywhere) float Height;
 	UPROPERTY(EditAnywhere) float Width;
 };
@@ -82,7 +83,7 @@ USTRUCT(BlueprintType)
 struct DATACONFIGEXTRA_API FDcStructShapeCircle : public FDcStructShapeBase
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(EditAnywhere) float Radius;
 };
 
@@ -127,11 +128,61 @@ enum class EDcExtraTestEnum1
 USTRUCT()
 struct DATACONFIGEXTRA_API FDcExtraSimpleStruct
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
-    UPROPERTY() FString Name;
-    UPROPERTY() int Id;
-    UPROPERTY() EDcExtraTestEnum1 Type;
+	UPROPERTY() FString Name;
+	UPROPERTY() int Id;
+	UPROPERTY() EDcExtraTestEnum1 Type;
+};
+
+USTRUCT()
+struct DATACONFIGEXTRA_API FDcExtraCoreTypesStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY() FGuid GuidField1;
+	UPROPERTY() FGuid GuidField2;
+
+	UPROPERTY() FVector2D Vec2Field1;
+	UPROPERTY() FVector2D Vec2Field2;
+
+	UPROPERTY() FVector VecField1;
+	UPROPERTY() FVector VecField2;
+
+	UPROPERTY() FPlane PlaneField1;
+	UPROPERTY() FPlane PlaneField2;
+
+	UPROPERTY()	FMatrix MatrixField1;
+	UPROPERTY()	FMatrix MatrixField2;
+
+	UPROPERTY() FRotator RotatorField1;
+	UPROPERTY() FRotator RotatorField2;
+
+	UPROPERTY() FQuat QuatField1;
+	UPROPERTY() FQuat QuatField2;
+
+	UPROPERTY() FTransform TransformField1;
+	UPROPERTY() FTransform TransformField2;
+
+	UPROPERTY() FColor ColorField1;
+	UPROPERTY() FColor ColorField2;
+
+	UPROPERTY() FLinearColor LinearColorField1;
+	UPROPERTY() FLinearColor LinearColorField2;
+
+	UPROPERTY() FIntPoint IntPointField1;
+	UPROPERTY() FIntPoint IntPointField2;
+
+	UPROPERTY() FIntVector IntVectorField1;
+	UPROPERTY() FIntVector IntVectorField2;
+
+	UPROPERTY() FDateTime DateTimeField1;
+	UPROPERTY() FDateTime DateTimeField2;
+
+	UPROPERTY() FTimespan TimespanField1;
+	UPROPERTY() FTimespan TimespanField2;
+
+	void MakeFixture();
 };
 
 

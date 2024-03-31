@@ -13,12 +13,17 @@
 	"Modules": [
 		{
 			"Name": "DataConfigCore",
-			"Type": "Editor",
+			"Type": "Runtime",
 			"LoadingPhase": "None"
 		},
 		{
 			"Name": "DataConfigExtra",
-			"Type": "Editor",
+			"Type": "Runtime",
+	    	"LoadingPhase": "Default"
+		},
+		{
+			"Name": "DataConfigEngineExtra",
+			"Type": "Runtime",
 	    	"LoadingPhase": "Default"
 		},
 		{

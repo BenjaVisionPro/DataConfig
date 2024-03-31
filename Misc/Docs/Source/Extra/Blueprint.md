@@ -1,21 +1,21 @@
 # Blueprint Serialization/Deserialization
 
-The Property System is so powerful that you can create new Blueprint Class/Struct, which is equivalent to C++ `UCLASS/USTRUCT` to some extents. In this example we'll show how to handle these in DataConfig. 
+[The Property System][1] is so powerful that you can create new Blueprint Class/Struct, which is equivalent to C++ `UCLASS/USTRUCT` to some extents. In this example we'll show how to handle these in DataConfig. 
 
-The whole blueprint stuff depends on `Engine` module. This is also why we put related code into `DataConfigEditorExtra` module.
+The whole blueprint stuff depends on `Engine` module. This is also why we put related code into `DataConfigEngineExtra` module.
 
 ## Blueprint Class and Object references
 
 Blueprint class are stored within `UBlueprint` typed assets. Note that we automatically unwrap the container in handlers.
 
-* [DcSerDeBlueprint.h]({{SrcRoot}}DataConfigEditorExtra/Public/DataConfig/EditorExtra/SerDe/DcSerDeBlueprint.h)
-* [DcSerDeBlueprint.cpp]({{SrcRoot}}DataConfigEditorExtra/Private/DataConfig/EditorExtra/SerDe/DcSerDeBlueprint.cpp)
+* [DcSerDeBlueprint.h]({{SrcRoot}}DataConfigEngineExtra/Public/DataConfig/EngineExtra/SerDe/DcSerDeBlueprint.h)
+* [DcSerDeBlueprint.cpp]({{SrcRoot}}DataConfigEngineExtra/Private/DataConfig/EngineExtra/SerDe/DcSerDeBlueprint.cpp)
 
 
 ```c++
-//DataConfigEditorExtra/Public/DataConfig/EditorExtra/SerDe/DcSerDeBlueprint.h
+//DataConfigEngineExtra/Public/DataConfig/EngineExtra/SerDe/DcSerDeBlueprint.h
 USTRUCT()
-struct DATACONFIGEDITOREXTRA_API FDcEditorExtraTestStructWithBPClass
+struct FDcEngineExtraTestStructWithBPClass
 {
     GENERATED_BODY()
 
@@ -25,7 +25,7 @@ struct DATACONFIGEDITOREXTRA_API FDcEditorExtraTestStructWithBPClass
 };
 
 USTRUCT()
-struct DATACONFIGEDITOREXTRA_API FDcEditorExtraTestStructWithBPInstance
+struct FDcEngineExtraTestStructWithBPInstance
 {
     GENERATED_BODY()
 
@@ -34,7 +34,7 @@ struct DATACONFIGEDITOREXTRA_API FDcEditorExtraTestStructWithBPInstance
     UPROPERTY() UDcTestBPClassBase* InstanceField3;
 };
 
-//DataConfigEditorExtra/Private/DataConfig/EditorExtra/SerDe/DcSerDeBlueprint.cpp
+//DataConfigEngineExtra/Private/DataConfig/EngineExtra/SerDe/DcSerDeBlueprint.cpp
 FString Str = TEXT(R"(
     {
         "ClassField1" : null,
@@ -59,7 +59,7 @@ In this example we roundtrip a Blueprint class instance from JSON:
 ![Blueprint Class](Images/DataConfigEditorExtra-BlueprintClass.png)
 
 ```c++
-//DataConfigEditorExtra/Private/DataConfig/EditorExtra/SerDe/DcSerDeBlueprint.cpp
+//DataConfigEngineExtra/Private/DataConfig/EngineExtra/SerDe/DcSerDeBlueprint.cpp
 FString Str = TEXT(R"(
     {
         "StrField" : "Foo",
@@ -78,7 +78,7 @@ Finally we're combined `FColor`, `FDcAnyStruct` and Blueprint struct into one si
 ![DataConfigEditorExtra-BlueprintStruct](Images/DataConfigEditorExtra-BlueprintStruct.png)
 
 ```c++
-//DataConfigEditorExtra/Private/DataConfig/EditorExtra/SerDe/DcSerDeBlueprint.cpp
+//DataConfigEngineExtra/Private/DataConfig/EngineExtra/SerDe/DcSerDeBlueprint.cpp
 FString Str = TEXT(R"(
     {
         "AnyStructField1" : {
@@ -121,5 +121,5 @@ Under the hood Blueprint struct mangles its field names. The struct above dumps 
 
 The good news is that DataConfig already got this covered. 
 
-
+[1]:https://dev.epicgames.com/documentation/en-us/unreal-engine/reflection-system-in-unreal-engine "Unreal Engine Reflection System"
 

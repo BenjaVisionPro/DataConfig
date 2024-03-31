@@ -6,7 +6,7 @@
 
 FDcResult FDcSerializeContext::Prepare()
 {
-	DC_TRY(DcExpect(State == EState::Uninitialized, [&]{ 
+	DC_TRY(DcExpect(State == EState::Uninitialized, [&]{
 		return DC_FAIL(DcDSerDe, ContextInvalidState) << (int)State;
 	}));
 

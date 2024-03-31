@@ -10,7 +10,7 @@ struct FDcSerializer;
 
 struct DATACONFIGCORE_API FDcSerializeContext
 {
-	enum class EState
+	enum class EState : uint8
 	{
 		Uninitialized,
 		Ready,
@@ -28,7 +28,7 @@ struct DATACONFIGCORE_API FDcSerializeContext
 
 	void* UserData = nullptr;
 
-	FORCEINLINE FFieldVariant& TopProperty() 
+	FORCEINLINE FFieldVariant& TopProperty()
 	{
 		checkf(Properties.Num(), TEXT("Expect TopProperty found none."));
 		return Properties.Top();

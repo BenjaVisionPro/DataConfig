@@ -17,13 +17,13 @@
 #include "DataConfig/Deserialize/DcDeserializerSetup.h"
 #include "DataConfig/Diagnostic/DcDiagnosticSerDe.h"
 #include "DataConfig/Diagnostic/DcDiagnosticReadWrite.h"
-#include "DataConfig/EditorExtra/SerDe/DcSerDeGameplayTags.h"
+#include "DataConfig/EngineExtra/SerDe/DcSerDeGameplayTags.h"
 #include "DataConfig/EditorExtra/Diagnostic/DcDiagnosticEditorExtra.h"
 #include "DataConfig/Automation/DcAutomationUtils.h"
 #include "DataConfig/Json/DcJsonReader.h"
 #include "DataConfig/Property/DcPropertyWriter.h"
 #include "DataConfig/Automation/DcAutomation.h"
-#include "DataConfig/EditorExtra/SerDe/DcSerDeBlueprint.h"
+#include "DataConfig/EngineExtra/SerDe/DcSerDeBlueprint.h"
 #include "DataConfig/Extra/Types/DcPropertyPathAccess.h"
 #include "DataConfig/SerDe/DcSerDeUtils.h"
 
@@ -37,6 +37,8 @@ static TOptional<FDcDeserializer> GameplayAbilityDeserializer;
 
 static void LazyInitializeDeserializer()
 {
+	using namespace DcEngineExtra;
+
 	if (GameplayAbilityDeserializer.IsSet())
 		return;
 
@@ -45,30 +47,23 @@ static void LazyInitializeDeserializer()
 
 	GameplayAbilityDeserializer->FieldClassDeserializerMap[FClassProperty::StaticClass()] = FDcDeserializeDelegate::CreateStatic(HandlerBPClassReferenceDeserialize);
 
-	GameplayAbilityDeserializer->AddPredicatedHandler(
-		FDcDeserializePredicate::CreateStatic(PredicateIsGameplayAttribute),
+	GameplayAbilityDeserializer->AddStructHandler(
+		FGameplayAttribute::StaticStruct(),
 		FDcDeserializeDelegate::CreateStatic(HandlerGameplayAttributeDeserialize)
 	);
-	GameplayAbilityDeserializer->AddPredicatedHandler(
-		FDcDeserializePredicate::CreateStatic(PredicateIsGameplayTag),
+	GameplayAbilityDeserializer->AddStructHandler(
+		FGameplayTag::StaticStruct(),
 		FDcDeserializeDelegate::CreateStatic(HandlerGameplayTagDeserialize)
 	);
-	GameplayAbilityDeserializer->AddPredicatedHandler(
-		FDcDeserializePredicate::CreateStatic(PredicateIsGameplayTagContainer),
+	GameplayAbilityDeserializer->AddStructHandler(
+		FGameplayTagContainer::StaticStruct(),
 		FDcDeserializeDelegate::CreateStatic(HandlerGameplayTagContainerDeserialize)
 	);
 }
-	
+
 } // namespace GameplayAbilityDetails
 
-	
-EDcDeserializePredicateResult PredicateIsGameplayAttribute(FDcDeserializeContext& Ctx)
-{
-	UScriptStruct* Struct = DcPropertyUtils::TryGetStructClass(Ctx.TopProperty());
-	return Struct && Struct == FGameplayAttribute::StaticStruct()
-		? EDcDeserializePredicateResult::Process
-		: EDcDeserializePredicateResult::Pass;
-}
+
 
 FDcResult HandlerGameplayAttributeDeserialize(FDcDeserializeContext& Ctx)
 {
@@ -79,11 +74,11 @@ FDcResult HandlerGameplayAttributeDeserialize(FDcDeserializeContext& Ctx)
 	bool bFound = AttributeStr.FindChar(TCHAR('.'), Ix);
 	if (!bFound)
 		return DC_FAIL(DcDEditorExtra, InvalidGameplayAttribute) << AttributeStr;
-	
+
 	FStringView View =  AttributeStr;
 	FString Head = FString(View.Left(Ix));
 	FString Tail = FString(View.RightChop(Ix + 1));
-	
+
 	UClass* AttributeClass;
 	DC_TRY(DcSerDeUtils::TryFindFirstObject<UClass>(*Head, false, AttributeClass));
 
@@ -96,14 +91,14 @@ FDcResult HandlerGameplayAttributeDeserialize(FDcDeserializeContext& Ctx)
 
 	FGameplayAttribute* Attribute = (FGameplayAttribute*)Datum.DataPtr;
 	Attribute->SetUProperty(AttributeProperty);
-	
+
 	return DcOk();
 }
 
 FDcResult DeserializeGameplayAbility(UGameplayAbility* Instance, FDcReader& Reader)
 {
 	using namespace GameplayAbilityDetails;
-	
+
 	LazyInitializeDeserializer();
 
 	FDcPropertyWriter Writer(FDcPropertyDatum(UGameplayAbility::StaticClass(), Instance));
@@ -113,7 +108,7 @@ FDcResult DeserializeGameplayAbility(UGameplayAbility* Instance, FDcReader& Read
 	Ctx.Writer = &Writer;
 	Ctx.Deserializer = &GameplayAbilityDeserializer.GetValue();
 	DC_TRY(Ctx.Prepare());
-	
+
 	return GameplayAbilityDeserializer->Deserialize(Ctx);
 }
 
@@ -129,7 +124,7 @@ FDcResult DeserializeGameplayEffect(UGameplayEffect* Instance, FDcReader& Reader
 	Ctx.Writer = &Writer;
 	Ctx.Deserializer = &GameplayAbilityDeserializer.GetValue();
 	DC_TRY(Ctx.Prepare());
-	
+
 	return GameplayAbilityDeserializer->Deserialize(Ctx);
 }
 
@@ -206,14 +201,14 @@ TSharedRef<FExtender> GameplayAbilityEffectExtender(const TArray<FAssetData>& Se
 
 		if (!NativeParentClass)
 			continue;
-		
+
 		if (NativeParentClass->IsChildOf(UGameplayAbility::StaticClass()))
 		{
 			Extender->AddMenuExtension("GetAssetActions", EExtensionHook::After, TSharedPtr<FUICommandList>(),
 				FMenuExtensionDelegate::CreateLambda([Asset](FMenuBuilder& MenuBuilder)
 				{
 					MenuBuilder.AddMenuEntry(
-						NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_LoadAbilityFromJson", "DataConfig Load Ability From JSON"), 
+						NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_LoadAbilityFromJson", "DataConfig Load Ability From JSON"),
 						NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_LoadAbilityFromJsonTooltip", "DataConfig load ability default values from a JSON file"),
 						FSlateIcon(),
 						FUIAction(
@@ -237,7 +232,7 @@ TSharedRef<FExtender> GameplayAbilityEffectExtender(const TArray<FAssetData>& Se
 						)
 					);
 			}));
-			
+
 			break;
 		}
 		else if (NativeParentClass->IsChildOf(UGameplayEffect::StaticClass()))
@@ -246,7 +241,7 @@ TSharedRef<FExtender> GameplayAbilityEffectExtender(const TArray<FAssetData>& Se
 				FMenuExtensionDelegate::CreateLambda([Asset](FMenuBuilder& MenuBuilder)
 				{
 					MenuBuilder.AddMenuEntry(
-						NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_LoadEffectFromJson", "DataConfig Load Effect From JSON"), 
+						NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_LoadEffectFromJson", "DataConfig Load Effect From JSON"),
 						NSLOCTEXT("DataConfigEditorExtra", "DcEditorExtra_LoadEffectFromJsonTooltip", "DataConfig load effect default values from a JSON file"),
 						FSlateIcon(),
 						FUIAction(
@@ -270,12 +265,12 @@ TSharedRef<FExtender> GameplayAbilityEffectExtender(const TArray<FAssetData>& Se
 						)
 					);
 			}));
-			
+
 			break;
 		}
 	}
 
-    return Extender;
+	return Extender;
 }
 
 } // namespace DcEditorExtra
@@ -285,7 +280,7 @@ DC_TEST("DataConfig.EditorExtra.GameplayAbility")
 {
 	FString Str = TEXT(R"(
 		{
-		    /// Tags
+			/// Tags
 			"AbilityTags" : [
 				"DataConfig.Foo.Bar",
 				"DataConfig.Foo.Bar.Baz",
@@ -325,7 +320,7 @@ DC_TEST("DataConfig.EditorExtra.GameplayAbility")
 	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", ContainerPtr->HasTagExact(
 			UGameplayTagsManager::Get().RequestGameplayTag(TEXT("DataConfig.Tar.Taz"))
 	));
-	
+
 	return true;
 }
 
@@ -355,7 +350,7 @@ DC_TEST("DataConfig.EditorExtra.GameplayEffect")
 
 	UTEST_TRUE("Editor Extra UGameplayEffect Deserialize", TmpEffect->Modifiers[0].Attribute.AttributeName == TEXT("Mana"));
 	UTEST_TRUE("Editor Extra UGameplayEffect Deserialize", TmpEffect->Modifiers[0].Attribute.GetAttributeSetClass() == UDcTestAttributeSet::StaticClass());
-	
+
 	UTEST_TRUE("Editor Extra UGameplayEffect Deserialize", TmpEffect->Modifiers[1].Attribute.AttributeName == TEXT("Health"));
 	UTEST_TRUE("Editor Extra UGameplayEffect Deserialize", TmpEffect->Modifiers[1].Attribute.GetAttributeSetClass() == UDcTestAttributeSet::StaticClass());
 

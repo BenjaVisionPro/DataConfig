@@ -10,7 +10,7 @@ struct FDcDeserializer;
 
 struct DATACONFIGCORE_API FDcDeserializeContext
 {
-	enum class EState
+	enum class EState : uint8
 	{
 		Uninitialized,
 		Ready,
@@ -19,6 +19,7 @@ struct DATACONFIGCORE_API FDcDeserializeContext
 	};
 
 	EState State = EState::Uninitialized;
+	bool bSkipStructHandlers = false;
 
 	TArray<UObject*, TInlineAllocator<4>> Objects;
 	TArray<FFieldVariant, TInlineAllocator<8>> Properties;
@@ -29,13 +30,13 @@ struct DATACONFIGCORE_API FDcDeserializeContext
 
 	void* UserData = nullptr;
 
-	FORCEINLINE FFieldVariant& TopProperty() 
+	FORCEINLINE FFieldVariant& TopProperty()
 	{
 		checkf(Properties.Num(), TEXT("Expect TopProperty found none."));
 		return Properties.Top();
 	}
 
-	FORCEINLINE UObject* TopObject() 
+	FORCEINLINE UObject* TopObject()
 	{
 		checkf(Objects.Num(), TEXT("Expect TopObject found none."));
 		return Objects.Top();

@@ -123,7 +123,7 @@ struct FDcTestStructArrayDim1
 	UPROPERTY() EDcTestEnumFlag EnumFlagArr[2];
 	UPROPERTY() FDcTestStructArrayDimInner1 StructArr[2];
 
-	void MakeFixture();	
+	void MakeFixture();
 };
 
 

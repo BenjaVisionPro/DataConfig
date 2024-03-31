@@ -81,10 +81,9 @@ FDcResult TDcInlineStructDeserialize<TInlineStruct>::DcHandlerDeserializeInlineS
 }
 
 template <typename TInlineStruct>
-EDcDeserializePredicateResult TDcInlineStructDeserialize<TInlineStruct>::PredicateIsDcInlineStruct(
-	FDcDeserializeContext& Ctx)
+UScriptStruct* TDcInlineStructDeserialize<TInlineStruct>::StaticStruct()
 {
-	return DcDeserializeUtils::PredicateIsUStruct<TInlineStruct>(Ctx);
+	return TInlineStruct::StaticStruct();
 }
 
 template <typename TInlineStruct>
@@ -135,9 +134,9 @@ FDcResult TDcInlineStructSerialize<TInlineStruct>::DcHandlerSerializeInlineStruc
 }
 
 template <typename TInlineStruct>
-EDcSerializePredicateResult TDcInlineStructSerialize<TInlineStruct>::PredicateIsDcInlineStruct(FDcSerializeContext& Ctx)
+UScriptStruct* TDcInlineStructSerialize<TInlineStruct>::StaticStruct()
 {
-	return DcSerializeUtils::PredicateIsUStruct<TInlineStruct>(Ctx);
+	return TInlineStruct::StaticStruct();
 }
 
 template <typename TInlineStruct>
@@ -150,6 +149,17 @@ FDcResult TDcInlineStructSerialize<TInlineStruct>::HandlerDcInlineStructSerializ
 }
 
 
+//	explit initialize since we don't have inline on the methods
+template struct DATACONFIGEXTRA_API TDcInlineStructSerialize<FDcInlineStruct64>;
+template struct DATACONFIGEXTRA_API TDcInlineStructSerialize<FDcInlineStruct128>;
+template struct DATACONFIGEXTRA_API TDcInlineStructSerialize<FDcInlineStruct256>;
+template struct DATACONFIGEXTRA_API TDcInlineStructSerialize<FDcInlineStruct512>;
+
+template struct DATACONFIGEXTRA_API TDcInlineStructDeserialize<FDcInlineStruct64>;
+template struct DATACONFIGEXTRA_API TDcInlineStructDeserialize<FDcInlineStruct128>;
+template struct DATACONFIGEXTRA_API TDcInlineStructDeserialize<FDcInlineStruct256>;
+template struct DATACONFIGEXTRA_API TDcInlineStructDeserialize<FDcInlineStruct512>;
+
 } // namespace DcExtra
 
 DC_TEST("DataConfig.Extra.InlineStructUsage")
@@ -159,7 +169,7 @@ DC_TEST("DataConfig.Extra.InlineStructUsage")
 	Inline1.Emplace<FColor>(255, 0, 0, 255);
 	UTEST_TRUE("Inline Struct", *Inline1.GetChecked<FColor>() == FColor::Red);
 
-	//	support copy 
+	//	support copy
 	FDcInlineStruct64 Inline2 = Inline1;
 	UTEST_TRUE("Inline Struct", *Inline2.GetChecked<FColor>() == FColor::Red);
 
@@ -219,8 +229,8 @@ DC_TEST("DataConfig.Extra.SerDe.InlineStructOverflow")
 		UTEST_DIAG("Extra InlineStruct SerDe", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
 		[](FDcDeserializeContext& Ctx) {
 			using Inline64 = TDcInlineStructDeserialize<FDcInlineStruct64>;
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(Inline64::PredicateIsDcInlineStruct),
+			Ctx.Deserializer->AddStructHandler(
+				Inline64::StaticStruct(),
 				FDcDeserializeDelegate::CreateStatic(Inline64::HandlerDcInlineStructDeserialize)
 			);
 		}), DcDExtra, InlineStructTooBig);
@@ -233,8 +243,8 @@ DC_TEST("DataConfig.Extra.SerDe.InlineStructOverflow")
 		UTEST_DIAG("Extra InlineStruct SerDe", DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(&Src),
 		[](FDcSerializeContext& Ctx) {
 			using Inline64 = TDcInlineStructSerialize<FDcInlineStruct64>;
-			Ctx.Serializer->AddPredicatedHandler(
-				FDcSerializePredicate::CreateStatic(Inline64::PredicateIsDcInlineStruct),
+			Ctx.Serializer->AddStructHandler(
+				Inline64::StaticStruct(),
 				FDcSerializeDelegate::CreateStatic(Inline64::HandlerDcInlineStructSerialize)
 			);
 		}), DcDExtra, InlineStructNotSet);
@@ -273,12 +283,12 @@ DC_TEST("DataConfig.Extra.SerDe.InlineStruct")
 		UTEST_OK("Extra InlineStruct SerDe", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum,
 		[](FDcDeserializeContext& Ctx) {
 			using Inline64 = TDcInlineStructDeserialize<FDcInlineStruct64>;
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(Inline64::PredicateIsDcInlineStruct),
+			Ctx.Deserializer->AddStructHandler(
+				Inline64::StaticStruct(),
 				FDcDeserializeDelegate::CreateStatic(Inline64::HandlerDcInlineStructDeserialize)
 			);
-			Ctx.Deserializer->AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Deserializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcDeserializeDelegate::CreateStatic(HandlerColorDeserialize)
 			);
 		}));
@@ -297,12 +307,12 @@ DC_TEST("DataConfig.Extra.SerDe.InlineStruct")
 		UTEST_OK("Extra InlineStruct SerDe", DcAutomationUtils::SerializeInto(&Writer, DestDatum,
 		[](FDcSerializeContext& Ctx) {
 			using Inline64 = TDcInlineStructSerialize<FDcInlineStruct64>;
-			Ctx.Serializer->AddPredicatedHandler(
-				FDcSerializePredicate::CreateStatic(Inline64::PredicateIsDcInlineStruct),
+			Ctx.Serializer->AddStructHandler(
+				Inline64::StaticStruct(),
 				FDcSerializeDelegate::CreateStatic(Inline64::HandlerDcInlineStructSerialize)
 			);
-			Ctx.Serializer->AddPredicatedHandler(
-				FDcSerializePredicate::CreateStatic(PredicateIsColorStruct),
+			Ctx.Serializer->AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcSerializeDelegate::CreateStatic(HandlerColorSerialize)
 			);
 		}));

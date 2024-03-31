@@ -5,9 +5,9 @@ public class DataConfigCore : ModuleRules
 	public DataConfigCore(ReadOnlyTargetRules Target) : base(Target)
 	{
 		//	source type module, pay extra attention to api boundry
-	    bRequiresImplementModule = false;
+		bRequiresImplementModule = false;
 
-	    Type = ModuleType.CPlusPlus;
+		Type = ModuleType.CPlusPlus;
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 #if UE_5_2_OR_LATER
@@ -16,7 +16,7 @@ public class DataConfigCore : ModuleRules
 		bEnforceIWYU = true;
 #endif
 
-        PublicDependencyModuleNames.AddRange(
+		PublicDependencyModuleNames.AddRange(
 			new string[] {
 			"Core",
 			"CoreUObject",
@@ -32,6 +32,6 @@ public class DataConfigCore : ModuleRules
 		}
 
 		//	toggle for debug unity
-        //bUseUnity = false;
+		//bUseUnity = false;
 	}
 }

@@ -57,6 +57,10 @@ enum Type : uint16
 	//	Pipe
 	PipeUnhandledEnded,
 	PipeUnhandledExtension,
+
+	//	Pipe
+	DateTimeParseFail,
+	TimespanParseFail,
 };
 
 } // namespace DcDSerDe

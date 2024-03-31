@@ -211,35 +211,35 @@ DC_TEST("DataConfig.Core.MsgPack.Roundtrip1")
 		DC_TRY(Writer.WriteDouble(1.234E-10));
 
 		DC_TRY(Writer.WriteDouble(1.79769e+308));
-        DC_TRY(Writer.WriteDouble(2.22507e-308));
-        DC_TRY(Writer.WriteDouble(-1.79769e+308));
-        DC_TRY(Writer.WriteDouble(-2.22507e-308));
-        DC_TRY(Writer.WriteDouble(4.9406564584124654e-324));
-        DC_TRY(Writer.WriteDouble(2.2250738585072009e-308));
-        DC_TRY(Writer.WriteDouble(2.2250738585072014e-308));
-        DC_TRY(Writer.WriteDouble(1.7976931348623157e+308));
-        DC_TRY(Writer.WriteDouble(18446744073709551616.0));
-        DC_TRY(Writer.WriteDouble(9223372036854775809.0));
-        DC_TRY(Writer.WriteDouble(.9868011474609375));
-        DC_TRY(Writer.WriteDouble(123e34));
-        DC_TRY(Writer.WriteDouble(45913141877270640000.0));
-        DC_TRY(Writer.WriteDouble(2.2250738585072011e-308));
-        DC_TRY(Writer.WriteDouble(1.7976931348623157e+308));
-        DC_TRY(Writer.WriteDouble(72057594037927928.0));
-        DC_TRY(Writer.WriteDouble(72057594037927936.0));
-        DC_TRY(Writer.WriteDouble(72057594037927936.0));
-        DC_TRY(Writer.WriteDouble(72057594037927928.0));
-        DC_TRY(Writer.WriteDouble(72057594037927936.0));
-        DC_TRY(Writer.WriteDouble(9223372036854774784.0));
-        DC_TRY(Writer.WriteDouble(9223372036854775808.0));
-        DC_TRY(Writer.WriteDouble(9223372036854775808.0));
-        DC_TRY(Writer.WriteDouble(9223372036854774784.0));
-        DC_TRY(Writer.WriteDouble(9223372036854775808.0));
-        DC_TRY(Writer.WriteDouble(10141204801825834086073718800384.0));
-        DC_TRY(Writer.WriteDouble(10141204801825835211973625643008.0));
-        DC_TRY(Writer.WriteDouble(10141204801825835211973625643008.0));
-        DC_TRY(Writer.WriteDouble(10141204801825834086073718800384.0));
-        DC_TRY(Writer.WriteDouble(10141204801825835211973625643008.0));
+		DC_TRY(Writer.WriteDouble(2.22507e-308));
+		DC_TRY(Writer.WriteDouble(-1.79769e+308));
+		DC_TRY(Writer.WriteDouble(-2.22507e-308));
+		DC_TRY(Writer.WriteDouble(4.9406564584124654e-324));
+		DC_TRY(Writer.WriteDouble(2.2250738585072009e-308));
+		DC_TRY(Writer.WriteDouble(2.2250738585072014e-308));
+		DC_TRY(Writer.WriteDouble(1.7976931348623157e+308));
+		DC_TRY(Writer.WriteDouble(18446744073709551616.0));
+		DC_TRY(Writer.WriteDouble(9223372036854775809.0));
+		DC_TRY(Writer.WriteDouble(.9868011474609375));
+		DC_TRY(Writer.WriteDouble(123e34));
+		DC_TRY(Writer.WriteDouble(45913141877270640000.0));
+		DC_TRY(Writer.WriteDouble(2.2250738585072011e-308));
+		DC_TRY(Writer.WriteDouble(1.7976931348623157e+308));
+		DC_TRY(Writer.WriteDouble(72057594037927928.0));
+		DC_TRY(Writer.WriteDouble(72057594037927936.0));
+		DC_TRY(Writer.WriteDouble(72057594037927936.0));
+		DC_TRY(Writer.WriteDouble(72057594037927928.0));
+		DC_TRY(Writer.WriteDouble(72057594037927936.0));
+		DC_TRY(Writer.WriteDouble(9223372036854774784.0));
+		DC_TRY(Writer.WriteDouble(9223372036854775808.0));
+		DC_TRY(Writer.WriteDouble(9223372036854775808.0));
+		DC_TRY(Writer.WriteDouble(9223372036854774784.0));
+		DC_TRY(Writer.WriteDouble(9223372036854775808.0));
+		DC_TRY(Writer.WriteDouble(10141204801825834086073718800384.0));
+		DC_TRY(Writer.WriteDouble(10141204801825835211973625643008.0));
+		DC_TRY(Writer.WriteDouble(10141204801825835211973625643008.0));
+		DC_TRY(Writer.WriteDouble(10141204801825834086073718800384.0));
+		DC_TRY(Writer.WriteDouble(10141204801825835211973625643008.0));
 
 		return DcOk();
 	}));
@@ -473,7 +473,7 @@ DC_TEST("DataConfig.Core.MsgPack.RoundtripJsonMsgpackJson")
 				123,
 				null
 			]
-		} 
+		}
 
 	)")));
 
@@ -1080,7 +1080,7 @@ static FDcResult HandlerMsgPackFixture(FDcDeserializeContext& Ctx)
 	return DcOk();
 }
 
-	
+
 } // namespace DcTestMsgPackDetails
 
 
@@ -1096,25 +1096,10 @@ DC_TEST("DataConfig.Core.MsgPack.TestSuite")
 
 	UTEST_OK("MsgPack TestSuite", DcAutomationUtils::DeserializeFrom(&Reader, FDcPropertyDatum(&TestSuite), [](FDcDeserializeContext& Ctx)
 	{
-		Ctx.Deserializer->AddPredicatedHandler(
-			FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FMsgPackTestSuite>),
-			FDcDeserializeDelegate::CreateStatic(HandlerMsgPackTestSuite)
-		);
-
-		Ctx.Deserializer->AddPredicatedHandler(
-			FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FMsgPackTestGroup>),
-			FDcDeserializeDelegate::CreateStatic(HandlerMsgPackTestGroup)
-		);
-
-		Ctx.Deserializer->AddPredicatedHandler(
-			FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FMsgPackTestFixture>),
-			FDcDeserializeDelegate::CreateStatic(HandlerMsgPackFixture)
-		);
-
-		Ctx.Deserializer->AddPredicatedHandler(
-			FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsUStruct<FDcTestMsgPackBlob>),
-			FDcDeserializeDelegate::CreateStatic(HandlerMsgPackTestBlob)
-		);
+		Ctx.Deserializer->AddStructHandler(TBaseStructure<FMsgPackTestSuite>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerMsgPackTestSuite));
+		Ctx.Deserializer->AddStructHandler(TBaseStructure<FMsgPackTestGroup>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerMsgPackTestGroup));
+		Ctx.Deserializer->AddStructHandler(TBaseStructure<FMsgPackTestFixture>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerMsgPackFixture));
+		Ctx.Deserializer->AddStructHandler(TBaseStructure<FDcTestMsgPackBlob>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerMsgPackTestBlob));
 
 	}, DcAutomationUtils::EDefaultSetupType::SetupJSONHandlers));
 

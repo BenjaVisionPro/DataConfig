@@ -36,6 +36,7 @@ static FDcDiagnosticDetail _ReadWriteDetails[] = {
 	{ PeekNoContainerProperty, TEXT("Property Reader/Writer has no container property, Actual: '{0}'"), },
 	{ PropertyNotSupportedUEVersion, TEXT("Property not supported by this Unreal Engine version: '{0}'"), },
 	{ WriteObjectReferenceDoNotAcceptNull, TEXT("FPropertyWriter::WriteObjectReference() don't accept nullptr. You should use WriteNone() instead."), },
+	{ HeuristicPropertiesTooDeep, TEXT("Heuristic property reading getting too deep, this is likely going to be a stack overflow."), },
 
 	//	putback reader
 	{ CantUsePutbackValue, TEXT("Cannot use putback value in '{0}'") },

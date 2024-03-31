@@ -25,153 +25,148 @@ namespace NDJSONDetails
 static TOptional<FDcDeserializer> Deserializer;
 static void LazyInitializeDeserializer()
 {
-    if (Deserializer.IsSet())
-        return;
-    
-    Deserializer.Emplace();
-    DcSetupJsonDeserializeHandlers(Deserializer.GetValue());
+	if (Deserializer.IsSet())
+		return;
 
-    Deserializer->AddPredicatedHandler(
-        FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsRootProperty),
-        FDcDeserializeDelegate::CreateLambda([](FDcDeserializeContext& Ctx) -> FDcResult
-        {
-            if (!Ctx.TopProperty().IsA<FArrayProperty>())
-                return DC_FAIL(DcDReadWrite, PropertyMismatch)
-                    << TEXT("Array") << Ctx.TopProperty().GetFName() << Ctx.TopProperty().GetClassName();
+	Deserializer.Emplace();
+	DcSetupJsonDeserializeHandlers(Deserializer.GetValue());
 
-            DC_TRY(Ctx.Writer->WriteArrayRoot());
-            EDcDataEntry CurPeek;
-            while (true)
-            {
-                DC_TRY(Ctx.Reader->PeekRead(&CurPeek));
-                //  read until EOF as we're processing ndjson
-                if (CurPeek == EDcDataEntry::Ended)
-                    break;
+	Deserializer->AddPredicatedHandler(
+		FDcDeserializePredicate::CreateStatic(DcDeserializeUtils::PredicateIsRootProperty),
+		FDcDeserializeDelegate::CreateLambda([](FDcDeserializeContext& Ctx) -> FDcResult
+		{
+			if (!Ctx.TopProperty().IsA<FArrayProperty>())
+				return DC_FAIL(DcDReadWrite, PropertyMismatch)
+					<< TEXT("Array") << Ctx.TopProperty().GetFName() << Ctx.TopProperty().GetClassName();
 
-                DC_TRY(DcDeserializeUtils::RecursiveDeserialize(Ctx));
-            }
+			DC_TRY(Ctx.Writer->WriteArrayRoot());
+			EDcDataEntry CurPeek;
+			while (true)
+			{
+				DC_TRY(Ctx.Reader->PeekRead(&CurPeek));
+				//  read until EOF as we're processing ndjson
+				if (CurPeek == EDcDataEntry::Ended)
+					break;
 
-            DC_TRY(Ctx.Writer->WriteArrayEnd());
-            return DcOk();
-        })
-    );
+				DC_TRY(DcDeserializeUtils::RecursiveDeserialize(Ctx));
+			}
+
+			DC_TRY(Ctx.Writer->WriteArrayEnd());
+			return DcOk();
+		})
+	);
 }
 
 
 static TOptional<FDcSerializer> Serializer;
 static void LazyInitializeSerializer()
 {
-    if (Serializer.IsSet())
-        return;
+	if (Serializer.IsSet())
+		return;
 
-    Serializer.Emplace();
-    DcSetupJsonSerializeHandlers(Serializer.GetValue());
+	Serializer.Emplace();
+	DcSetupJsonSerializeHandlers(Serializer.GetValue());
 
-    Serializer->AddPredicatedHandler(
-        FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsRootProperty),
-        FDcSerializeDelegate::CreateLambda([](FDcSerializeContext& Ctx) -> FDcResult{
-            if (!Ctx.TopProperty().IsA<FArrayProperty>())
-                return DC_FAIL(DcDReadWrite, PropertyMismatch)
-                    << TEXT("Array") << Ctx.TopProperty().GetFName() << Ctx.TopProperty().GetClassName();
+	Serializer->AddPredicatedHandler(
+		FDcSerializePredicate::CreateStatic(DcSerializeUtils::PredicateIsRootProperty),
+		FDcSerializeDelegate::CreateLambda([](FDcSerializeContext& Ctx) -> FDcResult{
+			if (!Ctx.TopProperty().IsA<FArrayProperty>())
+				return DC_FAIL(DcDReadWrite, PropertyMismatch)
+					<< TEXT("Array") << Ctx.TopProperty().GetFName() << Ctx.TopProperty().GetClassName();
 
-            FDcJsonWriter* JsonWriter = Ctx.Writer->CastByIdChecked<FDcJsonWriter>();
+			FDcJsonWriter* JsonWriter = Ctx.Writer->CastByIdChecked<FDcJsonWriter>();
 
-            DC_TRY(Ctx.Reader->ReadArrayRoot());
+			DC_TRY(Ctx.Reader->ReadArrayRoot());
 
-            EDcDataEntry CurPeek;
-            while (true)
-            {
-                DC_TRY(Ctx.Reader->PeekRead(&CurPeek));
-                if (CurPeek == EDcDataEntry::ArrayEnd)
-                    break;
+			EDcDataEntry CurPeek;
+			while (true)
+			{
+				DC_TRY(Ctx.Reader->PeekRead(&CurPeek));
+				if (CurPeek == EDcDataEntry::ArrayEnd)
+					break;
 
-                DC_TRY(DcSerializeUtils::RecursiveSerialize(Ctx));
+				DC_TRY(DcSerializeUtils::RecursiveSerialize(Ctx));
 
-                JsonWriter->CancelWriteComma();
-                JsonWriter->Sb << TCHAR('\n');
-            }
+				JsonWriter->CancelWriteComma();
+				JsonWriter->Sb << TCHAR('\n');
+			}
 
-            DC_TRY(Ctx.Reader->ReadArrayEnd());
+			DC_TRY(Ctx.Reader->ReadArrayEnd());
 
-            return DcOk();
-        })
-    );
+			return DcOk();
+		})
+	);
 }
 
 } // namespace NDJSONDetails
 
 FDcResult LoadNDJSON(const TCHAR* Str, FDcPropertyDatum Datum)
 {
-    using namespace NDJSONDetails;
+	using namespace NDJSONDetails;
 
-    FDcJsonReader Reader(Str);
-    FDcPropertyWriter Writer(Datum);
+	FDcJsonReader Reader(Str);
+	FDcPropertyWriter Writer(Datum);
 
-    LazyInitializeDeserializer();
+	LazyInitializeDeserializer();
 
-    FDcDeserializeContext Ctx;
-    Ctx.Reader = &Reader;
-    Ctx.Writer = &Writer;
-    Ctx.Deserializer = &Deserializer.GetValue();
-    Ctx.Properties.Add(Datum.Property);
-    DC_TRY(Ctx.Prepare());
-    DC_TRY(Deserializer->Deserialize(Ctx));
+	FDcDeserializeContext Ctx;
+	Ctx.Reader = &Reader;
+	Ctx.Writer = &Writer;
+	Ctx.Deserializer = &Deserializer.GetValue();
+	Ctx.Properties.Add(Datum.Property);
+	DC_TRY(Ctx.Prepare());
+	DC_TRY(Deserializer->Deserialize(Ctx));
 
-    return DcOk();
+	return DcOk();
 }
 
 
 FDcResult SaveNDJSON(FDcPropertyDatum Datum, FString& OutStr)
 {
-    using namespace NDJSONDetails;
+	using namespace NDJSONDetails;
 
-    FDcJsonWriter::ConfigType Config = {
-        TEXT(" "),
-        TEXT(" "),
-        TEXT(""),
-        TEXT(" "),
-        false,
-        false
-    };
+	FDcJsonWriter::ConfigType Config = FDcJsonWriter::DefaultConfig;
+	Config.IndentLiteral = TEXT("");
+	Config.LineEndLiteral = TEXT(" ");
 
-    FDcJsonWriter Writer(Config);
-    FDcPropertyReader Reader(Datum);
+	FDcJsonWriter Writer(Config);
+	FDcPropertyReader Reader(Datum);
 
-    LazyInitializeSerializer();
+	LazyInitializeSerializer();
 
-    FDcSerializeContext Ctx;
-    Ctx.Reader = &Reader;
-    Ctx.Writer = &Writer;
-    Ctx.Serializer = &Serializer.GetValue();
-    DC_TRY(Ctx.Prepare());
-    DC_TRY(Serializer->Serialize(Ctx));
+	FDcSerializeContext Ctx;
+	Ctx.Reader = &Reader;
+	Ctx.Writer = &Writer;
+	Ctx.Serializer = &Serializer.GetValue();
+	DC_TRY(Ctx.Prepare());
+	DC_TRY(Serializer->Serialize(Ctx));
 
-    OutStr = Writer.Sb.ToString();
-    return DcOk();
+	OutStr = Writer.Sb.ToString();
+	return DcOk();
 }
 
 } // namespace DcExtra
 
 DC_TEST("DataConfig.Extra.SerDe.NDJSON")
 {
-    using namespace DcExtra;
+	using namespace DcExtra;
 
-    TArray<FDcExtraSimpleStruct> Dest;
+	TArray<FDcExtraSimpleStruct> Dest;
 
-    FString Str = TEXT(R"(
+	FString Str = TEXT(R"(
 
-        { "Name" : "Foo", "Id" : 1, "Type" : "Alpha" }
-        { "Name" : "Bar", "Id" : 2, "Type" : "Beta" }
-        { "Name" : "Baz", "Id" : 3, "Type" : "Gamma" }
+		{ "Name" : "Foo", "Id" : 1, "Type" : "Alpha" }
+		{ "Name" : "Bar", "Id" : 2, "Type" : "Beta" }
+		{ "Name" : "Baz", "Id" : 3, "Type" : "Gamma" }
 
-    )");
+	)");
 
 
-    UTEST_OK("Extra NDJSON", LoadNDJSON(*Str, Dest));
+	UTEST_OK("Extra NDJSON", LoadNDJSON(*Str, Dest));
 
-    FString SavedStr;
-    UTEST_OK("Extra NDJSON", SaveNDJSON(Dest, SavedStr));
+	FString SavedStr;
+	UTEST_OK("Extra NDJSON", SaveNDJSON(Dest, SavedStr));
 
-    UTEST_EQUAL("Extra NDJSON", SavedStr, DcAutomationUtils::DcReindentStringLiteral(Str));
-    return true;
+	UTEST_EQUAL("Extra NDJSON", SavedStr, DcAutomationUtils::DcReindentStringLiteral(Str));
+	return true;
 };

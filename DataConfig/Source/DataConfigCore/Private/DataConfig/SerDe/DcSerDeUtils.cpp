@@ -36,7 +36,7 @@ UObject* StaticFindFirstObject(UClass* Class, const TCHAR* Name, bool bExactClas
 #if UE_VERSION_OLDER_THAN(5, 1, 0)
 	UObject* Ret = StaticFindObject(Class, ANY_PACKAGE, Name, bExactClass);
 #else
-	UObject* Ret = StaticFindFirstObject(Class, Name, 
+	UObject* Ret = StaticFindFirstObject(Class, Name,
 		EFindFirstObjectOptions::NativeFirst |
 		(bExactClass ? EFindFirstObjectOptions::ExactClass : EFindFirstObjectOptions::None)
 		);
@@ -134,7 +134,7 @@ FDcResult TryStaticLocateObject(UClass* Class, FStringView Str, UObject*& OutObj
 		//	'/Foo/Bar'
 		//	single quoted name, it's object name starting with '/'
 		//	note that need to use the quoted name to find
-		
+
 		UObject* Loaded;
 		DC_TRY(DcSerDeUtils::TryStaticFindFirstObject(Class, Str.GetData(), false, Loaded));
 

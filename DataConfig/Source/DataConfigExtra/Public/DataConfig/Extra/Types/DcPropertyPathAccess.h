@@ -58,7 +58,7 @@ GetDatumPropertyByPath(const FDcPropertyDatum& RootDatum, const FString& Path)
 
 	return (T*)(ResultDatum.DataPtr);
 }
-	
+
 template<typename T>
 typename TEnableIf<DcPropertyUtils::TIsInPropertyMap<T>::Value, T*>::Type
 GetDatumPropertyByPath(const FDcPropertyDatum& RootDatum, const FString& Path)

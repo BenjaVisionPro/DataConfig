@@ -17,73 +17,77 @@ The enum covers all possible types:
 UENUM()
 enum class EDcDataEntry : uint16
 {
-	None,
+    None,
 
-	Bool,
-	Name,
-	String,
-	Text,
-	Enum,
+    Bool,
+    Name,
+    String,
+    Text,
+    Enum,
 
-	Float,
-	Double,
+    Float,
+    Double,
 
-	Int8,
-	Int16,
-	Int32,
-	Int64,
+    Int8,
+    Int16,
+    Int32,
+    Int64,
 
-	UInt8,
-	UInt16,
-	UInt32,
-	UInt64,
+    UInt8,
+    UInt16,
+    UInt32,
+    UInt64,
 
-	//	Struct
-	StructRoot,
-	StructEnd,
+    //  Struct
+    StructRoot,
+    StructEnd,
 
-	//	Class
-	ClassRoot,
-	ClassEnd,
+    //  Class
+    ClassRoot,
+    ClassEnd,
 
-	//	Map
-	MapRoot,
-	MapEnd,
+    //  Map
+    MapRoot,
+    MapEnd,
 
-	//	Array
-	ArrayRoot,
-	ArrayEnd,
+    //  Array
+    ArrayRoot,
+    ArrayEnd,
 
-	//	Set,
-	SetRoot,
-	SetEnd,
+    //  Set,
+    SetRoot,
+    SetEnd,
 
-	//	Reference
-	ObjectReference,
-	ClassReference,
+    //  Optional
+    OptionalRoot,
+    OptionalEnd,
 
-	WeakObjectReference,
-	LazyObjectReference,
-	SoftObjectReference,
-	SoftClassReference,
-	InterfaceReference,
+    //  Reference
+    ObjectReference,
+    ClassReference,
 
-	//	Delegates
-	Delegate,
-	MulticastInlineDelegate,
-	MulticastSparseDelegate,
+    WeakObjectReference,
+    LazyObjectReference,
+    SoftObjectReference,
+    SoftClassReference,
+    InterfaceReference,
 
-	//	Field
-	FieldPath,
+    //  Delegates
+    Delegate,
+    MulticastInlineDelegate,
+    MulticastSparseDelegate,
 
-	//	Extra
-	Blob,
+    //  Field
+    FieldPath,
 
-	//	Extension
-	Extension,
+    //  Extra
+    Blob,
 
-	//	End
-	Ended,
+    //  Extension
+    Extension,
+
+    //  End
+    Ended,
 };
 ```
 

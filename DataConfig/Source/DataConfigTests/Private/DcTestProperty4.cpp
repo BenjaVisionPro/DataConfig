@@ -6,6 +6,7 @@
 #include "DataConfig/Extra/Misc/DcTestCommon.h"
 #include "DataConfig/Json/DcJsonReader.h"
 #include "DataConfig/Json/DcJsonWriter.h"
+#include "DataConfig/Diagnostic/DcDiagnosticReadWrite.h"
 
 static UDcShapeBox* _MakeBox()
 {
@@ -190,8 +191,8 @@ void UDcTestArrayDim2::MakeFixture()
 	StringArr[2] = TEXT("Twisted words");
 
 	InlineObjectArr[0] = NewObject<UDcTestArrayDimInner2>(this);
-	InlineObjectArr[0]->InnerNameArr[0] = TEXT("InnerFoo"); 
-	InlineObjectArr[0]->InnerNameArr[1] = TEXT("InnerBar"); 
+	InlineObjectArr[0]->InnerNameArr[0] = TEXT("InnerFoo");
+	InlineObjectArr[0]->InnerNameArr[1] = TEXT("InnerBar");
 
 	InlineObjectArr[0]->InnerIntArr[0] = 123;
 	InlineObjectArr[0]->InnerIntArr[1] = 234;
@@ -241,14 +242,14 @@ DC_TEST("DataConfig.Core.Property.ContainerRoots")
 
 	using namespace DcPropertyUtils;
 
-	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();		
+	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();
 	auto U64Prop = FDcPropertyBuilder::UInt64().LinkOnScope();
 
 	auto ArrInnerProp = FDcPropertyBuilder::Struct(FDcTestStructSimple::StaticStruct()).LinkOnScope();
 	auto SetInnerProp = FDcPropertyBuilder::Enum(
 			StaticEnum<EDcTestEnum1>(),
 			FDcPropertyBuilder::Int64()
-		).LinkOnScope();	
+		).LinkOnScope();
 
 	auto MapKeyProp = FDcPropertyBuilder::Str().LinkOnScope();
 	auto MapValueProp =  FDcPropertyBuilder::Int().LinkOnScope();
@@ -328,7 +329,7 @@ DC_TEST("DataConfig.Core.Property.StackScalarRoots")
 
 	using namespace DcPropertyUtils;
 
-	auto IntProp = FDcPropertyBuilder::Int().LinkOnScope();		
+	auto IntProp = FDcPropertyBuilder::Int().LinkOnScope();
 	auto IntArrProp = FDcPropertyBuilder::Int().ArrayDim(5).LinkOnScope();
 
 	int DestIntVal;
@@ -497,7 +498,7 @@ DC_TEST("DataConfig.Core.Property.HighlightFormat")
 	UTEST_OK("Highlight Format", Reader.SkipRead());
 	UTEST_EQUAL("Highlight Format", Reader.FormatHighlight().Formatted,
 		TEXT("Reading property: (FDcTestHighlight)$root.(TArray<FString>)StrArr[1]"));
-	
+
 	UTEST_OK("Highlight Format", Reader.SkipRead());
 	UTEST_OK("Highlight Format", Reader.ReadArrayEnd());
 
@@ -535,7 +536,7 @@ DC_TEST("DataConfig.Core.Property.HighlightFormat")
 
 DC_TEST("DataConfig.Core.Property.Blob2")
 {
-	FDcTestScalarArrayBlob Src; 
+	FDcTestScalarArrayBlob Src;
 	Src.ColorField = FColor::Red;
 	Src.ColorArr[0] = FColor::Green;
 	Src.ColorArr[1] = FColor::Blue;
@@ -622,7 +623,7 @@ DC_TEST("DataConfig.Core.Property.PropertyBuilder")
 
 	using namespace DcPropertyUtils;
 
-	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();		
+	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();
 	auto U64Prop = FDcPropertyBuilder::UInt64().LinkOnScope();
 
 	auto ArrProp = FDcPropertyBuilder::Array(
@@ -710,7 +711,7 @@ DC_TEST("DataConfig.Core.Property.PropertyBuilder2")
 
 	{
 		auto EnumProp = FDcPropertyBuilder::Enum(
-			StaticEnum<EDcTestEnum1>(), 
+			StaticEnum<EDcTestEnum1>(),
 			FDcPropertyBuilder::Int64()
 			).LinkOnScope();
 		FDcJsonReader Reader(TEXT("\"Tard\""));
@@ -784,7 +785,7 @@ DC_TEST("DataConfig.Core.Property.PropertyBuilder2")
 
 DC_TEST("DataConfig.Core.Property.PropertyBuilder3")
 {
-	using namespace DcPropertyUtils;	
+	using namespace DcPropertyUtils;
 
 	{
 		UObject* Src = NewObject<UDcTestClass1>();
@@ -984,3 +985,19 @@ DC_TEST("DataConfig.Core.Property.PropertyConfig")
 	return true;
 }
 #endif // WITH_EDITORONLY_DATA
+
+DC_TEST("DataConfig.Core.Property.HeuristicPropertiesTooDeep")
+{
+	UDcSelfReference1* RefObj = NewObject<UDcSelfReference1>();
+	RefObj->StrField = TEXT("SelfRef");
+	RefObj->RefField1 = RefObj;
+	RefObj->RefField2 = RefObj;
+
+	FDcPropertyDatum Datum(RefObj);
+	FDcNoopWriter Writer;
+
+	UTEST_DIAG("HeuristicPropertiesTooDeep", DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(RefObj)),
+		DcDReadWrite, HeuristicPropertiesTooDeep);
+
+	return true;
+}

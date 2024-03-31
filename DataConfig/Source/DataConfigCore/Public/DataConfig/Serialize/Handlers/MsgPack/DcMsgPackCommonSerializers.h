@@ -10,7 +10,7 @@ DATACONFIGCORE_API FDcResult HandlerMapSerialize(FDcSerializeContext& Ctx);
 
 DATACONFIGCORE_API EDcSerializePredicateResult PredicateIsBlobProperty(FDcSerializeContext& Ctx);
 DATACONFIGCORE_API FDcResult HandlerBlobSerialize(FDcSerializeContext& Ctx);
-	
+
 } // namespace DcMsgPackHandlers
 
 

@@ -61,7 +61,7 @@ EDcSerializePredicateResult PredicateIsEnumProperty(FDcSerializeContext& Ctx)
 	UEnum* Enum = nullptr;
 	FNumericProperty* UnderlyingProperty = nullptr;
 	bool bIsEnum = DcPropertyUtils::IsEnumAndTryUnwrapEnum(Ctx.TopProperty(), Enum, UnderlyingProperty);
-	
+
 	return bIsEnum
 		? EDcSerializePredicateResult::Process
 		: EDcSerializePredicateResult::Pass;

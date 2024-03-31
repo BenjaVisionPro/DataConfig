@@ -10,7 +10,7 @@ namespace DcExtra
 {
 
 DATACONFIGEXTRA_API FDcResult DcHandlerDeserializeAnyStruct(
-	FDcDeserializeContext& Ctx, 
+	FDcDeserializeContext& Ctx,
 	TFunctionRef<FDcResult(FDcDeserializeContext&, const FString&, UScriptStruct*&)> FuncLocateStruct
 );
 
@@ -19,11 +19,7 @@ DATACONFIGEXTRA_API FDcResult DcHandlerSerializeAnyStruct(
 	TFunctionRef<FString(UScriptStruct* InStruct)> FuncWriteStructType
 );
 
-DATACONFIGEXTRA_API EDcDeserializePredicateResult PredicateIsDcAnyStruct(FDcDeserializeContext& Ctx);
-
 DATACONFIGEXTRA_API FDcResult HandlerDcAnyStructDeserialize(FDcDeserializeContext& Ctx);
-
-DATACONFIGEXTRA_API EDcSerializePredicateResult PredicateIsDcAnyStruct(FDcSerializeContext& Ctx);
 
 DATACONFIGEXTRA_API FDcResult HandlerDcAnyStructSerialize(FDcSerializeContext& Ctx);
 

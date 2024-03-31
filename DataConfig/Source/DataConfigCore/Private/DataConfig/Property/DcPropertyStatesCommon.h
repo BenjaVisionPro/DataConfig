@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 
+//	hard depth cap when read/writing properties for heuristic overflow detection
+static const int DC_HEURISTIC_MAX_PROPERTIES_DEPTH = 256;
+
 extern FName DC_TRANSIENT_ARRAY;
 extern FName DC_TRANSIENT_SET;
 extern FName DC_TRANSIENT_MAP;

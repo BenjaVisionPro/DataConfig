@@ -45,7 +45,7 @@ FDcResult TraverseReaderByPath(FDcPropertyReader* Reader, const FString& Path)
 			DC_TRY(Reader->PeekReadProperty(&StructField));
 			UStruct* Struct = DcPropertyUtils::TryGetStruct(StructField);
 			check(Struct);
-			
+
 			DC_TRY(Reader->ReadStructRoot());
 			while (true)
 			{
@@ -77,7 +77,7 @@ FDcResult TraverseReaderByPath(FDcPropertyReader* Reader, const FString& Path)
 			DC_TRY(Reader->PeekReadProperty(&ClassField));
 			UStruct* Struct = DcPropertyUtils::TryGetStruct(ClassField);
 			check(Struct);
-			
+
 			FDcClassAccess Access;
 			DC_TRY(Reader->ReadClassRootAccess(Access));
 
@@ -233,7 +233,7 @@ DC_TEST("DataConfig.Extra.PathAccess.ReadWriteByPath")
 
 	UTEST_TRUE("Extra PathAccess ReadByPath", GetDatumPropertyByPath<FDcExtraTestStructNestMiddle>(FDcPropertyDatum(Outer), "StructRoot.Middle") == &Outer->StructRoot.Middle);
 	UTEST_TRUE("Extra PathAccess ReadByPath", GetDatumPropertyByPath<UDcExtraTestClassOuter>(FDcPropertyDatum(Outer), "StructRoot.Middle.InnerMost.ObjField") == Outer->StructRoot.Middle.InnerMost.ObjField);
-	
+
 	return true;
 }
 
@@ -254,6 +254,6 @@ DC_TEST("DataConfig.Extra.PathAccess.PropertyPathHelpers")
 	UTEST_TRUE("Extra PropertyPathHelpers", PropertyPathHelpers::GetPropertyValue(Outer, TEXT("StructRoot.Middle"), CopiedMiddle));
 	//	note that PropertyPathHelpers::GetPropertyValue creates a copy
 	UTEST_TRUE("Extra PropertyPathHelpers", &CopiedMiddle != &Outer->StructRoot.Middle);
-	
+
 	return true;
 }

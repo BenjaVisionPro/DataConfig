@@ -1,5 +1,6 @@
 #include "DataConfig/Serialize/DcSerializer.h"
 #include "DataConfig/Property/DcPropertyReader.h"
+#include "DataConfig/Property/DcPropertyUtils.h"
 #include "DataConfig/Diagnostic/DcDiagnosticSerDe.h"
 #include "DataConfig/Diagnostic/DcDiagnosticCommon.h"
 #include "DataConfig/DcEnv.h"
@@ -20,36 +21,43 @@ static FORCEINLINE FDcResult ExecuteSerializeHandler(FDcSerializeContext& Ctx, F
 static FDcResult SerializeBody(FDcSerializer* Self, FDcSerializeContext& Ctx)
 {
 	//	try predicated serializers first, if not handled then try direct handlers
-	for (auto& PredPair : Self->PredicatedSerializers)
+	for (auto& PredEntry : Self->PredicatedSerializers)
 	{
-		if (!PredPair.Key.IsBound())
+		if (!PredEntry.Predicate.IsBound())
 			return DC_FAIL(DcDCommon, StaleDelegate);
 
-		if (PredPair.Key.Execute(Ctx) == EDcSerializePredicateResult::Process)
-			return ExecuteSerializeHandler(Ctx, PredPair.Value);
+		if (PredEntry.Predicate.Execute(Ctx) == EDcSerializePredicateResult::Process)
+			return ExecuteSerializeHandler(Ctx, PredEntry.Handler);
 	}
 
 	FFieldVariant& Property = Ctx.TopProperty();
-	FDcSerializeDelegate* HandlerPtr;
-	if (Property.IsUObject())
+	FDcSerializeDelegate* HandlerPtr = nullptr;
+
+	if (UStruct* Struct = DcPropertyUtils::TryGetStruct(Property))
+		HandlerPtr = Self->StructSerializerMap.Find(Struct);
+
+	if (!HandlerPtr)
 	{
-		UObject* Object = CastChecked<UObject>(Property.ToUObjectUnsafe());
-		check(IsValid(Object));
-		UClass* Class = Object->GetClass();
-		HandlerPtr = Self->UClassSerializerMap.Find(Class);
-		if (HandlerPtr == nullptr)
-			return DC_FAIL(DcDSerDe, NoMatchingHandler)
-				<< Ctx.TopProperty().GetFName() << Class->GetFName();
-	}
-	else
-	{
-		FField* Field = Property.ToFieldUnsafe();
-		check(Field->IsValidLowLevel());
-		FFieldClass* FieldClass = Field->GetClass();
-		HandlerPtr = Self->FieldClassSerializerMap.Find(FieldClass);
-		if (HandlerPtr == nullptr)
-			return DC_FAIL(DcDSerDe, NoMatchingHandler)
-				<< Ctx.TopProperty().GetFName() << FieldClass->GetFName();
+		if (Property.IsUObject())
+		{
+			UObject* Object = CastChecked<UObject>(Property.ToUObjectUnsafe());
+			check(IsValid(Object));
+			UClass* Class = Object->GetClass();
+			HandlerPtr = Self->UClassSerializerMap.Find(Class);
+			if (HandlerPtr == nullptr)
+				return DC_FAIL(DcDSerDe, NoMatchingHandler)
+					<< Ctx.TopProperty().GetFName() << Class->GetFName();
+		}
+		else
+		{
+			FField* Field = Property.ToFieldUnsafe();
+			check(Field->IsValidLowLevel());
+			FFieldClass* FieldClass = Field->GetClass();
+			HandlerPtr = Self->FieldClassSerializerMap.Find(FieldClass);
+			if (HandlerPtr == nullptr)
+				return DC_FAIL(DcDSerDe, NoMatchingHandler)
+					<< Ctx.TopProperty().GetFName() << FieldClass->GetFName();
+		}
 	}
 
 	return ExecuteSerializeHandler(Ctx, *HandlerPtr);
@@ -131,18 +139,24 @@ FDcResult FDcSerializer::Serialize(FDcSerializeContext& Ctx)
 
 void FDcSerializer::AddDirectHandler(UClass* PropertyClass, FDcSerializeDelegate&& Delegate)
 {
-	check(!UClassSerializerMap.Contains(PropertyClass));
+	check(PropertyClass && !UClassSerializerMap.Contains(PropertyClass));
 	UClassSerializerMap.Add(PropertyClass, MoveTemp(Delegate));
 }
 
 void FDcSerializer::AddDirectHandler(FFieldClass* PropertyClass, FDcSerializeDelegate&& Delegate)
 {
-	check(!FieldClassSerializerMap.Contains(PropertyClass));
+	check(PropertyClass && !FieldClassSerializerMap.Contains(PropertyClass));
 	FieldClassSerializerMap.Add(PropertyClass, MoveTemp(Delegate));
-
 }
-void FDcSerializer::AddPredicatedHandler(FDcSerializePredicate&& Predicate, FDcSerializeDelegate&& Delegate)
+
+void FDcSerializer::AddPredicatedHandler(FDcSerializePredicate&& Predicate, FDcSerializeDelegate&& Delegate, const FName Name)
 {
-	PredicatedSerializers.Add(MakeTuple(MoveTemp(Predicate), MoveTemp(Delegate)));
+	PredicatedSerializers.Add(FPredicatedHandlerEntry{MoveTemp(Predicate), MoveTemp(Delegate), Name});
+}
+
+void FDcSerializer::AddStructHandler(UStruct* Struct, FDcSerializeDelegate&& Delegate)
+{
+	check(Struct && !StructSerializerMap.Contains(Struct));
+	StructSerializerMap.Add(Struct, MoveTemp(Delegate));
 }
 

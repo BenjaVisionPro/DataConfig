@@ -116,7 +116,7 @@ FProperty* FDcPropertyConfig::FindProcessPropertyByName(UStruct* Struct, const F
 	FProperty* Target = DcPropertyUtils::FindEffectivePropertyByName(Struct, Name);
 	if (!Target)
 		return nullptr;
-	
+
 	return ShouldProcessProperty(Target)
 		? Target
 		: nullptr;

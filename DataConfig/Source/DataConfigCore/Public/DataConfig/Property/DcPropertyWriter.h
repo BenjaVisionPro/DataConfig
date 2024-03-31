@@ -91,7 +91,7 @@ struct DATACONFIGCORE_API FDcPropertyWriter : public FDcWriter, private FNoncopy
 
 	///	manual writing supporting
 	FDcResult PushTopClassPropertyState(const FDcPropertyDatum& Datum);
-	FDcResult PushTopStructPropertyState(const FDcPropertyDatum& Datum, const FName& StructName); 
+	FDcResult PushTopStructPropertyState(const FDcPropertyDatum& Datum, const FName& StructName);
 
 	/// scalar array support
 	bool IsWritingScalarArrayItem();
@@ -104,7 +104,7 @@ struct DATACONFIGCORE_API FDcPropertyWriter : public FDcWriter, private FNoncopy
 	FDcDiagnosticHighlight FormatHighlight();
 	void FormatDiagnostic(FDcDiagnostic& Diag) override;
 
-	static FName ClassId(); 
+	static FName ClassId();
 	FName GetId() override;
 };
 

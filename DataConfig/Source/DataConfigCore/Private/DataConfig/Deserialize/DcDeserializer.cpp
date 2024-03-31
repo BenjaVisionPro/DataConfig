@@ -4,6 +4,7 @@
 #include "DataConfig/Diagnostic/DcDiagnosticCommon.h"
 #include "DataConfig/Misc/DcTemplateUtils.h"
 #include "DataConfig/Property/DcPropertyWriter.h"
+#include "DataConfig/Property/DcPropertyUtils.h"
 #include "Misc/ScopeExit.h"
 #include "Misc/StringBuilder.h"
 
@@ -21,36 +22,46 @@ static FORCEINLINE FDcResult ExecuteDeserializeHandler(FDcDeserializeContext& Ct
 static FDcResult DeserializeBody(FDcDeserializer* Self, FDcDeserializeContext& Ctx)
 {
 	//	use predicated deserializers first, if it's not handled then try direct handlers
-	for (auto& PredPair : Self->PredicatedDeserializers)
+	for (auto& PredEntry : Self->PredicatedDeserializers)
 	{
-		if (!PredPair.Key.IsBound())
+		if (!PredEntry.Predicate.IsBound())
 			return DC_FAIL(DcDCommon, StaleDelegate);
 
-		if (PredPair.Key.Execute(Ctx) == EDcDeserializePredicateResult::Process)
-			return ExecuteDeserializeHandler(Ctx, PredPair.Value);
+		if (PredEntry.Predicate.Execute(Ctx) == EDcDeserializePredicateResult::Process)
+			return ExecuteDeserializeHandler(Ctx, PredEntry.Handler);
 	}
 
 	FFieldVariant& Property = Ctx.TopProperty();
-	FDcDeserializeDelegate* HandlerPtr;
-	if (Property.IsUObject())
+	FDcDeserializeDelegate* HandlerPtr = nullptr;
+
+	if (!Ctx.bSkipStructHandlers)
 	{
-		UObject* Object = CastChecked<UObject>(Property.ToUObjectUnsafe());
-		check(IsValid(Object));
-		UClass* Class = Object->GetClass();
-		HandlerPtr = Self->UClassDeserializerMap.Find(Class);
-		if (HandlerPtr == nullptr)
-			return DC_FAIL(DcDSerDe, NoMatchingHandler)
-				<< Ctx.TopProperty().GetFName() << Class->GetFName();
+		if (UStruct* Struct = DcPropertyUtils::TryGetStruct(Property))
+			HandlerPtr = Self->StructDeserializeMap.Find(Struct);
 	}
-	else
+
+	if (!HandlerPtr)
 	{
-		FField* Field = Property.ToFieldUnsafe();
-		check(Field->IsValidLowLevel());
-		FFieldClass* FieldClass = Field->GetClass();
-		HandlerPtr = Self->FieldClassDeserializerMap.Find(FieldClass);
-		if (HandlerPtr == nullptr)
-			return DC_FAIL(DcDSerDe, NoMatchingHandler)
-				<< Ctx.TopProperty().GetFName() << FieldClass->GetFName();
+		if (Property.IsUObject())
+		{
+			UObject* Object = CastChecked<UObject>(Property.ToUObjectUnsafe());
+			check(IsValid(Object));
+			UClass* Class = Object->GetClass();
+			HandlerPtr = Self->UClassDeserializerMap.Find(Class);
+			if (HandlerPtr == nullptr)
+				return DC_FAIL(DcDSerDe, NoMatchingHandler)
+					<< Ctx.TopProperty().GetFName() << Class->GetFName();
+		}
+		else
+		{
+			FField* Field = Property.ToFieldUnsafe();
+			check(Field->IsValidLowLevel());
+			FFieldClass* FieldClass = Field->GetClass();
+			HandlerPtr = Self->FieldClassDeserializerMap.Find(FieldClass);
+			if (HandlerPtr == nullptr)
+				return DC_FAIL(DcDSerDe, NoMatchingHandler)
+					<< Ctx.TopProperty().GetFName() << FieldClass->GetFName();
+		}
 	}
 
 	return ExecuteDeserializeHandler(Ctx, *HandlerPtr);
@@ -102,7 +113,7 @@ static void AmendDiagnostic(FDcDiagnostic& Diag, FDcDeserializeContext& Ctx)
 
 	Highlight.Formatted = Sb.ToString();
 	Diag << MoveTemp(Highlight);
-	
+
 }
 
 }	// namespace DcDeserializerDetails
@@ -150,18 +161,24 @@ FDcResult FDcDeserializer::Deserialize(FDcDeserializeContext& Ctx)
 
 void FDcDeserializer::AddDirectHandler(UClass* PropertyClass, FDcDeserializeDelegate&& Delegate)
 {
-	check(!UClassDeserializerMap.Contains(PropertyClass));
+	check(PropertyClass && !UClassDeserializerMap.Contains(PropertyClass));
 	UClassDeserializerMap.Add(PropertyClass, MoveTemp(Delegate));
 }
 
 void FDcDeserializer::AddDirectHandler(FFieldClass* PropertyClass, FDcDeserializeDelegate&& Delegate)
 {
-	check(!FieldClassDeserializerMap.Contains(PropertyClass));
+	check(PropertyClass && !FieldClassDeserializerMap.Contains(PropertyClass));
 	FieldClassDeserializerMap.Add(PropertyClass, MoveTemp(Delegate));
 }
 
-void FDcDeserializer::AddPredicatedHandler(FDcDeserializePredicate&& Predicate, FDcDeserializeDelegate&& Delegate)
+void FDcDeserializer::AddPredicatedHandler(FDcDeserializePredicate&& Predicate, FDcDeserializeDelegate&& Delegate, const FName Name)
 {
-	PredicatedDeserializers.Add(MakeTuple(MoveTemp(Predicate), MoveTemp(Delegate)));
+	PredicatedDeserializers.Add(FPredicatedHandlerEntry{MoveTemp(Predicate), MoveTemp(Delegate), Name});
+}
+
+void FDcDeserializer::AddStructHandler(UStruct* Struct, FDcDeserializeDelegate&& Delegate)
+{
+	check(Struct && !StructDeserializeMap.Contains(Struct));
+	StructDeserializeMap.Add(Struct, Delegate);
 }
 

@@ -22,7 +22,7 @@ struct DATACONFIGEXTRA_API FDcAnyStruct
 	using FSharedReferencer = SharedPointerInternals::FSharedReferencer<ESPMode::Fast>;
 #endif
 
-	struct DATACONFIGEXTRA_API AnyStructReferenceController : public FReferenceControllerBase 
+	struct DATACONFIGEXTRA_API AnyStructReferenceController : public FReferenceControllerBase
 	{
 		AnyStructReferenceController(FDcAnyStruct* InAnyStruct)
 		{

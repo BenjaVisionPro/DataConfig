@@ -28,7 +28,7 @@ FORCEINLINE FDcResult CachedWrite(FDcPutbackWriter* Self, TMethod Method, TArgs&
 		return (Self->Writer->*Method)(Forward<TArgs>(Args)...);
 	}
 }
-	
+
 } // namespace DcPutbackWriterDetails
 
 FDcResult FDcPutbackWriter::PeekWrite(EDcDataEntry Next, bool* bOutOk)

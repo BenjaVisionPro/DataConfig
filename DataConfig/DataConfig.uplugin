@@ -13,11 +13,21 @@
 	"Modules": [
 		{
 			"Name": "DataConfigCore",
-			"Type": "Editor",
+			"Type": "Runtime",
 			"LoadingPhase": "None"
 		},
 		{
 			"Name": "DataConfigExtra",
+			"Type": "Runtime",
+	    	"LoadingPhase": "Default"
+		},
+		{
+			"Name": "DataConfigEngineExtra",
+			"Type": "Runtime",
+	    	"LoadingPhase": "Default"
+		},
+		{
+			"Name": "DataConfigEngineExtra5",
 			"Type": "Editor",
 	    	"LoadingPhase": "Default"
 		},
@@ -33,11 +43,6 @@
 		},
 		{
 			"Name": "DataConfigTests5",
-			"Type": "Editor",
-	    	"LoadingPhase": "Default"
-		},
-		{
-			"Name": "DataConfigEditorExtra5",
 			"Type": "Editor",
 	    	"LoadingPhase": "Default"
 		}

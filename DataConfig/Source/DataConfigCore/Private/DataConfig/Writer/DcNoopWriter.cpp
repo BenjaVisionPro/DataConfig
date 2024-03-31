@@ -2,9 +2,9 @@
 #include "DataConfig/Misc/DcTemplateUtils.h"
 
 FDcResult FDcNoopWriter::PeekWrite(EDcDataEntry, bool* bOutOk)
-{ 
+{
 	ReadOut(bOutOk, true);
-	return DcOk(); 
+	return DcOk();
 }
 FDcResult FDcNoopWriter::WriteNone() { return DcOk(); }
 FDcResult FDcNoopWriter::WriteBool(bool) { return DcOk(); }

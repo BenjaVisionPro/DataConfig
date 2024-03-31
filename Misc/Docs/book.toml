@@ -22,3 +22,4 @@ RepoRoot = "https://github.com/slowburn-dev/DataConfig/tree/release/"
 # renamed fields 
 [output.html.redirect]
 "/Formats/PipeProperty.html" = "/Formats/Property.html"
+"/Extra/Optional.html" = "/Advanced/Optional.html"

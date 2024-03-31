@@ -28,6 +28,7 @@ plugin_src.mkdir(parents=True, exist_ok=True)
 _copytree(root_src / "DataConfigCore", plugin_src / "DataConfigCore")
 _copytree(root_src / "DataConfigExtra", plugin_src / "DataConfigExtra")
 _copytree(root_src / "DataConfigTests", plugin_src / "DataConfigTests")
+_copytree(root_src / "DataConfigEngineExtra", plugin_src / "DataConfigEngineExtra")
 _copytree(root_src / "DataConfigEditorExtra", plugin_src / "DataConfigEditorExtra")
 
 # copy others

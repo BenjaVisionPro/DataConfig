@@ -27,7 +27,6 @@ static FDcDiagnosticDetail* SearchDetails(uint16 InID, FDcDiagnosticGroup* Group
 
 void DcRegisterDiagnosticGroup(FDcDiagnosticGroup* InWeakGroup)
 {
-	checkf(!DcIsInitialized(), TEXT("can't register diagnostic group after initialized"));
 	checkf(InWeakGroup->CategoryID > 0xFF, TEXT("categoryID under 255 is reserved"));
 	DcDiagGroups.Emplace(InWeakGroup);
 }

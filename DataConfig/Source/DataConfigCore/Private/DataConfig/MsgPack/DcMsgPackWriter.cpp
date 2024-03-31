@@ -514,7 +514,7 @@ void FDcMsgPackWriter::FormatDiagnostic(FDcDiagnostic& Diag)
 	UEnum* DataEntryEnum = StaticEnum<EDcDataEntry>();
 	check(DataEntryEnum);
 
-	Highlight.Formatted = FString::Printf(TEXT("Last write: %s"), 
+	Highlight.Formatted = FString::Printf(TEXT("Last write: %s"),
 		*DataEntryEnum->GetNameStringByIndex((int32)DcMsgPackCommon::TypeByteToDataEntry(States.Top().LastTypeByte))
 		);
 

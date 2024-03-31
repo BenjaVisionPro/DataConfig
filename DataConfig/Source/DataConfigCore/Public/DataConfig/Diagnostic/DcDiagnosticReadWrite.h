@@ -40,10 +40,11 @@ enum Type : uint16
 	WriterCastExpect,
 	PeekNoContainerProperty,
 	PropertyNotSupportedUEVersion,
+	HeuristicPropertiesTooDeep,
 
 	//	property writer
 	WriteObjectReferenceDoNotAcceptNull,
-	
+
 	//	putback reader
 	CantUsePutbackValue,
 

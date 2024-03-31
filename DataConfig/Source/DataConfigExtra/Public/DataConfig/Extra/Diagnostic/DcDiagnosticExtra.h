@@ -3,7 +3,7 @@
 #include "HAL/Platform.h"
 #include "DataConfig/Diagnostic/DcDiagnostic.h"
 
-///	Extra diagnostic 
+///	Extra diagnostic
 
 namespace DcDExtra
 {

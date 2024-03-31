@@ -65,7 +65,7 @@ EDcSerializePredicateResult PredicateIsSubObjectProperty(FDcSerializeContext& Ct
 		return EDcSerializePredicateResult::Pass;
 
 	FObjectProperty* ObjectProperty = CastField<FObjectProperty>(Ctx.TopProperty().ToFieldUnsafe());
-	return ObjectProperty && DcPropertyUtils::IsSubObjectProperty(ObjectProperty)
+	return ObjectProperty && Ctx.Reader->Config.ShouldExpandObject(ObjectProperty)
 		? EDcSerializePredicateResult::Process
 		: EDcSerializePredicateResult::Pass;
 }

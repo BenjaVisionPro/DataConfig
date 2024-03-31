@@ -25,9 +25,9 @@ FDcResult RecursiveDeserialize(FDcDeserializeContext& Ctx)
 EDcDeserializePredicateResult PredicateIsRootProperty(FDcDeserializeContext& Ctx)
 {
 	check(Ctx.Properties.Num() > 0);
-    return Ctx.TopProperty() == Ctx.Properties[0]
-        ? EDcDeserializePredicateResult::Process
-        : EDcDeserializePredicateResult::Pass;
+	return Ctx.TopProperty() == Ctx.Properties[0]
+		? EDcDeserializePredicateResult::Process
+		: EDcDeserializePredicateResult::Pass;
 }
 
 } // namespace DcDeserializeUtils

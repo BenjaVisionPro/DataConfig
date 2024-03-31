@@ -46,7 +46,7 @@ USTRUCT()
 struct FMsgPackTestSuite
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY() TArray<FMsgPackTestGroup> Groups;
 };
 

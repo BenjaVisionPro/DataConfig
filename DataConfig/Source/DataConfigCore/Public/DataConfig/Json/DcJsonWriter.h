@@ -4,8 +4,16 @@
 #include "DataConfig/Source/DcSourceUtils.h"
 #include "DataConfig/Writer/DcWriter.h"
 
+struct FDcJsonWriterShared : public FDcWriter, private FNoncopyable
+{
+	uint8 bAllowOverrideConfig : 1;
+	uint8 bUseOverrideConfig : 1;
+
+	virtual void FlushOverrideConfigChange() = 0;
+};
+
 template<typename CharType>
-struct TDcJsonWriter : public FDcWriter, private FNoncopyable
+struct TDcJsonWriter : public FDcJsonWriterShared
 {
 	using TSelf = TDcJsonWriter;
 	using SourceUtils = TDcCSourceUtils<CharType>;
@@ -14,11 +22,19 @@ struct TDcJsonWriter : public FDcWriter, private FNoncopyable
 
 	struct ConfigType
 	{
+		//	literals
 		const CharType* LeftSpacingLiteral;		//	Left side spacing around `:`
 		const CharType* RightSpacingLiteral;	//	Right side spacing around `:`
-		const CharType* IndentLiteral;		
+		const CharType* RightCommaLiteral;		// 	Right side spacing around ',' when there's no newline
+		const CharType* IndentLiteral;
 		const CharType* LineEndLiteral;
+		const CharType* Int64FormatLiteral;
+		const CharType* UInt64FormatLiteral;
+		const CharType* FloatFormatLiteral;
+		const CharType* DoubleFormatLiteral;
 
+		// flags
+		bool bUsesNewLine;						//  whether uses newline
 		bool bNestedArrayStartsOnNewLine;		//	aka C Braces Style on nested array
 		bool bNestedObjectStartsOnNewLine;		//	aka C Braces Style on nested map
 	};
@@ -26,12 +42,25 @@ struct TDcJsonWriter : public FDcWriter, private FNoncopyable
 	constexpr static CharType _DEFAULT_SPACING_LITERAL[] = { ' ', 0 };
 	constexpr static CharType _DEFAULT_INDENT_LITERAL[] = { ' ',' ',' ',' ',0 };
 	constexpr static CharType _DEFAULT_NEWLINE_LITERAL[] = { '\n', 0 };
+	constexpr static CharType _DEFAULT_INT64_FORMAT_LITERAL[] = { '%', 'l', 'l', 'd', 0 };
+	constexpr static CharType _DEFAULT_UINT64_FORMAT_LITERAL[] = { '%', 'l', 'l', 'u', 0 };
+	constexpr static CharType _DEFAULT_FLOAT_FORMAT_LITERAL[] = { '%', 'g', 0 };
+	constexpr static CharType _DEFAULT_DOUBLE_FORMAT_LITERAL[] = { '%', '.', '1', '7', 'g', 0 };
+	constexpr static CharType _INLINE_INT64_FORMAT_LITERAL[] = { '%', '8', 'd', 0 };
+	constexpr static CharType _INLINE_UINT64_FORMAT_LITERAL[] = { '%', '8', 'u', 0 };
+	constexpr static CharType _INLINE_FLOAT_DOUBLE_FORMAT_LITERAL[] = { '%', '9', '.', '4', 'g', 0 };
 
 	constexpr static ConfigType DefaultConfig = {
 		_DEFAULT_SPACING_LITERAL,
 		_DEFAULT_SPACING_LITERAL,
+		_DEFAULT_SPACING_LITERAL,
 		_DEFAULT_INDENT_LITERAL,
 		_DEFAULT_NEWLINE_LITERAL,
+		_DEFAULT_INT64_FORMAT_LITERAL,
+		_DEFAULT_UINT64_FORMAT_LITERAL,
+		_DEFAULT_FLOAT_FORMAT_LITERAL,
+		_DEFAULT_DOUBLE_FORMAT_LITERAL,
+		true,
 		false,
 		false
 	};
@@ -42,13 +71,43 @@ struct TDcJsonWriter : public FDcWriter, private FNoncopyable
 		_EMPTY_LITERAL,
 		_EMPTY_LITERAL,
 		_EMPTY_LITERAL,
+		_EMPTY_LITERAL,
+		_DEFAULT_INT64_FORMAT_LITERAL,
+		_DEFAULT_UINT64_FORMAT_LITERAL,
+		_DEFAULT_FLOAT_FORMAT_LITERAL,
+		_DEFAULT_DOUBLE_FORMAT_LITERAL,
+		false,
 		false,
 		false
 	};
 
+	constexpr static ConfigType InlineConfig = {
+		_DEFAULT_SPACING_LITERAL,
+		_DEFAULT_SPACING_LITERAL,
+		_DEFAULT_SPACING_LITERAL,
+		_DEFAULT_INDENT_LITERAL,
+		_DEFAULT_NEWLINE_LITERAL,
+		_INLINE_INT64_FORMAT_LITERAL,
+		_INLINE_UINT64_FORMAT_LITERAL,
+		_INLINE_FLOAT_DOUBLE_FORMAT_LITERAL,
+		_INLINE_FLOAT_DOUBLE_FORMAT_LITERAL,
+		false,
+		false,
+		false
+	};
 
 	StringBuilder Sb;
+
 	ConfigType Config;
+	ConfigType OverrideConfig;
+
+	ConfigType& ActiveConfig()
+	{
+		return bAllowOverrideConfig && bUseOverrideConfig
+			? OverrideConfig : Config;
+	}
+
+	void FlushOverrideConfigChange() override;
 
 	enum class EWriteState : uint8
 	{
@@ -72,14 +131,13 @@ struct TDcJsonWriter : public FDcWriter, private FNoncopyable
 		uint8 bNeedNewlineAndIndent :1;
 
 		uint8 Indent;
-
-		FORCEINLINE void Reset() { *this = FState{}; }
 	};
 
 	FState State = {};
 
 	TDcJsonWriter();
 	TDcJsonWriter(ConfigType InConfig);
+	TDcJsonWriter(ConfigType InConfig, ConfigType InOverrideConfig);
 
 	FDcResult PeekWrite(EDcDataEntry Next, bool* bOutOk) override;
 
@@ -110,7 +168,7 @@ struct TDcJsonWriter : public FDcWriter, private FNoncopyable
 
 	void FormatDiagnostic(FDcDiagnostic& Diag) override;
 
-	static FName ClassId(); 
+	static FName ClassId();
 	FName GetId() override;
 
 	///	Unsafe extension to write arbitrary string at value position

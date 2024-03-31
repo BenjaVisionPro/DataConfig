@@ -61,8 +61,8 @@ EDcDeserializePredicateResult PredicateIsEnumProperty(FDcDeserializeContext& Ctx
 	UEnum* Enum = nullptr;
 	FNumericProperty* UnderlyingProperty = nullptr;
 	bool bIsEnum = DcPropertyUtils::IsEnumAndTryUnwrapEnum(Ctx.TopProperty(), Enum, UnderlyingProperty);
-	
-	return bIsEnum 
+
+	return bIsEnum
 		? EDcDeserializePredicateResult::Process
 		: EDcDeserializePredicateResult::Pass;
 }
@@ -104,7 +104,7 @@ FDcResult HandlerStringToEnumDeserialize(FDcDeserializeContext& Ctx)
 	bIsBitFlags = false;
 #endif // WITH_EDITORONLY_DATA
 
-	
+
 	if (!bIsBitFlags)
 	{
 		FString Value;
@@ -157,7 +157,7 @@ FDcResult HandlerStringToFieldPathDeserialize(FDcDeserializeContext& Ctx)
 	FFieldPath Value;
 	Value.Generate(*Str);
 	DC_TRY(Ctx.Writer->WriteFieldPath(Value));
-	
+
 	return DcOk();
 }
 

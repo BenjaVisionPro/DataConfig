@@ -66,7 +66,7 @@ struct DATACONFIGCORE_API FDcPrettyPrintWriter : public FDcWriter
 
 	void SetIndentLevel(int InLevel);
 
-	static FName ClassId(); 
+	static FName ClassId();
 	FName GetId() override;
 
 };

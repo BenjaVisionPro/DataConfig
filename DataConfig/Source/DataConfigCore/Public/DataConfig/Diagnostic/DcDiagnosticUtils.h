@@ -17,7 +17,7 @@ DATACONFIGCORE_API FDcResult DcReadNextExpect(FDcReader& Reader, EDcDataEntry Ex
 
 struct DATACONFIGCORE_API FDcScopedDiagHandler
 {
-	using DiagHandlerType = TFunctionRef<void(FDcDiagnostic&)>; 
+	using DiagHandlerType = TFunctionRef<void(FDcDiagnostic&)>;
 	FDcScopedDiagHandler(DiagHandlerType InHandler);
 	~FDcScopedDiagHandler();
 

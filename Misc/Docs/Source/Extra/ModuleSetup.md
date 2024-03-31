@@ -26,26 +26,26 @@ public class DataConfigExtra : ModuleRules
 }
 ```
 
-The other module is `DcEditorExtraModule`, a more conventional editor only module. It's also the recommended setup for integrating DataConfig as an editor only dependency into your project. We also put samples that depends on `Engine` and other gameplay system in here.
+The other module is `DcEngineExtraModule`, which is a more conventional runtime module that introduces DataConfig dependency. We also put samples that depends on `Engine` and other gameplay system in here.
 
 Most of integration code is in `IModuleInterface::StartUpModule/ShutdownModule()`. 
 
-* [DcEditorExtraModule.cpp]({{SrcRoot}}DataConfigEditorExtra/Private/DcEditorExtraModule.cpp)
+* [DcEngineExtraModule.cpp]({{SrcRoot}}DataConfigEngineExtra/Private/DcEngineExtraModule.cpp)
 
 ```c++
-// DataConfigEditorExtra/Private/DcEditorExtraModule.cpp
-void FDcEditorExtraModule::StartupModule()
+// DataConfigEngineExtra/Private/DcEngineExtraModule.cpp
+void FDcEngineExtraModule::StartupModule()
 {
     // ...
 	DcRegisterDiagnosticGroup(&DcDExtra::Details);
-	DcRegisterDiagnosticGroup(&DcDEditorExtra::Details);
+	DcRegisterDiagnosticGroup(&DcDEngineExtra::Details);
 
 	DcStartUp(EDcInitializeAction::Minimal);
 	DcEnv().DiagConsumer = MakeShareable(new FDcMessageLogDiagnosticConsumer());
 	// ...
 }
 
-void FDcEditorExtraModule::ShutdownModule()
+void FDcEngineExtraModule::ShutdownModule()
 {
 	DcShutDown();
     // ...

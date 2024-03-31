@@ -117,7 +117,7 @@ DC_TEST("DataConfig.Core.Serialize.Containers")
 			],
 			"StringMap" : {
 				"One" : "1",
-				"Two" : "2",	
+				"Two" : "2",
 				"Three" : "3"
 			},
 			"StructArray" : [
@@ -148,7 +148,7 @@ DC_TEST("DataConfig.Core.Serialize.Containers")
 					"Index" : 3
 				}
 			],
-			"StructMap" : [] 
+			"StructMap" : []
 		}
 
 	)"));
@@ -336,7 +336,7 @@ DC_TEST("DataConfig.Core.Serialize.NonStructClassRoots")
 
 	using namespace DcPropertyUtils;
 
-	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();		
+	auto StrProp = FDcPropertyBuilder::Str().LinkOnScope();
 	auto U64ArrProp = FDcPropertyBuilder::UInt64().ArrayDim(2).LinkOnScope();
 
 	auto ArrProp = FDcPropertyBuilder::Array(
@@ -403,7 +403,7 @@ DC_TEST("DataConfig.Core.Serialize.NonStructClassRoots")
 					"NameField" : "Goo",
 					"StrField" : "Gar"
 				}
-			]		
+			]
 		)")),
 		FDcPropertyDatum(ArrProp.Get(), &SrcArr)
 		));
@@ -415,7 +415,7 @@ DC_TEST("DataConfig.Core.Serialize.NonStructClassRoots")
 				"Foo",
 				"Bar",
 				"Tard"
-			]		
+			]
 		)")),
 		FDcPropertyDatum(SetProp.Get(), &SrcSet)
 		));
@@ -485,8 +485,8 @@ DC_TEST("DataConfig.Core.Serialize.NonStringKeyMaps")
 	)"));
 
 	UTEST_OK("Serialize NonStringKeyMaps", DcAutomationUtils::SerializeInto(&Writer, Datum, [](FDcSerializeContext& Ctx){
-		Ctx.Serializer->AddPredicatedHandler(
-			FDcSerializePredicate::CreateStatic(DcExtra::PredicateIsColorStruct),
+		Ctx.Serializer->AddStructHandler(
+			TBaseStructure<FColor>::Get(),
 			FDcSerializeDelegate::CreateStatic(DcExtra::HandlerColorSerialize)
 		);
 	}));
@@ -514,7 +514,7 @@ DC_TEST("DataConfig.Core.Serialize.EnumPropertyWithoutEnum")
 	{
 		uint8 Ch = 5;
 		auto ByteProp = FDcPropertyBuilder::Byte(nullptr).LinkOnScope();
-		
+
 		FDcJsonWriter Writer;
 		UTEST_OK("Serialize EnumPropertyWithoutEnum", DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(ByteProp.Get(), &Ch)));
 		UTEST_EQUAL("Serialize EnumPropertyWithoutEnum", Writer.Sb.ToString(), "5");
@@ -523,7 +523,7 @@ DC_TEST("DataConfig.Core.Serialize.EnumPropertyWithoutEnum")
 	{
 		uint8 Ch = (uint8)EDcTestEnum_UInt8::Max;
 		auto ByteProp = FDcPropertyBuilder::Byte(StaticEnum<EDcTestEnum_UInt8>()).LinkOnScope();
-		
+
 		FDcJsonWriter Writer;
 		UTEST_OK("Serialize EnumPropertyWithoutEnum", DcAutomationUtils::SerializeInto(&Writer, FDcPropertyDatum(ByteProp.Get(), &Ch)));
 		UTEST_EQUAL("Serialize EnumPropertyWithoutEnum", Writer.Sb.ToString(), "\"Max\"");

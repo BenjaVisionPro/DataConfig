@@ -75,7 +75,7 @@ bool FDcAutomationBase::TestDiagnosticImpl(const TCHAR* Description, const FDcRe
 	if (Diag.Code.CategoryID != Category
 		|| Diag.Code.ErrorID != Code)
 	{
-		AddError(FString::Printf(TEXT("%s: Last diag unmatch, Expect: (%d, %d), Actual, (%d, %d)"), 
+		AddError(FString::Printf(TEXT("%s: Last diag unmatch, Expect: (%d, %d), Actual, (%d, %d)"),
 			Description, Category, Code, Diag.Code.CategoryID, Diag.Code.ErrorID
 		), 1);
 		return false;
@@ -134,7 +134,7 @@ FDcAutomationConsoleRunner::FArgs FDcAutomationConsoleRunner::FromCommandlineTok
 	{
 		//	default filter
 		//	ends with `.` to filter out DataConfigBenchmark
-		Args.Filters.Add(TEXT("DataConfig."));	
+		Args.Filters.Add(TEXT("DataConfig."));
 	}
 
 	int ParametersSplitIx = -1;
@@ -215,10 +215,10 @@ int32 RunTestsBody(FDcAutomationConsoleRunner* Self)
 
 		for (const FAutomationTestInfo& TestInfo: Self->SelectedTests)
 		{
-			FString TestCommand = FString::Printf(TEXT("%s %s"), *TestInfo.GetTestName(), *Self->ParametersJoined);	
+			FString TestCommand = FString::Printf(TEXT("%s %s"), *TestInfo.GetTestName(), *Self->ParametersJoined);
 			FAutomationTestExecutionInfo CurExecutionInfo;
 
-			int32 RoleIndex = 0; 
+			int32 RoleIndex = 0;
 			Framework.StartTestByName(TestCommand, RoleIndex);
 			const bool CurTestSuccessful = Framework.StopTest(CurExecutionInfo);
 

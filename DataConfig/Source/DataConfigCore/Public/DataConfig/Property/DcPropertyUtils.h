@@ -82,7 +82,7 @@ FORCEINLINE FString SafeNameToString(const FName& Value)
 
 
 //	Cpp type to Property
-	
+
 template<typename T>
 struct TPropertyTypeMap
 {};

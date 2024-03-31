@@ -105,7 +105,7 @@ struct DATACONFIGCORE_API FDcWriter
 	FDcResult WriteTObjectPtr(const TObjectPtr<TObject>& Value);
 #endif
 
-	static FName ClassId(); 
+	static FName ClassId();
 	virtual FName GetId();
 
 	template<typename T>

@@ -120,7 +120,7 @@ FDcResult FDcReader::ReadSparseDelegateField(TSparseDynamicDelegate<MulticastDel
 	{
 		FProperty* Property;
 		DC_TRY(DcPropertyUtils::FindEffectivePropertyByOffset(
-			OwningClass::StaticClass(), 
+			OwningClass::StaticClass(),
 			DelegateInfoClass::template GetDelegateOffset<OwningClass>(),
 			Property
 		));

@@ -37,8 +37,8 @@ DC_TEST("DataConfig.Core.Blurb.Frontpage")
 			//	create and setup a deserializer
 			FDcDeserializer Deserializer;
 			DcSetupJsonDeserializeHandlers(Deserializer);
-			Deserializer.AddPredicatedHandler(
-				FDcDeserializePredicate::CreateStatic(DcExtra::PredicateIsColorStruct),
+			Deserializer.AddStructHandler(
+				TBaseStructure<FColor>::Get(),
 				FDcDeserializeDelegate::CreateStatic(DcExtra::HandlerColorDeserialize)
 			);
 
@@ -85,7 +85,7 @@ DC_TEST("DataConfig.Core.Blurb.Frontpage")
 
 			auto& Buffer = Writer.GetMainBuffer();
 			//	starts withMsgPack FIXMAP(3) header
-			check(Buffer[0] == 0x83);	
+			check(Buffer[0] == 0x83);
 		}
 
 		return DcOk();
@@ -240,7 +240,7 @@ DC_TEST("DataConfig.Core.Blurb.Uninitialized")
 		FString Str = TEXT(R"(
 			{
 				// pass
-			} 
+			}
 		)");
 		FDcJsonReader Reader(Str);
 

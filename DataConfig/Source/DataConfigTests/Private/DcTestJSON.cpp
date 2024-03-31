@@ -30,7 +30,7 @@ DC_TEST("DataConfig.Core.JSON.Reader1")
 				"these", "are", "my", "twisted",
 			],
 			"Inty" : null,	/* allow trailing comma */
-		} 
+		}
 
 	)");
 
@@ -68,7 +68,7 @@ DC_TEST("DataConfig.Core.JSON.Diags")
 			{
 				"SameKey" : "Is",
 				"SameKey" : "Not Allowed.",
-			} 
+			}
 
 		)");
 		FDcJsonReader Reader(Str);
@@ -81,7 +81,7 @@ DC_TEST("DataConfig.Core.JSON.Diags")
 
 			{
 				2 : "Two",
-			} 
+			}
 
 		)");
 		FDcJsonReader Reader(Str);
@@ -229,7 +229,7 @@ static FDcResult RunSingleJsonFixture(FDcJsonTestFixure& Fixture)
 		Accept = EAccept::No;
 	else if (Basename.StartsWith(TEXT("i_")))
 		Accept = EAccept::Irrelevant;
-	
+
 	FDcJsonReader Reader(Fixture.Content);
 	DcEnv().FlushDiags();
 
@@ -239,7 +239,7 @@ static FDcResult RunSingleJsonFixture(FDcJsonTestFixure& Fixture)
 
 		FDcResult Ret = DcNoopPipeVisit(&Reader);
 		Ret.Ok();	//	discard the result
-		
+
 		DcEnv().Diagnostics.Empty();
 	}
 	else if (Accept == EAccept::Yes)
@@ -284,7 +284,7 @@ DC_TEST("DataConfig.Core.JSON.DcJSONFixtures")
 
 	IFileManager& FileManager = IFileManager::Get();
 	TArray<FDcJsonTestFixure> Fixtures;
-	
+
 	FileManager.IterateDirectory(*DcGetFixturePath(TEXT("DcJSONFixtures")), [&](const TCHAR* VisitFilename, bool VisitIsDir)
 	{
 		FString Filename(VisitFilename);
@@ -294,7 +294,7 @@ DC_TEST("DataConfig.Core.JSON.DcJSONFixtures")
 			verify(FFileHelper::LoadFileToString(JsonStr, VisitFilename));
 			Fixtures.Emplace(FDcJsonTestFixure{VisitFilename, MoveTemp(JsonStr)});
 		}
-		
+
 		return true;
 	});
 
@@ -304,7 +304,7 @@ DC_TEST("DataConfig.Core.JSON.DcJSONFixtures")
 		if (!RunSingleJsonFixture(Fixture).Ok())
 			bAllPass =false;
 	}
-	
+
 	return bAllPass;
 }
 
@@ -315,7 +315,7 @@ DC_TEST("DataConfig.Core.JSON.JSONTestSuiteParsing")
 
 	IFileManager& FileManager = IFileManager::Get();
 	TArray<FDcJsonTestFixure> Fixtures;
-	
+
 	FileManager.IterateDirectory(*DcGetFixturePath(TEXT("JSONTestSuiteParsing")), [&](const TCHAR* VisitFilename, bool VisitIsDir)
 	{
 		FString Filename(VisitFilename);
@@ -324,14 +324,14 @@ DC_TEST("DataConfig.Core.JSON.JSONTestSuiteParsing")
 			if (!Filename.Contains(Parameters))
 				return true;
 		}
-		
+
 		if (Filename.EndsWith(TEXT(".json"), ESearchCase::IgnoreCase))
 		{
 			FString JsonStr;
 			verify(FFileHelper::LoadFileToString(JsonStr, VisitFilename));
 			Fixtures.Emplace(FDcJsonTestFixure{VisitFilename, MoveTemp(JsonStr)});
 		}
-		
+
 		return true;
 	});
 
@@ -341,7 +341,7 @@ DC_TEST("DataConfig.Core.JSON.JSONTestSuiteParsing")
 		if (!RunSingleJsonFixture(Fixture).Ok())
 			bAllPass =false;
 	}
-	
+
 	return bAllPass;
 }
 

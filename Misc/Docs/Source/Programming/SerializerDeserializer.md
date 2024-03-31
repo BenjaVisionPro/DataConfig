@@ -117,29 +117,56 @@ Deserializer.AddDirectHandler(FMapProperty::StaticClass(), FDcDeserializeDelegat
 
 These basically says that "when running into array, set, map properties, use these provided handlers". 
 
+Then there's "struct handler" that uses a `UStruct` that maps a specific class/struct
+to a handler:
+
+```c++
+// DataConfigCore/Private/DataConfig/Deserialize/DcDeserializerSetup.cpp
+Deserializer.AddStructHandler(TBaseStructure<FGuid>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerGuidDeserialize));
+Deserializer.AddStructHandler(TBaseStructure<FColor>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerColorDeserialize));
+Deserializer.AddStructHandler(TBaseStructure<FDateTime>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerDateTimeDeserialize));
+```
+
+This means "when running into a `FGuid`, use these attached handlers". This is run before direct handlers.
+
 Then we have "predicated handler" that get tested very early. This is how we allow custom conversion logic
 setup for very specific class:
 
 ```c++
-// DataConfigExtra/Private/DataConfig/Extra/Deserialize/DcSerDeColor.cpp
-EDcDeserializePredicateResult PredicateIsColorStruct(FDcDeserializeContext& Ctx)
+// DataConfigCore/Private/DataConfig/Deserialize/DcDeserializerSetup.cpp
+EDcDeserializePredicateResult PredicateIsScalarArrayProperty(FDcDeserializeContext& Ctx)
 {
-    UScriptStruct* Struct = DcPropertyUtils::TryGetStructClass(Ctx.TopProperty());
-    return Struct && Struct == TBaseStructure<FColor>::Get()
+    FProperty* Prop = CastField<FProperty>(Ctx.TopProperty().ToField());
+    return Prop && Prop->ArrayDim > 1 && !Ctx.Writer->IsWritingScalarArrayItem()
         ? EDcDeserializePredicateResult::Process
         : EDcDeserializePredicateResult::Pass;
 }
 
 // ...
-Ctx.Deserializer->AddPredicatedHandler(
-    FDcDeserializePredicate::CreateStatic(PredicateIsColorStruct),
-    FDcDeserializeDelegate::CreateStatic(HandlerColorDeserialize)
+Deserializer.AddPredicatedHandler(
+    FDcDeserializePredicate::CreateStatic(PredicateIsScalarArrayProperty),
+    FDcDeserializeDelegate::CreateStatic(HandlerArrayDeserialize)
 );
 ```
 
-By convention the current deserializing property can be retrieved with `Ctx.TopProperty()`. 
-Here we simply test if it's a `UScriptStruct` that's equal to `FColor::StaticClass()`.
-If that's the case execute the provided handler.
+By convention the current deserializing property can be retrieved with `Ctx.TopProperty()`. `PredicateIsScalarArrayProperty` here
+checks if it's wring a scalar array with non 1 dimension, if that's the case it would need to treat it like an array.
+
+Note that all registered predicate handler is iterated through on every property, then proceed to handler on first success match or
+fall through to struct/direct handlers when no match. Use it only when struct/direct handlers doesn't fit.
+
+To recap:
+
+
+| Handler Type      | Order  | Usage              | Execution                                     |
+| :---------------- | ------ | ------------------ | --------------------------------------------- |
+| Predicate handler | First  | Most flexible      | Iteration through all and match first success |
+| Struct handler    | Second | "Is `FColor`? "    | Direct match                                  |
+| Direct handler    | Last   | "Is `Map/Array`? " | Direct match                                  |
+
+## Serializer Setup
+
+Serializer has exactly the same API as [deserializer](#deserializer-setup) and the semantics are all the same.
 
 ## Sum Up
 

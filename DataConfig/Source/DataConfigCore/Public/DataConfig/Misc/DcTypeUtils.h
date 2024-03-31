@@ -71,16 +71,16 @@ struct TIsUClass
 {
 	template <typename C> static uint16 Test(decltype(C::StaticClass));
 	template <typename C> static uint8 Test(...);
-	
+
 	enum { Value = sizeof(Test<T>(0)) - 1};
 };
-	
+
 template<typename T>
 struct TIsUStruct
 {
 	template <typename C> static uint16 Test(decltype(C::StaticStruct));
 	template <typename C> static uint8 Test(...);
-	
+
 	enum { Value = sizeof(Test<T>(0)) - 1};
 };
 

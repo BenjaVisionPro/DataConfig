@@ -301,7 +301,7 @@ FDcResult HandlerTransientLazyObjectDeserialize(FDcDeserializeContext& Ctx)
 		DC_TRY(Ctx.Writer->WriteLazyObjectReference(FLazyObjectPtr((UObject*)Ptr)));
 	}
 
-	
+
 	return DcOk();
 }
 
@@ -317,7 +317,7 @@ FDcResult HandlerTransientInterfaceDeserialize(FDcDeserializeContext& Ctx)
 
 	FScriptInterface Value((UObject*)ObjectPtr, InterfacePtr);
 	DC_TRY(Ctx.Writer->WriteInterfaceReference(Value));
-	
+
 	return DcOk();
 }
 

@@ -43,7 +43,9 @@ You should try DataConfig and it's highly likely DataConfig will fit into your s
   - Small code size / fast compile time. DataConfig tries not to expose template API. `TDcJsonReader` is explicit instantiated with its definition in private files.
   - Light memory footprint. Our JSON parser does stream parsing and would *not* construct the loaded JSON document in memory at all.
 
-- Works with whatever property system supports.
+  With that said DataConfig has [decent performance][10] that satisfies common runtime use cases. Do note the [subtle differences when doing shipping builds][11].
+
+- Works with whatever [property system][1] supports.
 
   The idea is that DataConfig supports everything that can be tagged with `UCLASS/USTRUCT/UPROPERTY/UENUM` macros, which covers the full data model of the property system.
 
@@ -59,7 +61,7 @@ You should try DataConfig and it's highly likely DataConfig will fit into your s
 - Integrated [nst/JSONTestSuite][6].
 - Integrated [kawanet/msgpack-test-suite][7].
 
-[1]:https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection "Unreal Property System (Reflection)"
+[1]:https://dev.epicgames.com/documentation/en-us/unreal-engine/reflection-system-in-unreal-engine "Unreal Engine Reflection System"
 [2]:https://docs.unrealengine.com/en-US/ProductionPipelines/DevelopmentSetup/CodingStandard/index.html "Epic C++ Coding StandardBlueprint Debugging in Unreal Engine"
 [3]:https://serde.rs/ "SerDe"
 [4]:https://json.nlohmann.me "JSON for Modern C++"
@@ -68,3 +70,5 @@ You should try DataConfig and it's highly likely DataConfig will fit into your s
 [7]:https://github.com/kawanet/msgpack-test-suite "a dataset for testing msgpack library"
 [8]:https://github.com/jacobdufault/fullserializer "jacobdufault/fullserializer"
 [9]:https://github.com/TeamSirenix/odin-serializer "TeamSirenix/odin-serializer"
+[10]:./Advanced/Benchmark.md "Advanced - Benchmark"
+[11]:./Advanced/NoMetaData.md "Advanced - No MetaData"

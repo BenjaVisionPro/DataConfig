@@ -10,12 +10,20 @@ struct DATACONFIGCORE_API FDcSerializer : public FNoncopyable
 
 	void AddDirectHandler(FFieldClass* PropertyClass, FDcSerializeDelegate&& Delegate);
 	void AddDirectHandler(UClass* PropertyClass, FDcSerializeDelegate&& Delegate);
-	void AddPredicatedHandler(FDcSerializePredicate&& Predicate, FDcSerializeDelegate&& Delegate);
+	void AddPredicatedHandler(FDcSerializePredicate&& Predicate, FDcSerializeDelegate&& Delegate, const FName Name = NAME_None);
+	void AddStructHandler(UStruct* Struct, FDcSerializeDelegate&& Delegate);
 
-	TArray<TTuple<FDcSerializePredicate, FDcSerializeDelegate>> PredicatedSerializers;
+	struct FPredicatedHandlerEntry
+	{
+		FDcSerializePredicate Predicate;
+		FDcSerializeDelegate Handler;
+		FName Name;
+	};
+	TArray<FPredicatedHandlerEntry> PredicatedSerializers;
 
 	TMap<UClass*, FDcSerializeDelegate> UClassSerializerMap;
 	TMap<FFieldClass*, FDcSerializeDelegate> FieldClassSerializerMap;
+	TMap<UStruct*, FDcSerializeDelegate> StructSerializerMap;
 };
 
 

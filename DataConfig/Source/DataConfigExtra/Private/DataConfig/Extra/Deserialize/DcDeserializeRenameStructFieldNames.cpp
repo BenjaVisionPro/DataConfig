@@ -107,7 +107,7 @@ DC_TEST("DataConfig.Extra.Deserialize.StructFieldRename")
 
 			{
 				"FromName1" : "Foo",
-				"FromStructSet1" : 
+				"FromStructSet1" :
 				[
 					{
 						"FromStr1" : "One",
@@ -145,7 +145,7 @@ DC_TEST("DataConfig.Extra.Deserialize.StructFieldRename")
 
 			{
 				"ToName1" : "Foo",
-				"ToStructSet1" : 
+				"ToStructSet1" :
 				[
 					{
 						"ToStr1" : "One",
