@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.6.1 - 2024-4-28
+
+- Fix compilation for UE 5.4.
+
 ## 1.6.0 - 2024-3-31
 
 - **BREAKING** Removed `PredicateIsUStruct`. Use struct handlers instead.
@@ -29,7 +33,7 @@ All notable changes to this project will be documented in this file.
 - UE 5.4 support.
   - See [UE version upgrade 5.4](Advanced/UEUpgrades.md#ue54)
 - **NEW** Optional support.
-  - See [Optional](Extra/Optional.md)
+  - See [Optional](Advanced/Optional.md)
 
 ## 1.4.3 - 2023-8-27
 

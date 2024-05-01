@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 
+#if !UE_VERSION_OLDER_THAN(5, 4, 0)
+#include "Internationalization/ITextData.h"
+#endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
 
 namespace DcSerDeCommon
 {
@@ -37,7 +40,11 @@ struct FMulticastScriptDelegateAccess : public FMulticastScriptDelegate
 
 struct FTextAccess
 {
+#if UE_VERSION_OLDER_THAN(5, 4, 0)
 	TSharedRef<ITextData, ESPMode::ThreadSafe> TextData;
+#else
+	TRefCountPtr<ITextData> TextData;
+#endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
 	uint32 Flags;
 
 };

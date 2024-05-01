@@ -84,10 +84,16 @@ FDcResult HandlerTransientTextSerialize(FDcSerializeContext& Ctx)
 	DC_TRY(Ctx.Reader->ReadText(&Value));
 	FTextAccess& ValueAccess = (FTextAccess&)(Value);
 
-	FSharedRefAccess& SharedRefAccess = (FSharedRefAccess&)ValueAccess.TextData;
 	DC_TRY(Ctx.Writer->WriteArrayRoot());
+
+#if UE_VERSION_OLDER_THAN(5, 4, 0)
+	FSharedRefAccess& SharedRefAccess = (FSharedRefAccess&)ValueAccess.TextData;
 	DC_TRY(DcMsgPackHandlersDetails::WritePointer(Ctx.Writer, SharedRefAccess.Object));
 	DC_TRY(DcMsgPackHandlersDetails::WritePointer(Ctx.Writer, SharedRefAccess.SharedReferenceCount));
+#else
+	DC_TRY(DcMsgPackHandlersDetails::WritePointer(Ctx.Writer, ValueAccess.TextData.GetReference()));
+#endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
+
 	DC_TRY(Ctx.Writer->WriteUInt32(ValueAccess.Flags));
 	DC_TRY(Ctx.Writer->WriteArrayEnd());
 

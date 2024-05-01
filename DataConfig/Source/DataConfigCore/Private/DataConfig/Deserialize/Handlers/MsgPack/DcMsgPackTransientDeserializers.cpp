@@ -147,6 +147,10 @@ FDcResult HandlerTransientTextDeserialize(FDcDeserializeContext& Ctx)
 {
 	using namespace DcSerDeCommon;
 
+	FText Text;
+	FTextAccess& TextAccess = (FTextAccess&)Text;
+
+#if UE_VERSION_OLDER_THAN(5, 4, 0)
 	void* ObjectPtr;
 	void* SharedRefPtr;
 	uint32 Flags;
@@ -156,9 +160,6 @@ FDcResult HandlerTransientTextDeserialize(FDcDeserializeContext& Ctx)
 	DC_TRY(DcMsgPackHandlersDetails::ReadPointerRaw(Ctx.Reader, SharedRefPtr));
 	DC_TRY(Ctx.Reader->ReadUInt32(&Flags));
 	DC_TRY(Ctx.Reader->ReadArrayEnd());
-
-	FText Text;
-	FTextAccess& TextAccess = (FTextAccess&)Text;
 
 #if ENGINE_MAJOR_VERSION == 5
 	{
@@ -183,6 +184,24 @@ FDcResult HandlerTransientTextDeserialize(FDcDeserializeContext& Ctx)
 		);
 	}
 #endif
+
+#else
+	void* ObjectPtr;
+	uint32 Flags;
+
+	DC_TRY(Ctx.Reader->ReadArrayRoot());
+	DC_TRY(DcMsgPackHandlersDetails::ReadPointerRaw(Ctx.Reader, ObjectPtr));
+	DC_TRY(Ctx.Reader->ReadUInt32(&Flags));
+	DC_TRY(Ctx.Reader->ReadArrayEnd());
+
+	{
+		using RefCountPtr = TRefCountPtr<ITextData>;
+		RefCountPtr TextPtr((ITextData*)ObjectPtr, true);
+
+		TextAccess.TextData = MoveTemp(TextPtr);
+	}
+#endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
+
 
 	TextAccess.Flags = Flags;
 	DC_TRY(Ctx.Writer->WriteText(Text));
