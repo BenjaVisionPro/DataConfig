@@ -25,6 +25,7 @@ public class DataConfigEditorExtra : ModuleRules
 			"ToolMenus",
 			"Kismet",
 			"KismetCompiler",
+			"MessageLog",
 			});
 
 	}

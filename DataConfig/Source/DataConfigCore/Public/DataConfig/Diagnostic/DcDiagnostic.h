@@ -143,6 +143,8 @@ FORCEINLINE FDcDiagnostic& operator<<(FDcDiagnostic& Diag, const FFieldVariant& 
 struct DATACONFIGCORE_API IDcDiagnosticConsumer : public TSharedFromThis<IDcDiagnosticConsumer>
 {
 	virtual void HandleDiagnostic(FDcDiagnostic& Diag) = 0;
+	virtual void OnPostFlushDiags() {};
+
 	virtual ~IDcDiagnosticConsumer() = default;
 };
 

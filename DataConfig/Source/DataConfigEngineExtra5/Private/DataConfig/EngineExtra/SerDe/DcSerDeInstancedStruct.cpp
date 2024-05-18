@@ -54,6 +54,7 @@ FDcResult DcHandlerDeserializeInstancedStruct(
 		FField* StructField = Datum.Property.ToField();
 		check(StructField);
 
+#if WITH_EDITORONLY_DATA
 		if (StructField->HasMetaData(TEXT("BaseStruct")))
 		{
 			const FString& BaseStructStr = StructField->GetMetaData(TEXT("BaseStruct"));
@@ -63,6 +64,7 @@ FDcResult DcHandlerDeserializeInstancedStruct(
 			if (!LoadStruct->IsChildOf(BaseStruct))
 				return DC_FAIL(DcDSerDe, StructLhsIsNotChildOfRhs) << LoadStruct->GetFName() << BaseStructStr;
 		}
+#endif // WITH_EDITORONLY_DATA
 
 		InstancedStructPtr->InitializeAs(LoadStruct, nullptr);
 

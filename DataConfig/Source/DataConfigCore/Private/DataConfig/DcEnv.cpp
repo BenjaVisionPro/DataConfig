@@ -28,10 +28,15 @@ FDcDiagnostic& FDcEnv::Diag(FDcErrorCode InErr)
 
 void FDcEnv::FlushDiags()
 {
+	if (Diagnostics.Num() == 0)
+		return;
+
 	if (DiagConsumer.IsValid())
 	{
 		for (FDcDiagnostic& Diag : Diagnostics)
 			DiagConsumer->HandleDiagnostic(Diag);
+
+		DiagConsumer->OnPostFlushDiags();
 	}
 
 	Diagnostics.Empty();

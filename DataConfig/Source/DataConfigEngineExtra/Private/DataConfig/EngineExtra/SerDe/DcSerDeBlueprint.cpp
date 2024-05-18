@@ -334,12 +334,17 @@ FDcResult HandlerBPEnumDeserialize(FDcDeserializeContext& Ctx)
 	};
 
 	bool bIsBitFlags;
+
+#if WITH_EDITORONLY_DATA
 #if WITH_METADATA
 	bIsBitFlags = Enum->HasMetaData(TEXT("Bitflags"));
 #else
 	//	Program target is missing `UEnum::HasMetaData`
 	bIsBitFlags = ((UField*)Enum)->HasMetaData(TEXT("Bitflags"));
-#endif
+#endif // WITH_METADATA
+#else
+	bIsBitFlags = false;
+#endif // WITH_EDITORONLY_DATA
 
 	if (!bIsBitFlags)
 	{
@@ -444,12 +449,16 @@ FDcResult HandlerBPEnumSerialize(FDcSerializeContext& Ctx)
 
 
 	bool bIsBitFlags;
+#if WITH_EDITORONLY_DATA
 #if WITH_METADATA
 	bIsBitFlags = Enum->HasMetaData(TEXT("Bitflags"));
 #else
 	//	Program target is missing `UEnum::HasMetaData`
 	bIsBitFlags = ((UField*)Enum)->HasMetaData(TEXT("Bitflags"));
-#endif
+#endif // WITH_METADATA
+#else
+	bIsBitFlags = false;
+#endif // WITH_EDITORONLY_DATA
 
 	UUserDefinedEnum* BPEnum = Cast<UUserDefinedEnum>(Enum);
 	if (!bIsBitFlags)

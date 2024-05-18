@@ -10,7 +10,6 @@ public class DataConfigEngineExtra : ModuleRules
 			"Core",
 			"CoreUObject",
 			"Engine",
-			"MessageLog",
 			"GameplayTags",
 			"GameplayAbilities",
 			"DataConfigCore",

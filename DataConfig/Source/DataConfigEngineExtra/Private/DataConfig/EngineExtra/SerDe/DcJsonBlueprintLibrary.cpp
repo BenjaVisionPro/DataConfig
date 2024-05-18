@@ -44,7 +44,6 @@
 #include "Engine/UserDefinedStruct.h"
 #include "Engine/UserDefinedEnum.h"
 #include "GameplayTags.h"
-#include "MessageLogModule.h"
 #if !UE_VERSION_OLDER_THAN(5, 4, 0)
 #include "UObject/VerseValueProperty.h"
 #endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
@@ -79,7 +78,9 @@ static void LazyInitializeSerializer(TOptional<FDcSerializer>& Serializer, bool 
 	{
 		using namespace DcExtra;
 
+#if WITH_EDITORONLY_DATA
 		Serializer->AddPredicatedHandler(FDcSerializePredicate::CreateStatic(PredicateIsBase64Blob), FDcSerializeDelegate::CreateStatic(HandleBase64BlobSerialize));
+#endif // WITH_EDITORONLY_DATA
 
 		Serializer->AddStructHandler(TBaseStructure<FDcAnyStruct>::Get(), FDcSerializeDelegate::CreateStatic(HandlerDcAnyStructSerialize));
 
@@ -146,7 +147,9 @@ static void LazyInitializeDeserializer(TOptional<FDcDeserializer>& Deserializer,
 	{
 		using namespace DcExtra;
 
+#if WITH_EDITORONLY_DATA
 		Deserializer->AddPredicatedHandler(FDcDeserializePredicate::CreateStatic(PredicateIsBase64Blob), FDcDeserializeDelegate::CreateStatic(HandleBase64BlobDeserialize));
+#endif // WITH_EDITORONLY_DATA
 
 		Deserializer->AddStructHandler(TBaseStructure<FDcAnyStruct>::Get(), FDcDeserializeDelegate::CreateStatic(HandlerDcAnyStructDeserialize));
 
@@ -273,14 +276,6 @@ static FDcResult _Load(bool bRoot, TOptional<FDcDeserializer>& Deserializer, FDc
 	return DcOk();
 }
 
-static void _TryOpenDataConfigMessageLog()
-{
-	if (FMessageLogModule* MessageLogModule = FModuleManager::LoadModulePtr<FMessageLogModule>("MessageLog"))
-	{
-		MessageLogModule->OpenMessageLog(TEXT("DataConfig"));
-	}
-}
-
 }
 
 DEFINE_FUNCTION(UDcJsonBlueprintLibrary::execDumpValue)
@@ -316,7 +311,6 @@ DEFINE_FUNCTION(UDcJsonBlueprintLibrary::execDumpValue)
 		if (!bResult)
 		{
 			DcEnv().FlushDiags();
-			_TryOpenDataConfigMessageLog();
 		}
 		P_NATIVE_END
 	}
@@ -354,7 +348,6 @@ DEFINE_FUNCTION(UDcJsonBlueprintLibrary::execDumpObject)
 		if (!bResult)
 		{
 			DcEnv().FlushDiags();
-			_TryOpenDataConfigMessageLog();
 		}
 		P_NATIVE_END
 	}
@@ -395,7 +388,6 @@ DEFINE_FUNCTION(UDcJsonBlueprintLibrary::execLoadValue)
 		if (!bResult)
 		{
 			DcEnv().FlushDiags();
-			_TryOpenDataConfigMessageLog();
 		}
 		P_NATIVE_END
 	}
@@ -434,7 +426,6 @@ DEFINE_FUNCTION(UDcJsonBlueprintLibrary::execLoadObject)
 		if (!bResult)
 		{
 			DcEnv().FlushDiags();
-			_TryOpenDataConfigMessageLog();
 		}
 		P_NATIVE_END
 	}

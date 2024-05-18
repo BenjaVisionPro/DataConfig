@@ -450,7 +450,6 @@ FORCEINLINE_DEBUGGABLE FDcResult DcPipe_Dispatch(EDcDataEntry Next, TReader* Rea
 		default:
 			return DcNoEntry();
 	}
-	return DcNoEntry();
 }
 
 template<typename TReader>

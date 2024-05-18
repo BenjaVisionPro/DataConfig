@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.6.2 - 2024-5-18
+
+- Misc Shipping configuration build fixes.
+
 ## 1.6.1 - 2024-4-28
 
 - Fix compilation for UE 5.4.
