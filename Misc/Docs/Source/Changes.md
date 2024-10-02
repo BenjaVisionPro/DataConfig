@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.0 - 2024-10-2
+
+- Initial UE 5.5 support.
+- **BREAKING** Separate `DataConfig54.uplugin` and `DataConfig.uplugin`.
+    - See: [Breaking - 1.7.0](Advanced/Breaking.md#170)
+
 ## 1.6.2 - 2024-5-18
 
 - Misc Shipping configuration build fixes.

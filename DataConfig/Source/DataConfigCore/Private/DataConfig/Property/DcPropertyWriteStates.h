@@ -4,6 +4,7 @@
 #include "DataConfig/Property/DcPropertyStatesCommon.h"
 #include "DataConfig/Property/DcPropertyDatum.h"
 #include "DataConfig/Property/DcPropertyUtils.h"
+#include "DataConfig/Misc/DcTypeUtils.h"
 #include "UObject/UnrealType.h"
 #include "Misc/EngineVersionComparison.h"
 
@@ -347,7 +348,7 @@ struct FDcWriteStateOptional : public FDcBaseWriteState
 
 	void FormatHighlightSegment(TArray<FString>& OutSegments, DcPropertyHighlight::EFormatSeg SegType) override;
 };
-static_assert(TIsTriviallyDestructible<FDcWriteStateOptional>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcWriteStateOptional>::Value, "need trivial destructible");
 #endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
 
 struct FDcWriteStateScalar : public FDcBaseWriteState
@@ -424,9 +425,9 @@ FDcResult WriteValue(FDcPropertyWriter* Parent, FDcBaseWriteState& State, const 
 	return DcOk();
 }
 
-static_assert(TIsTriviallyDestructible<FDcWriteStateClass>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcWriteStateStruct>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcWriteStateMap>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcWriteStateArray>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcWriteStateSet>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcWriteStateClass>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcWriteStateStruct>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcWriteStateMap>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcWriteStateArray>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcWriteStateSet>::Value, "need trivial destructible");
 

@@ -11,8 +11,8 @@ struct FDcTestRoundtripStruct1
 	GENERATED_BODY()
 
 	//	FieldPath
-	UPROPERTY() TFieldPath<FNameProperty> FieldPathField;
-	UPROPERTY() TFieldPath<FNameProperty> FieldPathField2;
+	UPROPERTY() TFieldPath<FProperty> FieldPathField;
+	UPROPERTY() TFieldPath<FProperty> FieldPathField2;
 
 	void MakeFixture();
 };

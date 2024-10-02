@@ -31,7 +31,7 @@ FString FDcAutomationBase::CheckUniqueName(const FString& InName)
 	return InName;
 }
 
-uint32 FDcAutomationBase::GetTestFlags() const
+FDcAutomationBase::FlagsType FDcAutomationBase::GetTestFlags() const
 {
 	return FLAGS;
 }

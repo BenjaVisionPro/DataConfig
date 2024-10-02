@@ -41,12 +41,17 @@
 #include "UObject/Script.h"
 #endif // ENGINE_MAJOR_VERSION == 5
 
-#include "Engine/UserDefinedStruct.h"
 #include "Engine/UserDefinedEnum.h"
 #include "GameplayTags.h"
 #if !UE_VERSION_OLDER_THAN(5, 4, 0)
 #include "UObject/VerseValueProperty.h"
 #endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
+
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+#include "Engine/UserDefinedStruct.h"
+#else
+#include "StructUtils/UserDefinedStruct.h"
+#endif // UE_VERSION_OLDER_THAN(5, 5, 0)
 
 namespace DcJsonBlueprintLibraryDetails
 {
@@ -206,7 +211,17 @@ static bool _BlueprintLibPropertyPredicate(FProperty* Property)
 		|| Property->IsA<FMulticastInlineDelegateProperty>()
 		|| Property->IsA<FMulticastSparseDelegateProperty>()
 #if !UE_VERSION_OLDER_THAN(5, 4, 0)
+
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
 		|| Property->IsA<FVerseValueProperty>()
+#else
+
+#if WITH_VERSE_VM
+		|| Property->IsA<FVValueProperty>()
+#endif // WITH_VERSE_VM
+
+#endif // UE_VERSION_OLDER_THAN(5, 5, 0)
+
 #endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
 		)
 		return false;

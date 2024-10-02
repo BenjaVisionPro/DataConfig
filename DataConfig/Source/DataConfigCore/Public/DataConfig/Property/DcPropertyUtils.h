@@ -148,6 +148,15 @@ FORCEINLINE UScriptStruct* CastFieldVariant<UScriptStruct>(const FFieldVariant& 
 
 DATACONFIGCORE_API extern const FName DC_TRANSIENT_PROPERTY;
 
+FORCEINLINE int32 ElementSize(const FProperty* Property)
+{
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+	return Property->ElementSize;
+#else
+	return Property->GetElementSize();
+#endif
+}
+
 struct DATACONFIGCORE_API FDcPropertyBuilder
 {
 	FProperty* Property;

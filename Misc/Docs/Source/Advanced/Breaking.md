@@ -2,6 +2,11 @@
 
 On this page we'll document breaking changes across versions.
 
+# 1.7.0
+
+- UE 5.5 deprecated `StructUtils` plugin, thus we'll need to setup multiple uplugins for UE5. See: [DataConfigXX.uplugin](../Integration.md#dataconfigxxuplugin)
+
+
 # 1.6.0
 
 -  Added a optional `FName` to `FDcSerializer/FDcDeserializer::AddPredicatedHandler` which can be used to identify an entry so one can replace it later like this:

@@ -4,7 +4,13 @@
 #include "DataConfig/Deserialize/DcDeserializeTypes.h"
 #include "DataConfig/Serialize/DcSerializeTypes.h"
 
+#include "Misc/EngineVersionComparison.h"
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
 #include "InstancedStruct.h"
+#else
+#include "StructUtils/InstancedStruct.h"
+#endif // !UE_VERSION_OLDER_THAN(5, 5, 0)
+
 #include "Engine/DataAsset.h"
 
 #include "DcSerDeInstancedStruct.generated.h"

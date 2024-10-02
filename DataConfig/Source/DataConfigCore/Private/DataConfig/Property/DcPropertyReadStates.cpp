@@ -1304,7 +1304,7 @@ FDcResult FDcReadStateScalar::ReadDataEntry(FDcPropertyReader* Parent, FFieldCla
 	else
 	{
 		OutDatum.Property = ScalarField;
-		OutDatum.DataPtr = (uint8*)ScalarPtr + (PTRINT)(ScalarField->ElementSize * Index);
+		OutDatum.DataPtr = (uint8*)ScalarPtr + (PTRINT)(DcPropertyUtils::ElementSize(ScalarField) * Index);
 
 		++Index;
 		if (Index == ScalarField->ArrayDim)
@@ -1356,7 +1356,7 @@ FDcResult FDcReadStateScalar::PeekReadDataPtr(FDcPropertyReader* Parent, void** 
 			<< EState::ExpectScalar << EState::ExpectArrayItem << State
 			<< Parent->FormatHighlight();
 
-	return ReadOutOk(OutDataPtr, (uint8*)ScalarPtr + (PTRINT)(ScalarField->ElementSize * Index));
+	return ReadOutOk(OutDataPtr, (uint8*)ScalarPtr + (PTRINT)(DcPropertyUtils::ElementSize(ScalarField) * Index));
 }
 
 FDcResult FDcReadStateScalar::ReadArrayRoot(FDcPropertyReader* Parent)

@@ -15,9 +15,14 @@ public class DataConfigEngineExtra : ModuleRules
 			"DataConfigCore",
 			"DataConfigExtra",
 #if UE_5_0_OR_LATER
-			"StructUtils",
 			"DataConfigEngineExtra5",
-#endif
+
+#if UE_5_5_OR_LATER
+			// pass
+#else
+			"StructUtils",
+#endif // UE_5_5_OR_LATER
+#endif // UE_5_0_OR_LATER
 			});
 
 		if (Target.bBuildEditor == true)

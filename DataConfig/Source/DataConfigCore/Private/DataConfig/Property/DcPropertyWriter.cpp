@@ -734,7 +734,7 @@ FDcResult FDcPropertyWriter::WriteBlob(const FDcBlobViewData& Value)
 		FArrayProperty* ArrayProperty = Datum.CastFieldChecked<FArrayProperty>();
 		FScriptArrayHelper ScriptArray(ArrayProperty, Datum.DataPtr);
 
-		int32 ElementSize = ArrayProperty->Inner->ElementSize;
+		int32 ElementSize = DcPropertyUtils::ElementSize(ArrayProperty->Inner);
 		int32 NewCount = Value.Num / ElementSize;
 		if (Value.Num % ElementSize != 0)
 			NewCount += 1;
@@ -749,7 +749,7 @@ FDcResult FDcPropertyWriter::WriteBlob(const FDcBlobViewData& Value)
 		DC_TRY(GetTopState(this).WriteDataEntry(this, FProperty::StaticClass(), Datum));
 		DC_TRY(DcPropertyUtils::HeuristicVerifyPointer(Value.DataPtr));
 
-		int FullSize = Prop->ArrayDim * Prop->ElementSize;
+		int FullSize = Prop->ArrayDim * DcPropertyUtils::ElementSize(Prop);
 		if (Value.Num > FullSize)
 			return DC_FAIL(DcDReadWrite, WriteBlobOverrun) << FullSize << Value.Num;
 
@@ -764,8 +764,9 @@ FDcResult FDcPropertyWriter::WriteBlob(const FDcBlobViewData& Value)
 
 		FStructProperty* StructProperty = Datum.CastFieldChecked<FStructProperty>();
 
-		if (Value.Num > StructProperty->ElementSize)
-			return DC_FAIL(DcDReadWrite, WriteBlobOverrun) << StructProperty->ElementSize << Value.Num;
+		int32 StructSize = DcPropertyUtils::ElementSize(StructProperty);
+		if (Value.Num > StructSize)
+			return DC_FAIL(DcDReadWrite, WriteBlobOverrun) << StructSize << Value.Num;
 
 		StructProperty->CopySingleValue(Datum.DataPtr, Value.DataPtr);
 		return DcOk();

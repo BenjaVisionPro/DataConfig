@@ -11,8 +11,8 @@
 template<int32 BUFLEN>
 struct TDcInlineStructBase
 {
-	constexpr static int32 _BUFLEN = BUFLEN;
-	constexpr static int32 _CLASS_OFFSET = _BUFLEN - sizeof(void*);
+	enum : int32 { _BUFLEN = BUFLEN };
+	enum : int32 { _CLASS_OFFSET = _BUFLEN - sizeof(void*) };
 
 	//	[<struct body>, UScriptStruct*]
 	TAlignedBytes<_BUFLEN, 16u> Buffer;

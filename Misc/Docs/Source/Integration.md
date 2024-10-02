@@ -2,6 +2,7 @@
 
 At the moment it supports these the engine versions below:
 
+- UE 5.5
 - UE 5.4
 - UE 5.3 
 - UE 5.2 
@@ -45,14 +46,27 @@ DataConfig now uses separated `uplugin` files for UE4 and UE5 so that we can try
 git clone https://github.com/slowburn-dev/DataConfig
 # requires python 3.6+
 python ./DataConfig/Misc/Scripts/make_dataconfig_ue4.py
+python ./DataConfig/Misc/Scripts/make_dataconfig_ue54.py
 python ./DataConfig/Misc/Scripts/make_dataconfig_ue5.py
 ```
 
-### Manual Steps for UE5
+### `DataConfigXX.uplugin`
+
+Ultimately we figured that we'll need multiple `.uplugin` files to support acrosss UE versions:
+
+| Name                 | Version      |
+| -------------------- | ------------ |
+| DataConfig4.uplugin  | 4.25 - 4.27  |
+| DataConfig54.uplugin | 5.0 - 5.4    |
+| DataConfig5.uplugin  | 5.5 - Latest |
+
+When packaging for each engine version we rename the one we want and delete the rest.
+
+### Manual Steps for UE5 Latest
 
 1. Get a copy of [DataConfig repository][1]. Then copy  `./DataConfig` (where `DataConfig.uplugin` is located) into your project's `Plugins` directory.
 
-2. Delete `DataConfig4.uplugin`.
+2. Delete `DataConfig4.uplugin`, and other `DataConfig5X.uplugin`.
 
 3. **Delete `DataConfig/Source/DataConfigHeadless`** folder. **This step is crucial or you your project won't build**.
 
@@ -65,7 +79,7 @@ python ./DataConfig/Misc/Scripts/make_dataconfig_ue5.py
 3. **Delete `DataConfig/Source/DataConfigHeadless`** folder. **This step is crucial or you your project won't build**.
 
 4. Additionally delete UE5 specific modules.
-    
+   
     * `DataConfig/Source/DataConfigEngineExtra5`
 
 ### Validate integration

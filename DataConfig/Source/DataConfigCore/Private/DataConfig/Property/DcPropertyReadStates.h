@@ -3,6 +3,7 @@
 #include "DataConfig/DcTypes.h"
 #include "DataConfig/Property/DcPropertyUtils.h"
 #include "DataConfig/Property/DcPropertyStatesCommon.h"
+#include "DataConfig/Misc/DcTypeUtils.h"
 #include "Misc/EngineVersionComparison.h"
 
 enum class EDcPropertyReadType
@@ -399,16 +400,16 @@ struct FDcReadStateOptional : public FDcBaseReadState
 
 	void FormatHighlightSegment(TArray<FString>& OutSegments, DcPropertyHighlight::EFormatSeg SegType) override;
 };
-static_assert(TIsTriviallyDestructible<FDcReadStateOptional>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcReadStateOptional>::Value, "need trivial destructible");
 #endif // !UE_VERSION_OLDER_THAN(5, 4, 0)
 
 //	storage is already POD type, and TArray<> do only bitwise relocate anyway
 //	we'll just needs to assume these types are trivially destructable
-static_assert(TIsTriviallyDestructible<FDcReadStateClass>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcReadStateStruct>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcReadStateMap>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcReadStateArray>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcReadStateSet>::Value, "need trivial destructible");
-static_assert(TIsTriviallyDestructible<FDcReadStateScalar>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcReadStateClass>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcReadStateStruct>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcReadStateMap>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcReadStateArray>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcReadStateSet>::Value, "need trivial destructible");
+static_assert(DcTypeUtils::TIsTriviallyDestructible<FDcReadStateScalar>::Value, "need trivial destructible");
 
 

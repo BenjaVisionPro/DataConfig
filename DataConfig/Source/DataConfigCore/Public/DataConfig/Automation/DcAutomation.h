@@ -6,6 +6,7 @@
 #include "DataConfig/Misc/DcTemplateUtils.h"
 #include "Misc/AutomationTest.h"
 #include "Misc/AssertionMacros.h"
+#include "Misc/EngineVersionComparison.h"
 #include "Containers/UnrealString.h"
 
 class DATACONFIGCORE_API FDcAutomationBase : public FAutomationTestBase
@@ -13,7 +14,13 @@ class DATACONFIGCORE_API FDcAutomationBase : public FAutomationTestBase
 public:
 	static FString CheckUniqueName(const FString& InName);
 
-	constexpr static uint32 FLAGS = EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::EngineFilter;
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+	using FlagsType = uint32;
+	constexpr static FlagsType FLAGS = EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::EngineFilter;
+#else
+	using FlagsType = EAutomationTestFlags;
+	constexpr static FlagsType FLAGS = EAutomationTestFlags_ApplicationContextMask | EAutomationTestFlags::EngineFilter;
+#endif
 
 	FDcAutomationBase( const FString& InName, const bool bInComplexTask )
 		: FAutomationTestBase(InName, bInComplexTask)
@@ -22,7 +29,7 @@ public:
 		bSuppressLogs = true;
 	}
 
-	uint32 GetTestFlags() const override;
+	FlagsType GetTestFlags() const override;
 	uint32 GetRequiredDeviceNum() const override;
 
 	bool TestOk(const TCHAR* Description, const FDcResult& Result);
@@ -93,7 +100,7 @@ struct DATACONFIGCORE_API FDcAutomationConsoleRunner
 	{
 		TArray<FString> Filters;
 		TArray<FString> Parameters;
-		uint32 RequestedTestFilter;
+		FDcAutomationBase::FlagsType RequestedTestFilter;
 	};
 
 	static FArgs FromCommandlineTokens(const TArray<FString>& Tokens);

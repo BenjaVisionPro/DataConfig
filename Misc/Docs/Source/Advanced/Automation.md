@@ -18,7 +18,7 @@ We provide a standalone, command target that runs tests on core, non editor Data
 
     ```shell
     # UE5
-    <PathToUE5SourceBuild>/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.exe -project="%CD%/DataConfig.uplugin" DataConfigHeadless Win64 Debug
+    <PathToUE5SourceBuild>/Engine/Build/BatchFiles/RunUBT -project="%CD%/DataConfig.uplugin" DataConfigHeadless Win64 Debug
 
     # UE4
     <PathToUE4SourceBuild>/Engine/Binaries/DotNET/UnrealBuildTool.exe -project="%CD%/DataConfig4.uplugin" DataConfigHeadless Win64 Debug
@@ -52,7 +52,7 @@ You can build and run the benchmarks with the commands below:
 
 ```shell
 # remember to build in Shipping
-<PathToUE5SourceBuild>/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.exe -project="%CD%/DataConfig.uplugin" DataConfigHeadless Win64 Shipping
+<PathToUE5SourceBuild>Engine/Build/BatchFiles/RunUBT -project="%CD%/DataConfig.uplugin" DataConfigHeadless Win64 Shipping
 %CD%/Binaries/Win64/DataConfigHeadless-Win64-Shipping.exe DataConfigBenchmark
 ````
 
@@ -82,7 +82,7 @@ target for Linux and run it under WSL2.
     ```shell
     # UE5.1
     set LINUX_MULTIARCH_ROOT=<PathToToolchains>/v20_clang-13.0.1-centos7
-    <PathToUE5SourceBuild>/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.exe -project="%CD%/DataConfig.uplugin" DataConfigHeadless Linux Debug
+    <PathToUE5SourceBuild>/Engine/Build/BatchFiles/RunUBT -project="%CD%/DataConfig.uplugin" DataConfigHeadless Linux Debug
 
     # UE4
     set LINUX_MULTIARCH_ROOT=<PathToToolchains>/v19_clang-11.0.1-centos7
@@ -133,7 +133,7 @@ With the editor target we have a `DcCoreTestsCommandlet` that can be run through
    ```shell
    # UE5
    # build
-   <PathToUE5>/Engine/Binaries/DotNET/UnrealBuildTool/UnrealBuildTool.exe DcProjectEditor Win64 Development %CD%/DcProject5.uproject -NoHotReload -NoEngineChanges
+   <PathToUE5>/Engine/Build/BatchFiles/RunUBT DcProjectEditor Win64 Development %CD%/DcProject5.uproject -NoHotReload -NoEngineChanges
    # run commandlet
    <PathToUE5>/Engine/Binaries/Win64/UnrealEditor-Cmd.exe %CD%/DcProject5.uproject DataConfigEditorExtra.DcCoreTestsCommandlet
 

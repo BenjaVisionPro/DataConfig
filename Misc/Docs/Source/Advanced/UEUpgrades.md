@@ -2,6 +2,16 @@
 
 DataConfig is committed to support multiple UE versions with no deprecations and warnings. On this page we'll document important upgrade and migration info.
 
+# UE5.5
+
+- `EAutomationTestFlags` is now a `enum class` type.
+- `TIsTriviallyDestructible` is deprecated over `std::is_trivially_destructible_v`.
+- `TFieldPath(OtherPropertyType*)` constructor now checks for actual type safety.
+- `FProperty::ElementSize` deprecated over `GetElementSize`.
+- `StructUtils` plugin is deprecated with all things moved in engine.
+- `PER_MODULE_BOILERPLATE` not needed anymore as UBT handles it automatically.
+- `FVerseValueProperty` renamed to `FVValueProperty`, also compiled only with `WITH_VERSE_VM` define.
+
 # UE5.4
 - New property `Optional` and `VValue` are added. We fully support `Optional` starting by adding `EDcDataEntry::OptionalRoot/OptionalEnd` and then evantually it works with all DataConfig APIs including JSON/MsgPack serialization and property builder. 
 - `FObjectPtrProperty/FClassPtrProperty` are deprecated. It's introduced in 5.0 now removed and alias to `FObjectProperty/FClassProperty` respectively.

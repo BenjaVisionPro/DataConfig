@@ -717,7 +717,7 @@ FDcResult FDcPropertyReader::ReadBlob(FDcBlobViewData* OutPtr)
 		{
 			*OutPtr = {
 				(uint8*)ScriptArray.GetRawPtr(),
-				ScriptArray.Num() * ArrayProperty->Inner->ElementSize
+				ScriptArray.Num() * DcPropertyUtils::ElementSize(ArrayProperty->Inner)
 			};
 		}
 
@@ -732,7 +732,7 @@ FDcResult FDcPropertyReader::ReadBlob(FDcBlobViewData* OutPtr)
 		{
 			*OutPtr = {
 				(uint8*)Datum.DataPtr,
-				Prop->ArrayDim * Prop->ElementSize
+				Prop->ArrayDim * DcPropertyUtils::ElementSize(Prop)
 			};
 		}
 
@@ -748,7 +748,7 @@ FDcResult FDcPropertyReader::ReadBlob(FDcBlobViewData* OutPtr)
 		{
 			*OutPtr = {
 				(uint8*)Datum.DataPtr,
-				StructProperty->ElementSize
+				DcPropertyUtils::ElementSize(StructProperty)
 			};
 		}
 

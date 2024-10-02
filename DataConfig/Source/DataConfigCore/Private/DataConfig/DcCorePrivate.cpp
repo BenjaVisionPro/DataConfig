@@ -1,4 +1,8 @@
 #include "DcCorePrivate.h"
+#include "Misc/EngineVersionComparison.h"
+
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+// 5.5 get rids of this boilerplate
 
 #if !IS_MONOLITHIC
 
@@ -7,6 +11,7 @@ PER_MODULE_BOILERPLATE
 
 #endif
 
+#endif // !UE_VERSION_OLDER_THAN(5, 5, 0)
 
 namespace DcCorePrivate {
 

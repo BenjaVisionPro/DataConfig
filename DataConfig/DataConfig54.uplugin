@@ -55,6 +55,10 @@
 		{
 			"Name": "SQLiteCore",
 			"Enabled": true
+		},
+		{
+			"Name": "StructUtils",
+			"Enabled": true
 		}
 	]
 }

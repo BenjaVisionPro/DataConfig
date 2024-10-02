@@ -54,7 +54,7 @@ FDcResult TDcInlineStructDeserialize<TInlineStruct>::DcHandlerDeserializeInlineS
 		if (LoadStruct->GetStructureSize() > TInlineStruct::_CLASS_OFFSET)
 		{
 			return DC_FAIL(DcDExtra, InlineStructTooBig)
-				<< TInlineStruct::_CLASS_OFFSET << LoadStruct->GetFName() << LoadStruct->GetStructureSize();
+				<< (int32)TInlineStruct::_CLASS_OFFSET << LoadStruct->GetFName() << LoadStruct->GetStructureSize();
 		}
 
 		LoadStruct->InitializeStruct(&InlineStructPtr->Buffer);

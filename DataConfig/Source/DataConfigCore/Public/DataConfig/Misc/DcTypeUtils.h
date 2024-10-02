@@ -3,6 +3,10 @@
 #include "DataConfig/DcTypes.h"
 #include "Misc/EngineVersionComparison.h"
 
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+#include "Templates/IsTriviallyDestructible.h"
+#endif
+
 namespace DcTypeUtils {
 
 FORCEINLINE bool IsNumericDataEntry(const EDcDataEntry& Entry)
@@ -104,6 +108,16 @@ struct TRemoveConst
 #endif
 };
 
+
+template <typename T>
+struct TIsTriviallyDestructible
+{
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+	enum { Value = ::TIsTriviallyDestructible<T>::Value };
+#else
+	enum { Value = std::is_trivially_destructible_v<T> };
+#endif
+};
 
 } // namespace DcTypeUtils
 

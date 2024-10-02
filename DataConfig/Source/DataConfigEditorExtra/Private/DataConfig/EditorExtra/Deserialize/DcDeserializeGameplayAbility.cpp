@@ -293,7 +293,7 @@ DC_TEST("DataConfig.EditorExtra.GameplayAbility")
 			"CostGameplayEffectClass" : "/DataConfig/DcFixture/DcTestGameplayEffectAlpha",
 			/// Advanced
 			"ReplicationPolicy" : "ReplicateYes",
-			"InstancingPolicy" : "NonInstanced",
+			"InstancingPolicy" : "InstancedPerActor",
 		}
 	)");
 	FDcJsonReader Reader(Str);
@@ -302,12 +302,18 @@ DC_TEST("DataConfig.EditorExtra.GameplayAbility")
 	UTEST_OK("Editor Extra UGameplayAbility Deserialize", DcEditorExtra::DeserializeGameplayAbility(TmpAbility, Reader));
 
 	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", TmpAbility->GetReplicationPolicy() == EGameplayAbilityReplicationPolicy::ReplicateYes);
-	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", TmpAbility->GetInstancingPolicy() == EGameplayAbilityInstancingPolicy::NonInstanced);
+	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", TmpAbility->GetInstancingPolicy() == EGameplayAbilityInstancingPolicy::InstancedPerActor);
 
-	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", TmpAbility->AbilityTags.HasTagExact(
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+	auto& AbilityTags = TmpAbility->AbilityTags;
+#else
+	auto& AbilityTags = TmpAbility->GetAssetTags();
+#endif // !UE_VERSION_OLDER_THAN(5, 5, 0)
+
+	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", AbilityTags.HasTagExact(
 		UGameplayTagsManager::Get().RequestGameplayTag(TEXT("DataConfig.Foo.Bar"))
 	));
-	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", TmpAbility->AbilityTags.HasTagExact(
+	UTEST_TRUE("Editor Extra UGameplayAbility Deserialize", AbilityTags.HasTagExact(
 		UGameplayTagsManager::Get().RequestGameplayTag(TEXT("DataConfig.Foo.Bar.Baz"))
 	));
 

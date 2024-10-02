@@ -59,7 +59,7 @@ struct FDcTestArrayDim1
 
 	UPROPERTY() TSoftClassPtr<UObject> SoftClassArr[2];
 	UPROPERTY() TScriptInterface<IDcTestInterface1> InterfaceArr[3];
-	UPROPERTY() TFieldPath<FNameProperty> FieldPathArr[4];
+	UPROPERTY() TFieldPath<FProperty> FieldPathArr[4];
 
 	UPROPERTY() FDcTestDelegate1 DelegateArr[2];
 	UPROPERTY() FDcTestDynMulticastCallback1 DynMulticastArr[3];

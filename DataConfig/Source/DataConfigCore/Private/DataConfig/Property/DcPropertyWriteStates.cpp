@@ -1118,7 +1118,7 @@ FDcResult FDcWriteStateScalar::WriteDataEntry(FDcPropertyWriter* Parent, FFieldC
 	else
 	{
 		OutDatum.Property = ScalarField;
-		OutDatum.DataPtr = (uint8*)ScalarPtr + (PTRINT)(ScalarField->ElementSize * Index);
+		OutDatum.DataPtr = (uint8*)ScalarPtr + (PTRINT)(DcPropertyUtils::ElementSize(ScalarField) * Index);
 
 		++Index;
 		if (Index == ScalarField->ArrayDim)
