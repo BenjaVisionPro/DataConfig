@@ -628,6 +628,7 @@ FDcResult FDcWriteStateMap::WriteMapRoot(FDcPropertyWriter* Parent)
 	if (State == EState::ExpectRoot)
 	{
 		State = EState::ExpectKeyOrEnd;
+		MapHelper.EmptyValues();
 		return DcOk();
 	}
 	else
@@ -764,6 +765,7 @@ FDcResult FDcWriteStateArray::WriteArrayRoot(FDcPropertyWriter* Parent)
 	if (State == EState::ExpectRoot)
 	{
 		State = EState::ExpectItemOrEnd;
+		ArrayHelper.EmptyValues();
 		return DcOk();
 	}
 	else
@@ -893,6 +895,7 @@ FDcResult FDcWriteStateSet::WriteSetRoot(FDcPropertyWriter* Parent)
 	if (State == EState::ExpectRoot)
 	{
 		State = EState::ExpectItemOrEnd;
+		SetHelper.EmptyElements();
 		return DcOk();
 	}
 	else
