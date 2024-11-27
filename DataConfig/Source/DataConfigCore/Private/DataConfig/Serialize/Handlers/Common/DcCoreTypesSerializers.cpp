@@ -197,6 +197,45 @@ FDcResult HandlerTimespanSerialize(FDcSerializeContext& Ctx)
 	return DcOk();
 }
 
+FDcResult HandlerTextSerialize(FDcSerializeContext& Ctx)
+{
+	FText Value;
+	DC_TRY(Ctx.Reader->ReadText(&Value));
+
+	if (Value.IsFromStringTable())
+	{
+		FName TableId;
+		FString TextKey;
+
+		verify(FTextInspector::GetTableIdAndKey(Value, TableId, TextKey));
+
+		DC_TRY(Ctx.Writer->WriteArrayRoot());
+
+		DC_TRY(Ctx.Writer->WriteString(TableId.ToString()));
+		DC_TRY(Ctx.Writer->WriteString(TextKey));
+
+		DC_TRY(Ctx.Writer->WriteArrayEnd());
+	}
+	else
+	{
+		DC_TRY(Ctx.Writer->WriteArrayRoot());
+
+		TOptional<FString> Namespace = FTextInspector::GetNamespace(Value);
+		DC_TRY(Ctx.Writer->WriteString(Namespace.IsSet() ? *Namespace : ""));
+
+		TOptional<FString> TextKey = FTextInspector::GetKey(Value);
+		DC_TRY(Ctx.Writer->WriteString(TextKey.IsSet() ? *TextKey : ""));
+
+		const FString* SourceString = FTextInspector::GetSourceString(Value);
+		DC_TRY(Ctx.Writer->WriteString(SourceString ? *SourceString : ""));
+
+		DC_TRY(Ctx.Writer->WriteArrayEnd());
+	}
+
+	return DcOk();
+}
+
+
 FDcResult HandlerIntPointSerialize(FDcSerializeContext& Ctx)
 {
     DcSerializeUtils::FDcScopedTryUseJSONOverrideConfig ScopedOverrideConfig(Ctx.Writer);

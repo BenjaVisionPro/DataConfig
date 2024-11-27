@@ -1,5 +1,58 @@
 # UE Core Types Handlers
 
+
+We bundled some custom serialization handlers for common Unreal Engine types (think `FText/FVector/FColor`) to improve developer experience. You need to explicitly set it up with your serializer/deserializers.
+
+```c++
+//  setup core types serializers
+FDcSerializer Serializer;
+DcSetupCoreTypesSerializeHandlers(Serializer);
+
+//  setup core types deserializers
+FDcDeserializer Deserializer;
+DcSetupCoreTypesDeserializeHandlers(Deserializer);
+```
+
+These are also used in [DataConfig blueprint nodes][2]. 
+
+Note that you always can custom these default behavior [by writing your own handlers][1].
+
+
+## FText
+
+`FText` is used to handle localization in UE and it's quite different from `FString`. When calling `ReadText()` on JSON/MsgPack reader
+we pipe the string through a helper method `FTextStringHelper::CreateFromBuffer()` which parses and handles `NSLOCTEXT()/LOCTABLE()` style string.
+
+
+```json
+//  DataConfigTests/Private/DcTestProperty5.cpp
+{
+    "TextFieldAlpha" : "NSLOCTEXT(\"DataConfig.Tests\", \"BAR_TEST\", \"Localize String Bar\")",
+    "TextFieldBeta" : "LOCTABLE(\"/Bogus/Path/To/Table\", \"FOO_TEST\")"
+}
+```
+
+The escaping sequences in JSON makes it a bit difficult to use. With the core types handlers we also accept arrays:
+
+```json
+//  DataConfigTests/Private/DcTestRoundtrip2.cpp
+{
+    // [<namespace>, <text-id>, <source>], same as `NSLOCTEXT()`
+    "TextFieldAlpha" : [
+        "DataConfig.Tests",
+        "BAR_TEST",
+        "Localize String Bar"
+    ],
+    // [<string-table-id>, <text-id>], same as `LOCTABLE()`
+    "TextFieldBeta" : [
+        "/Bogus/Path/To/Table",
+        "FOO_TEST"
+    ]
+}
+```
+
+## Compact Presentation
+
 Without any special handling a `FVector` is serialized as a JSON object like this:
 
 
@@ -12,17 +65,7 @@ Without any special handling a `FVector` is serialized as a JSON object like thi
 ```
 
 This is fine but sometimes we want it to be more compact. DataConfig now comes with 
-a set of serialize/deserialize handlers that writes the commonly used types in compact form:
-
-```c++
-//  setup core types serializers
-FDcSerializer Serializer;
-DcSetupCoreTypesSerializeHandlers(Serializer);
-
-//  setup core types deserializers
-FDcDeserializer Deserializer;
-DcSetupCoreTypesDeserializeHandlers(Deserializer);
-```
+a set of serialize/deserialize handlers that writes the commonly used types in compact form.
 
 With a struct like this:
 
@@ -146,3 +189,5 @@ It would be serialized like this:
 This would make large JSON dumps more readable. Deserialize also works and it supports both array and object form.
 
 
+[1]:./WritingHandlers.md "Writing Handlers"
+[2]:../Extra/BlueprintNodes.md "Blueprint Nodes"

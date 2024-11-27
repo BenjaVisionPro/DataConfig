@@ -2,11 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.2 - 2024-11-27
+
+- **New** Better `FText` deserialize handling.
+    - See: [Core Types - FText](Advanced/CoreTypes.md#ftext)
+
 ## 1.7.1 - 2024-11-20
 
 - **BREAKING** Empty `TArray/TSet/TMap` properties on write.
     - See: [Breaking - 1.7.1](Advanced/Breaking.md#171)
-
 
 ## 1.7.0 - 2024-10-2
 

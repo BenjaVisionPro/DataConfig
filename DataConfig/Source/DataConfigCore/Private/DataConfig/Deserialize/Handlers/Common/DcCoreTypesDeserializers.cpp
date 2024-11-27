@@ -7,6 +7,8 @@
 #include "DataConfig/SerDe/DcSerDeCoreTypesCommon.h"
 #include "DataConfig/Diagnostic/DcDiagnosticSerDe.h"
 
+#include "Misc/EngineVersionComparison.h"
+
 namespace DcCoreTypesHandlers {
 
 struct FDcScopedSkipStructHandler
@@ -227,6 +229,61 @@ FDcResult HandlerTimespanDeserialize(FDcDeserializeContext& Ctx)
 	else
 	{
 		return DC_FAIL(DcDSerDe, TimespanParseFail) << TimespanStr;
+	}
+}
+
+FDcResult HandlerTextDeserialize(FDcDeserializeContext& Ctx)
+{
+	EDcDataEntry Next;
+	DC_TRY(Ctx.Reader->PeekRead(&Next));
+	if (Next == EDcDataEntry::String)
+	{
+		FText Value;
+		DC_TRY(Ctx.Reader->ReadText(&Value));
+		DC_TRY(Ctx.Writer->WriteText(Value));
+		return DcOk();
+	}
+	else if (Next == EDcDataEntry::ArrayRoot)
+	{
+		DC_TRY(Ctx.Reader->ReadArrayRoot());
+
+		FString Value1;
+		FString Value2;
+		DC_TRY(Ctx.Reader->ReadString(&Value1));
+		DC_TRY(Ctx.Reader->ReadString(&Value2));
+
+		DC_TRY(Ctx.Reader->PeekRead(&Next));
+		if (Next == EDcDataEntry::ArrayEnd)
+		{
+			// [<string-table-id>, <text-id>]
+			FText Result = FText::FromStringTable(FName(*Value1), Value2);
+			DC_TRY(Ctx.Writer->WriteText(Result));
+			DC_TRY(Ctx.Reader->ReadArrayEnd());
+		}
+		else
+		{
+			// [<namespace>, <text-id>, <source>]
+			FString Value3;
+			DC_TRY(Ctx.Reader->ReadString(&Value3));
+
+#if UE_VERSION_OLDER_THAN(5, 5, 0)
+			FText Result = Value3.IsEmpty()
+				? FText::GetEmpty()
+				: FInternationalization::ForUseOnlyByLocMacroAndGraphNodeTextLiterals_CreateText(*Value3, *Value1, *Value2);
+#else
+			FText Result = FText::AsLocalizable_Advanced(Value1, Value2, MoveTemp(Value3));
+#endif // UE_VERSION_OLDER_THAN(5, 5, 0)
+
+			DC_TRY(Ctx.Writer->WriteText(Result));
+			DC_TRY(Ctx.Reader->ReadArrayEnd());
+		}
+
+		return DcOk();
+	}
+	else
+	{
+		return DC_FAIL(DcDSerDe, DataEntryMismatch2)
+			<< EDcDataEntry::String << EDcDataEntry::ArrayRoot << Next;
 	}
 }
 

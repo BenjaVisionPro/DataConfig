@@ -249,6 +249,8 @@ void DcSetupCoreTypesSerializeHandlers(FDcSerializer& Serializer)
 	Serializer.AddStructHandler(TBaseStructure<FDateTime>::Get(), FDcSerializeDelegate::CreateStatic(HandlerDateTimeSerialize));
 	Serializer.AddStructHandler(DcSerDeUtils::FindFirstObject<UScriptStruct>(TEXT("Timespan"), true), FDcSerializeDelegate::CreateStatic(HandlerTimespanSerialize));
 
+	Serializer.FieldClassSerializerMap[FTextProperty::StaticClass()] = FDcSerializeDelegate::CreateStatic(HandlerTextSerialize);
+
 	Serializer.AddStructHandler(DcSerDeUtils::FindFirstObject<UScriptStruct>(TEXT("IntPoint"), true), FDcSerializeDelegate::CreateStatic(HandlerIntPointSerialize));
 	Serializer.AddStructHandler(DcSerDeUtils::FindFirstObject<UScriptStruct>(TEXT("IntVector"), true), FDcSerializeDelegate::CreateStatic(HandlerIntVectorSerialize));
 #if !UE_VERSION_OLDER_THAN(5, 1, 0)

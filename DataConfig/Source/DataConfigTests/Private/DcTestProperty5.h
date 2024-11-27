@@ -22,3 +22,13 @@ struct FDcTestStructWithDefaults
 	};
 };
 
+USTRUCT()
+struct FDcTestStructWithText
+{
+	GENERATED_BODY()
+
+	UPROPERTY() FText TextFieldAlpha;
+	UPROPERTY() FText TextFieldBeta;
+
+	void MakeFixture();
+};

@@ -1,4 +1,6 @@
 #include "DcTestRoundtrip.h"
+#include "DcTestProperty5.h"
+
 #include "DataConfig/Automation/DcAutomationUtils.h"
 #include "DataConfig/Extra/Misc/DcTestCommon.h"
 #include "DataConfig/Automation/DcAutomation.h"
@@ -135,3 +137,52 @@ DC_TEST("DataConfig.Core.RoundTrip.CoreTypes")
 	return true;
 };
 
+DC_TEST("DataConfig.Core.RoundTrip.Text")
+{
+	FDcTestStructWithText Source;
+	Source.MakeFixture();
+
+	FDcPropertyDatum SourceDatum(&Source);
+	FDcJsonWriter JsonWriter;
+	{
+		UTEST_OK("Text Roundtrip", DcAutomationUtils::SerializeInto(&JsonWriter, SourceDatum,
+		[](FDcSerializeContext& Ctx)
+		{
+			DcSetupCoreTypesSerializeHandlers(*Ctx.Serializer);
+		}));
+	}
+
+	FDcTestStructWithText Dest;
+	FDcPropertyDatum DestDatum(&Dest);
+
+	JsonWriter.Sb << TCHAR('\n');
+	FString Json = JsonWriter.Sb.ToString();
+
+	UTEST_EQUAL("OverrideConfig", Json, DcAutomationUtils::DcReindentStringLiteral(TEXT(R"(
+
+	{
+	    "TextFieldAlpha" : [
+	        "DataConfig.Tests",
+	        "BAR_TEST",
+	        "Localize String Bar"
+	    ],
+	    "TextFieldBeta" : [
+	        "/Bogus/Path/To/Table",
+	        "FOO_TEST"
+	    ]
+	}
+
+	)")));
+
+	FDcJsonReader JsonReader(Json);
+	{
+		UTEST_OK("Text Roundtrip", DcAutomationUtils::DeserializeFrom(&JsonReader, DestDatum,
+		[](FDcDeserializeContext& Ctx)
+		{
+			DcSetupCoreTypesDeserializeHandlers(*Ctx.Deserializer);
+		}));
+	}
+
+	UTEST_OK("Text Roundtrip", DcAutomationUtils::TestReadDatumEqual(SourceDatum, DestDatum));
+	return true;
+};

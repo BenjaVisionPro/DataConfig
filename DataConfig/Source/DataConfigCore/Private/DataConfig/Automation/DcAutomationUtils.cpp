@@ -57,6 +57,36 @@ FDcResult _ExpectEqual<EDcDataEntry>(const EDcDataEntry& Lhs, const EDcDataEntry
 	}
 }
 
+template<>
+FDcResult _ExpectEqual<FText>(const FText& Lhs, const FText& Rhs)
+{
+	auto _DeepTextCheck = [](const FText& Lhs, const FText& Rhs) -> bool
+	{
+		if (FTextInspector::GetNamespace(Lhs) != FTextInspector::GetNamespace(Rhs))
+			return false;
+
+		if (FTextInspector::GetKey(Lhs) != FTextInspector::GetKey(Rhs))
+			return false;
+
+		const FString* LhsSource = FTextInspector::GetSourceString(Lhs);
+		const FString* RhsSource = FTextInspector::GetSourceString(Rhs);
+
+		if ((LhsSource == nullptr && RhsSource != nullptr)
+			|| (LhsSource != nullptr && RhsSource == nullptr))
+			return false;
+
+		if (LhsSource == nullptr && RhsSource == nullptr)
+			return true;
+
+		return *LhsSource == *RhsSource;
+	};
+
+	return _DeepTextCheck(Lhs, Rhs)
+		? DcOk()
+		: DC_FAIL(DcDReadWrite, DataTypeUnequalLhsRhs)
+			<< "FText" << Lhs << Rhs;
+}
+
 FDcResult TestReadDatumEqual(const FDcPropertyDatum& LhsDatum, const FDcPropertyDatum& RhsDatum, EReadDatumEqualType Type)
 {
 	FDcPropertyReader LhsReader(LhsDatum);
@@ -124,7 +154,7 @@ FDcResult TestReadDatumEqual(const FDcPropertyDatum& LhsDatum, const FDcProperty
 				FText Rhs;
 				DC_TRY(RhsReader.ReadText(&Rhs));
 
-				DC_TRY(_ExpectEqual(Lhs.ToString(), Rhs.ToString()));
+				DC_TRY(_ExpectEqual(Lhs, Rhs));
 				break;
 			}
 			case EDcDataEntry::Enum:

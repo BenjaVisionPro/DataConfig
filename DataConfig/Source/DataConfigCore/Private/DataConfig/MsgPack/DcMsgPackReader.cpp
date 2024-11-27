@@ -331,7 +331,7 @@ FDcResult FDcMsgPackReader::ReadText(FText* OutPtr)
 	DC_TRY(ReadString(&Str));
 
 	if (OutPtr)
-		*OutPtr = FText::FromString(Str);
+		*OutPtr = FTextStringHelper::CreateFromBuffer(*Str);
 
 	return DcOk();
 }

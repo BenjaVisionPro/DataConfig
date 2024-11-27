@@ -521,7 +521,7 @@ FDcResult TDcJsonReader<CharType>::ReadText(FText* OutPtr)
 		if (IsAtObjectKey())
 			DC_TRY(CheckObjectDuplicatedKey(ParsedStr));
 
-		ReadOut(OutPtr, FText::FromString(MoveTemp(ParsedStr)));
+		ReadOut(OutPtr, FTextStringHelper::CreateFromBuffer(*ParsedStr));
 		DC_TRY(EndTopRead());
 		return DcOk();
 	}

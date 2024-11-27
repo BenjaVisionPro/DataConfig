@@ -1,5 +1,6 @@
 #include "DcTestProperty2.h"
 #include "DcTestProperty4.h"
+#include "DcTestProperty5.h"
 #include "DcTestSerDe.h"
 #include "DataConfig/Json/DcJsonReader.h"
 #include "DataConfig/Diagnostic/DcDiagnosticSerDe.h"
@@ -314,6 +315,38 @@ DC_TEST("DataConfig.Core.Deserialize.ClassRefs")
 
 	UTEST_OK("Deserialize into FDcTestStructRefs2", DcAutomationUtils::DeserializeFrom(&Reader, DestDatum));
 	UTEST_OK("Deserialize into FDcTestStructRefs2", DcAutomationUtils::TestReadDatumEqual(DestDatum, ExpectDatum));
+
+	return true;
+}
+
+
+DC_TEST("DataConfig.Core.Deserialize.Text")
+{
+	{
+		FString Str = TEXT(R"-(
+
+			{
+				"TextFieldAlpha" : "NSLOCTEXT(\"DataConfig.Tests\", \"BAR_TEST\", \"Localize String Bar\")",
+				"TextFieldBeta" : "LOCTABLE(\"/Bogus/Path/To/Table\", \"FOO_TEST\")"
+			}
+
+		)-");
+
+		FDcJsonReader Reader(Str);
+		FDcTestStructWithText Dest;
+
+		FDcTestStructWithText Expect;
+		Expect.MakeFixture();
+
+		UTEST_OK("Deserialize Text", DcAutomationUtils::DeserializeFrom(&Reader, FDcPropertyDatum(&Dest),
+		[](FDcDeserializeContext& Ctx)
+		{
+			DcSetupCoreTypesDeserializeHandlers(*Ctx.Deserializer);
+		}));
+
+		UTEST_OK("Deserialize Text", DcAutomationUtils::TestReadDatumEqual(FDcPropertyDatum(&Dest), FDcPropertyDatum(&Expect)));
+	}
+
 
 	return true;
 }

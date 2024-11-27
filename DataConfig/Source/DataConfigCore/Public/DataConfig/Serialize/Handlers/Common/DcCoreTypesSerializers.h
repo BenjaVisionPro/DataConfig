@@ -15,6 +15,7 @@ DATACONFIGCORE_API FDcResult HandlerIntVectorSerialize(FDcSerializeContext& Ctx)
 DATACONFIGCORE_API FDcResult HandlerColorSerialize(FDcSerializeContext& Ctx);
 DATACONFIGCORE_API FDcResult HandlerDateTimeSerialize(FDcSerializeContext& Ctx);
 DATACONFIGCORE_API FDcResult HandlerTimespanSerialize(FDcSerializeContext& Ctx);
+DATACONFIGCORE_API FDcResult HandlerTextSerialize(FDcSerializeContext& Ctx);
 
 #if ENGINE_MAJOR_VERSION == 5
 DATACONFIGCORE_API FDcResult HandlerVector2dSerialize(FDcSerializeContext& Ctx);
