@@ -2,6 +2,7 @@
 
 #include "DataConfig/Deserialize/DcDeserializeTypes.h"
 #include "DataConfig/Serialize/DcSerializeTypes.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcSerDeColor.generated.h"
 
 ///	`FColor` <-> hex string like `#FFGGBBAA`
@@ -18,6 +19,7 @@ USTRUCT()
 struct FDcExtraTestStructWithColor1
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcExtraTestStructWithColor1)
 
 	UPROPERTY() FColor ColorField1;
 	UPROPERTY() FColor ColorField2;

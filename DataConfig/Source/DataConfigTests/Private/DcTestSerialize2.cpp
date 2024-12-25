@@ -49,12 +49,12 @@ DC_TEST("DataConfig.Core.Serialize.CoreTypes")
 		    "QuatField2" : [        0,         0,         0,         0],
 		    "TransformField1" : {
 		        "Rotation" : [        0,         0,         0,         1],
-		        "Translation" : [        1,         2,         3],
+		        "Translation" : [        0,         0,         0],
 		        "Scale3D" : [        1,         1,         1]
 		    },
 		    "TransformField2" : {
 		        "Rotation" : [        0,         0,         0,         1],
-		        "Translation" : [        0,         0,         0],
+		        "Translation" : [        1,         2,         3],
 		        "Scale3D" : [        1,         1,         1]
 		    },
 		    "ColorField1" : "#000000FF",

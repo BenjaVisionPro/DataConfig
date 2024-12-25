@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcTestSerDeEditor.generated.h"
 
 UCLASS()
@@ -12,13 +13,14 @@ class DATACONFIGEDITOREXTRA_API UDcEditorExtraNativeDataAsset : public UDataAsse
 public:
 
 	UPROPERTY() FString StrField;
-	UPROPERTY() int IntField;
+	UPROPERTY() int IntField = 0;
 };
 
 USTRUCT()
 struct FDcEditorExtraTestObjectRefs1
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcEditorExtraTestObjectRefs1)
 
 	UPROPERTY() UObject* ObjField1;
 	UPROPERTY() UObject* ObjField2;

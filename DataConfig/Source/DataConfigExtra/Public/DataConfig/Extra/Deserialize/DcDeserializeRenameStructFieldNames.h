@@ -4,6 +4,7 @@
 
 #include "DataConfig/DcTypes.h"
 #include "DataConfig/Deserialize/DcDeserializeTypes.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcDeserializeRenameStructFieldNames.generated.h"
 
 
@@ -23,7 +24,7 @@ struct FDcTestExtraRenameFrom1
 	GENERATED_BODY()
 
 	UPROPERTY() FString FromStr1;
-	UPROPERTY() int FromInt1;
+	UPROPERTY() int FromInt1 = 0;
 
 	FORCEINLINE friend uint32 GetTypeHash(const FDcTestExtraRenameFrom1& In)
 	{
@@ -43,7 +44,7 @@ struct FDcTestExtraRenameTo1
 	GENERATED_BODY()
 
 	UPROPERTY() FString ToStr1;
-	UPROPERTY() int ToInt1;
+	UPROPERTY() int ToInt1 = 0;
 
 	FORCEINLINE friend uint32 GetTypeHash(const FDcTestExtraRenameTo1& In)
 	{

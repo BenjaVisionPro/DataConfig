@@ -31,7 +31,7 @@ struct FDcExtraTestUser
 {
 	GENERATED_BODY()
 
-	UPROPERTY() int Id;
+	UPROPERTY() int Id = 0;
 	UPROPERTY() FString Name;
 	UPROPERTY() FName Title;
 };

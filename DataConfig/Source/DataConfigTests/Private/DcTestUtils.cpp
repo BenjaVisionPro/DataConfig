@@ -30,3 +30,17 @@ DC_TEST("DataConfig.Core.Utils.DcDiagnostic")
 
 	return true;
 }
+
+#if !(UE_BUILD_TEST || UE_BUILD_SHIPPING)
+
+#if !WITH_ENGINE // engine sometimes have uninitialized fields
+DC_TEST("DataConfig.Core.Utils.AttemptToFindUninitializedScriptStructMembers")
+{
+	UTEST_EQUAL("No Unitialized Field", FStructUtils::AttemptToFindUninitializedScriptStructMembers(), 0);
+
+	return true;
+}
+#endif // !WITH_ENGINE
+
+#endif // !(UE_BUILD_TEST || UE_BUILD_SHIPPING)
+

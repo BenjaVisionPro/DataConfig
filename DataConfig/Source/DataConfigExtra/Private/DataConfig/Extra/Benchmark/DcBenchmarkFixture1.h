@@ -1,12 +1,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcBenchmarkFixture1.generated.h"
 
 USTRUCT()
 struct FDcVector2D
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcVector2D)
 
 	UPROPERTY() float X;
 	UPROPERTY() float Y;
@@ -75,7 +77,7 @@ struct FDcCorpusEntry
 	UPROPERTY() TArray<FDcCorpusAuthor> authors;
 	UPROPERTY() TArray<FString> inCitations;
 	UPROPERTY() TArray<FString> outCitations;
-	UPROPERTY() int year;
+	UPROPERTY() int year = 0;
 	UPROPERTY() FString s2Url;
 	UPROPERTY() TArray<FString> sources;
 	UPROPERTY() TArray<FString> pdfUrls;

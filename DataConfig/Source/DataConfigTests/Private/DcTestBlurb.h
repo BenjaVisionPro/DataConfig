@@ -14,7 +14,7 @@ struct FDcTestExampleStruct
 {
 	GENERATED_BODY()
 	UPROPERTY() FString StrField;
-	UPROPERTY() EDcTestExampleEnum EnumField;
+	UPROPERTY() EDcTestExampleEnum EnumField = EDcTestExampleEnum::Foo;
 	UPROPERTY() TArray<FColor> Colors;
 };
 
@@ -24,7 +24,7 @@ struct FDcTestExampleSimple
 	GENERATED_BODY()
 
 	UPROPERTY() FString StrField;
-	UPROPERTY() int IntField;
+	UPROPERTY() int IntField = 0;
 };
 
 

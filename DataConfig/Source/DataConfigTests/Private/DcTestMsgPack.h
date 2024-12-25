@@ -25,7 +25,7 @@ struct FMsgPackTestFixture
 {
 	GENERATED_BODY()
 
-	UPROPERTY() EDcTestMsgPackCompareType Type;
+	UPROPERTY() EDcTestMsgPackCompareType Type = EDcTestMsgPackCompareType::Skip;
 	UPROPERTY() TArray<uint8> Expect;
 	UPROPERTY() TArray<FDcTestMsgPackBlob> Actuals;
 

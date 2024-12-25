@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Math/NumericLimits.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcTestProperty2.generated.h"
 
 USTRUCT()
@@ -115,6 +116,7 @@ USTRUCT()
 struct FDcTestStructEnum1
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestStructEnum1)
 
 	UPROPERTY() EDcTestEnum_UInt8 EnumUInt8Field;
 	UPROPERTY() EDcTestEnum_UInt16 EnumUInt16Field;
@@ -145,6 +147,7 @@ USTRUCT()
 struct FDcTestStructEnum2
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestStructEnum2)
 
 	UPROPERTY() TEnumAsByte<EDcTestEnum_Namespaced::Type> EnumNamespaced1;
 	UPROPERTY() TEnumAsByte<EDcTestEnum_Namespaced::Type> EnumNamespaced2;
@@ -155,7 +158,7 @@ struct FDcTestStructDefaultValue1
 {
 	GENERATED_BODY()
 
-	UPROPERTY() int IntField1;
+	UPROPERTY() int IntField1 = -1;
 	UPROPERTY() int IntField2 = 123;
 	UPROPERTY() int IntField3 = 234;
 };

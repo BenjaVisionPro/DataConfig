@@ -9,6 +9,11 @@ Unreal Engine features a powerful [Property System][1] which implements C++ runt
 - Pull/Push styled API for verbatim data access and lossless type infomation.
 - Designed as a collection of tools that can be easily extended to support other formats.
 
+## Integration
+
+Download the latest [DataConfig plugin](../../releases/latest) to get started.
+[More details here][4].
+
 ## Documentation
 
 See [DataConfig Book][2] for details.
@@ -111,3 +116,4 @@ It would be trememdously helpful if you credit us in your projects. See the [lic
 [1]:https://www.unrealengine.com/en-US/blog/unreal-property-system-reflection "Unreal Property System (Reflection)"
 [2]:https://slowburn.dev/dataconfig "DataConfig Book"
 [3]:https://slowburn.dev/dataconfig/License "DataConfig Book - License"
+[4]:https://slowburn.dev/dataconfig/Integration.html#integrate-dataconfig-plugin "DataConfig Book - Integration"

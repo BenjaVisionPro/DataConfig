@@ -68,8 +68,8 @@ struct FDcTestJsonConverter1
 
 	UPROPERTY() FString StrField;
 	UPROPERTY() FDcTestJsonConverterInner1 NestField;
-	UPROPERTY() int IntField;
-	UPROPERTY() bool BoolField;
+	UPROPERTY() int IntField = 0;
+	UPROPERTY() bool BoolField = false;
 };
 
 USTRUCT()
@@ -88,7 +88,7 @@ struct FDcTestJsonConverterArrayDim1
 	GENERATED_BODY()
 
 	UPROPERTY() FString StrArr[2];
-	UPROPERTY() int IntArr[3];
+	UPROPERTY() int IntArr[3] = {};
 	UPROPERTY() FMovie MovieArr[2];
 };
 

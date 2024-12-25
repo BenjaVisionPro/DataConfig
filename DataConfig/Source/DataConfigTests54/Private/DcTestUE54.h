@@ -10,7 +10,7 @@ struct FDcInnerStruct54
 	GENERATED_BODY()
 
 	UPROPERTY() FString StrField;
-	UPROPERTY() int IntField;
+	UPROPERTY() int IntField = 0;
 };
 
 USTRUCT()

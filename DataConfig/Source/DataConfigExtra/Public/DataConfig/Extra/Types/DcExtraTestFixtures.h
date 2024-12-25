@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Math/UnrealMath.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcExtraTestFixtures.generated.h"
 
 USTRUCT()
@@ -74,6 +75,7 @@ USTRUCT(BlueprintType)
 struct DATACONFIGEXTRA_API FDcStructShapeRectangle : public FDcStructShapeBase
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcStructShapeRectangle)
 
 	UPROPERTY(EditAnywhere) float Height;
 	UPROPERTY(EditAnywhere) float Width;
@@ -83,6 +85,7 @@ USTRUCT(BlueprintType)
 struct DATACONFIGEXTRA_API FDcStructShapeCircle : public FDcStructShapeBase
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcStructShapeCircle)
 
 	UPROPERTY(EditAnywhere) float Radius;
 };
@@ -131,14 +134,15 @@ struct DATACONFIGEXTRA_API FDcExtraSimpleStruct
 	GENERATED_BODY()
 
 	UPROPERTY() FString Name;
-	UPROPERTY() int Id;
-	UPROPERTY() EDcExtraTestEnum1 Type;
+	UPROPERTY() int Id = 0;
+	UPROPERTY() EDcExtraTestEnum1 Type = EDcExtraTestEnum1::Alpha;
 };
 
 USTRUCT()
 struct DATACONFIGEXTRA_API FDcExtraCoreTypesStruct
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcExtraCoreTypesStruct)
 
 	UPROPERTY() FGuid GuidField1;
 	UPROPERTY() FGuid GuidField2;

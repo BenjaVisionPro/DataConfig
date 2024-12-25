@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "DcTestProperty.h"
 #include "DcTestProperty2.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcTestProperty4.generated.h"
 
 USTRUCT()
@@ -29,29 +30,29 @@ struct FDcTestArrayDim1
 	GENERATED_BODY()
 
 	//	bool array not allowed
-	UPROPERTY() FName NameArr[2];
-	UPROPERTY() FString StringArr[3];
-	UPROPERTY() FText TextArr[4];
+	UPROPERTY() FName NameArr[2] = {};
+	UPROPERTY() FString StringArr[3] = {};
+	UPROPERTY() FText TextArr[4] = {};
 
-	UPROPERTY() EDcTestEnum1 EnumArr[2];
+	UPROPERTY() EDcTestEnum1 EnumArr[2] = {};
 
-	UPROPERTY() float FloatArr[2];
-	UPROPERTY() double DoubleArr[3];
+	UPROPERTY() float FloatArr[2] = {};
+	UPROPERTY() double DoubleArr[3] = {};
 
-	UPROPERTY() int8 Int8Arr[2];
-	UPROPERTY() int16 Int16Arr[3];
-	UPROPERTY() int32 Int32Arr[4];
-	UPROPERTY() int64 Int64Arr[5];
+	UPROPERTY() int8 Int8Arr[2] = {};
+	UPROPERTY() int16 Int16Arr[3] = {};
+	UPROPERTY() int32 Int32Arr[4] = {};
+	UPROPERTY() int64 Int64Arr[5] = {};
 
-	UPROPERTY() uint8 UInt8Arr[2];
-	UPROPERTY() uint16 UInt16Arr[3];
-	UPROPERTY() uint32 UInt32Arr[4];
-	UPROPERTY() uint64 UInt64Arr[5];
+	UPROPERTY() uint8 UInt8Arr[2] = {};
+	UPROPERTY() uint16 UInt16Arr[3] = {};
+	UPROPERTY() uint32 UInt32Arr[4] = {};
+	UPROPERTY() uint64 UInt64Arr[5] = {};
 
 	//	array/set/map array not allowed
-	UPROPERTY() UDcTestClass1* ObjectRefArr[2];
-	UPROPERTY() UDcBaseShape* ObjectInlineArr[3];
-	UPROPERTY() UClass* ClassArr[3];
+	UPROPERTY() UDcTestClass1* ObjectRefArr[2] = {};
+	UPROPERTY() UDcBaseShape* ObjectInlineArr[3] = {};
+	UPROPERTY() UClass* ClassArr[3] = {};
 
 	UPROPERTY() TWeakObjectPtr<UObject> WeakObjectArr[2];
 	UPROPERTY() TLazyObjectPtr<UObject> LazyObjectArr[3];
@@ -114,6 +115,7 @@ USTRUCT()
 struct FDcTestScalarArrayBlob
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestScalarArrayBlob)
 
 	UPROPERTY() FColor ColorField;
 	UPROPERTY() FColor ColorArr[2];
@@ -133,6 +135,7 @@ USTRUCT()
 struct FDcTestSerializeMeta1
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestSerializeMeta1)
 
 	UPROPERTY(meta = (DcTestSerialize)) int SerializedField;
 	UPROPERTY() int IgnoredField;
@@ -144,12 +147,12 @@ struct FDcTestObjectRefs2
 {
 	GENERATED_BODY()
 
-	UPROPERTY() UDcTestClass1* TestClassObjectField;
+	UPROPERTY() UDcTestClass1* TestClassObjectField = nullptr;
 	UPROPERTY() TWeakObjectPtr<UDcTestClass1> TestClassWeakObjectField;
 	UPROPERTY() TLazyObjectPtr<UDcTestClass1> TestClassLazyObjectField;
 	UPROPERTY() TSoftObjectPtr<UDcTestClass1> TestClassSoftObjectField;
 
-	UPROPERTY() UDcBaseShape* InlineShapeObjectField;
+	UPROPERTY() UDcBaseShape* InlineShapeObjectField = nullptr;
 };
 
 UCLASS(BlueprintType, EditInlineNew, DefaultToInstanced)

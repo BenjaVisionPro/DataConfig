@@ -104,7 +104,7 @@ struct FDcExtraTestStructNestInnerMost
 	GENERATED_BODY()
 
 	UPROPERTY() FString StrField;
-	UPROPERTY() class UDcExtraTestClassOuter* ObjField;
+	UPROPERTY() class UDcExtraTestClassOuter* ObjField = nullptr;
 
 };
 

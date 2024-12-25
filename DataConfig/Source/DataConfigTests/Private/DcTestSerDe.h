@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "DcTestProperty.h"
 #include "Templates/SubclassOf.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcTestSerDe.generated.h"
 
 UENUM(meta = (Bitflags))
@@ -24,6 +25,7 @@ USTRUCT()
 struct FDcTestStructEnumFlag1
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestStructEnumFlag1)
 
 	UPROPERTY() EDcTestEnumFlag EnumFlagField1;
 	UPROPERTY() EDcTestEnumFlag EnumFlagField2;
@@ -35,6 +37,7 @@ USTRUCT()
 struct FDcTestStructShapeContainer1
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestStructShapeContainer1)
 
 	UPROPERTY() UDcBaseShape* ShapeField1;
 	UPROPERTY() UDcBaseShape* ShapeField2;
@@ -48,6 +51,7 @@ USTRUCT()
 struct FDcTestStructObjectRef1
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestStructObjectRef1)
 
 	UPROPERTY() UObject* ObjField1;
 	UPROPERTY() UObject* ObjField2;
@@ -69,8 +73,8 @@ struct FDcTestStructRefs1
 {
 	GENERATED_BODY()
 
-	UPROPERTY() UObject* ObjectField1;
-	UPROPERTY() UObject* ObjectField2;
+	UPROPERTY() UObject* ObjectField1 = nullptr;
+	UPROPERTY() UObject* ObjectField2 = nullptr;
 
 	UPROPERTY() TSoftObjectPtr<UObject> SoftField1;
 	UPROPERTY() TSoftObjectPtr<UObject> SoftField2;
@@ -90,8 +94,8 @@ struct FDcTestStructRefs2
 {
 	GENERATED_BODY()
 
-	UPROPERTY() UClass* RawClassField1;
-	UPROPERTY() UClass* RawClassField2;
+	UPROPERTY() UClass* RawClassField1 = nullptr;
+	UPROPERTY() UClass* RawClassField2 = nullptr;
 
 	UPROPERTY() TSubclassOf<UObject> SubClassField1;
 	UPROPERTY() TSubclassOf<UObject> SubClassField2;
@@ -108,7 +112,7 @@ struct FDcTestStructArrayDimInner1
 	GENERATED_BODY()
 
 	UPROPERTY() FName InnerNameArr[2];
-	UPROPERTY() int InnerIntArr[2];
+	UPROPERTY() int InnerIntArr[2] = {};
 };
 
 USTRUCT()
@@ -118,9 +122,9 @@ struct FDcTestStructArrayDim1
 
 	UPROPERTY() FName NameArr[2];
 	UPROPERTY() FString StringArr[2];
-	UPROPERTY() float FloatArr[2];
-	UPROPERTY() int8 Int8Arr[2];
-	UPROPERTY() EDcTestEnumFlag EnumFlagArr[2];
+	UPROPERTY() float FloatArr[2] = {};
+	UPROPERTY() int8 Int8Arr[2] = {};
+	UPROPERTY() EDcTestEnumFlag EnumFlagArr[2] = {};
 	UPROPERTY() FDcTestStructArrayDimInner1 StructArr[2];
 
 	void MakeFixture();

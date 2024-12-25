@@ -3,6 +3,7 @@
 #include "DataConfig/Deserialize/DcDeserializeTypes.h"
 #include "DataConfig/Serialize/DcSerializeTypes.h"
 #include "Engine/DataAsset.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcSerDeBlueprint.generated.h"
 
 ///	Blueprint SerDe, including:
@@ -64,6 +65,7 @@ USTRUCT()
 struct DATACONFIGENGINEEXTRA_API FDcEngineExtraTestStructWithBPInstance
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcEngineExtraTestStructWithBPInstance)
 
 	UPROPERTY() UDcTestBPClassBase* InstanceField1;
 	UPROPERTY() UDcTestBPClassBase* InstanceField2;

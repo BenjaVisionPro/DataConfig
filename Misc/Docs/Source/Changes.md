@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.3 - 2024-12-25
+
+- **FIX** Fix uninitialized struct fields which causes bogus errors.
+
 ## 1.7.2 - 2024-11-27
 
 - **New** Better `FText` deserialize handling.

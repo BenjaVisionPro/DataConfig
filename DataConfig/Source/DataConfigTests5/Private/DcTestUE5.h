@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DataConfig/Extra/DcExtraCommon.h"
 #include "DcTestUE5.generated.h"
 
 UCLASS()
@@ -32,6 +33,7 @@ USTRUCT()
 struct FDcTestLWC
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestLWC)
 
 	UPROPERTY() FVector VectorField;
 	UPROPERTY() FVector3f Vector3fField;

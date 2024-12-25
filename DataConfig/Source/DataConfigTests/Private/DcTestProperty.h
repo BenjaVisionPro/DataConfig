@@ -19,24 +19,24 @@ struct FDcTestStruct1
 	GENERATED_BODY()
 
 	// basic scalar types
-	UPROPERTY() bool BoolField;
+	UPROPERTY() bool BoolField = false;
 	UPROPERTY() FName NameField;
 	UPROPERTY() FString StringField;
 	UPROPERTY() FText TextField;
-	UPROPERTY() EDcTestEnum1 EnumField;
+	UPROPERTY() EDcTestEnum1 EnumField = EDcTestEnum1::Foo;
 
-	UPROPERTY() float FloatField;
-	UPROPERTY() double DoubleField;
+	UPROPERTY() float FloatField = 0;
+	UPROPERTY() double DoubleField = 0;
 
-	UPROPERTY() int8 Int8Field;
-	UPROPERTY() int16 Int16Field;
-	UPROPERTY() int32 Int32Field;
-	UPROPERTY() int64 Int64Field;
+	UPROPERTY() int8 Int8Field = 0;
+	UPROPERTY() int16 Int16Field = 0;
+	UPROPERTY() int32 Int32Field = 0;
+	UPROPERTY() int64 Int64Field = 0;
 
-	UPROPERTY() uint8 UInt8Field;
-	UPROPERTY() uint16 UInt16Field;
-	UPROPERTY() uint32 UInt32Field;
-	UPROPERTY() uint64 UInt64Field;
+	UPROPERTY() uint8 UInt8Field = 0;
+	UPROPERTY() uint16 UInt16Field = 0;
+	UPROPERTY() uint32 UInt32Field = 0;
+	UPROPERTY() uint64 UInt64Field = 0;
 
 	void MakeFixture();
 };
@@ -67,7 +67,7 @@ struct FDcTestStruct2
 	GENERATED_BODY()
 
 	//	other scalar types
-	UPROPERTY() UClass* ClassField;
+	UPROPERTY() UClass* ClassField = nullptr;
 	UPROPERTY() TWeakObjectPtr<UObject> WeakObjetField;
 	UPROPERTY() TLazyObjectPtr<UObject> LazyObjectField;
 	UPROPERTY() TSoftObjectPtr<UObject> SoftObjectField;
@@ -85,7 +85,7 @@ struct FDcKeyableStruct
 	GENERATED_BODY()
 
 	UPROPERTY() FName Name;
-	UPROPERTY() int16 Index;
+	UPROPERTY() int16 Index = 0;
 
 	FORCEINLINE friend uint32 GetTypeHash(const FDcKeyableStruct& In)
 	{
@@ -133,6 +133,7 @@ USTRUCT()
 struct FDcTestStruct4
 {
 	GENERATED_BODY()
+	DCEXTRA_ZEROINIT_CONSTRUCTOR(FDcTestStruct4)
 
 	//	inline object
 	UPROPERTY() UDcBaseShape* InlineObjectField1;

@@ -24,7 +24,7 @@ void FDcExtraCoreTypesStruct::MakeFixture()
 	QuatField2 = FQuat(0, 0, 0, 0);
 
 	TransformField1 = FTransform::Identity;
-	TransformField1 = FTransform(FQuat::Identity, FVector(1,2,3), FVector::OneVector);
+	TransformField2 = FTransform(FQuat::Identity, FVector(1,2,3), FVector::OneVector);
 
 	ColorField1 = FColor::Black;
 	ColorField2 = FColor::Blue;
